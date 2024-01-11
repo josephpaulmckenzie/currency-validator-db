@@ -1,0 +1,35 @@
+[
+  {
+    "detectedText": "в 32",
+    "boundingBox": {
+      "Height": 0.0224609375,
+      "Left": 0.540026843547821,
+      "Top": 0.216796875,
+      "Width": 0.022365570068359375
+    },
+    "confidence": 91.089599609375,
+    "filteredWord": false
+  },
+  {
+    "detectedText": "A1",
+    "boundingBox": {
+      "Height": 0.056533098220825195,
+      "Left": 0.09029419720172882,
+      "Top": 0.3208545446395874,
+      "Width": 0.0345277301967144
+    },
+    "confidence": 85.46109771728516,
+    "filteredWord": false
+  },
+  {
+    "detectedText": "B 2",
+    "boundingBox": {
+      "Height": 0.029188774526119232,
+      "Left": 0.07252049446105957,
+      "Top": 0.7319064140319824,
+      "Width": 0.02005983516573906
+    },
+    "confidence": 56.585514068603516,
+    "filteredWord": false
+  }
+]

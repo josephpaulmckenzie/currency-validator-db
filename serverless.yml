@@ -1,0 +1,30 @@
+service: currency-db
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+
+functions:
+  validateData:
+    handler: index.handler
+    events:
+      - http:
+          path: validate-data
+          method: post
+          cors: true
+resources:
+  Resources:
+    PostgresDBInstance:
+      Type: AWS::RDS::DBInstance
+      Properties:
+        AllocatedStorage: 20
+        DBInstanceClass: db.t3.micro # Change to a supported instance class
+        Engine: postgres
+        EngineVersion: "15.4" # Change to a supported PostgreSQL version
+        MasterUsername: # Username
+        MasterUserPassword: # Ppassword 
+        DBName: #DB_NAME
+        PubliclyAccessible: true
+        VPCSecurityGroups:
+          - # Replace with your security group ID
