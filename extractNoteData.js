@@ -1,7 +1,8 @@
-// extractNote
-
 const { readFileSync, writeFileSync } = require("fs");
-const { RekognitionClient, DetectTextCommand } = require("@aws-sdk/client-rekognition");
+const {
+  RekognitionClient,
+  DetectTextCommand,
+} = require("@aws-sdk/client-rekognition");
 
 const rekognition = new RekognitionClient({ region: "us-east-1" }); // Replace with your AWS region
 
@@ -15,29 +16,28 @@ async function detectText(imagePath, outputJsonPath) {
     const response = await rekognition.send(command);
 
     const detectedTextData = [];
+
     const filteredWordsData = readFileSync("./filteredWords.json");
     const { filteredWords } = JSON.parse(filteredWordsData);
-    
     const regexPatterns = [
       /^[A-J]\s*[1-9]\d{0,2}$/,
       /^([A-Q]\s?[A-L]?|[A-L])\s?(\d{8})\s?([A-L*])$/,
       /\b(1|2|5|10|20|50|100)\b/,
       /^\d{4}\s?[AB]?$/,
-      /^[AB]$/,
+      // /^[A]$/,
       /\bSERIES\b/,
-      /^в\s?\d+$/ // Pattern for "B 32"
+      // /\b[A-ZА-Я]{3}\b/g
     ];
-    
+
     function replaceCyrillic(text) {
       const cyrillicToEnglishMap = {
         'в': 'B',
         'В': 'B', 
       };
-    
+
       const replacedText = text.replace(/[а-яА-Я]/g, (match) => cyrillicToEnglishMap[match] || match);
       return replacedText;
     }
-    
 
     for (const text of response.TextDetections) {
       const cleanedText = replaceCyrillic(text.DetectedText.toUpperCase());
@@ -80,6 +80,7 @@ async function detectText(imagePath, outputJsonPath) {
     }
 
     writeFileSync(outputJsonPath, JSON.stringify(detectedTextData, null, 2));
+
     console.log(`Results saved to: ${outputJsonPath}`);
 
     return detectedTextData;

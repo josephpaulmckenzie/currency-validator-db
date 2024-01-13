@@ -1,5 +1,3 @@
-// mapNoite
-
 const sharp = require("sharp");
 const detectText = require("./extractNoteData");
 const outputPath = "./output.json";
@@ -9,7 +7,7 @@ async function annotateImage(pathToSavedImage) {
     const imageBuffer = await sharp(pathToSavedImage).toBuffer();
     const metadata = await sharp(imageBuffer).metadata();
     const noteData = await detectText("./testing/test_images/IMG_2359.jpg", outputPath);
-    
+
     if (!noteData || !Array.isArray(noteData)) {
       throw new Error("Note data is not in the expected format or is empty.");
     }

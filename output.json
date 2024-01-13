@@ -99,17 +99,6 @@
     "filteredWord": false
   },
   {
-    "detectedText": "A",
-    "boundingBox": {
-      "Height": 0.017578125,
-      "Left": 0.1219940185546875,
-      "Top": 0.73828125,
-      "Width": 0.0065063475631177425
-    },
-    "confidence": 98.02386474609375,
-    "filteredWord": false
-  },
-  {
     "detectedText": "10",
     "boundingBox": {
       "Height": 0.13671875,
@@ -129,28 +118,6 @@
       "Width": 0.10435104370117188
     },
     "confidence": 79.23743438720703,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "в",
-    "boundingBox": {
-      "Height": 0.0224609375,
-      "Left": 0.540026843547821,
-      "Top": 0.216796875,
-      "Width": 0.008539581671357155
-    },
-    "confidence": 83.26627349853516,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "A",
-    "boundingBox": {
-      "Height": 0.05078125,
-      "Left": 0.8145133852958679,
-      "Top": 0.6044921875,
-      "Width": 0.014232635498046875
-    },
-    "confidence": 96.74779510498047,
     "filteredWord": false
   }
 ]
