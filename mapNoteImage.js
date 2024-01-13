@@ -1,3 +1,5 @@
+// mapNoite
+
 const sharp = require("sharp");
 const detectText = require("./extractNoteData");
 const outputPath = "./output.json";
