@@ -33,7 +33,7 @@
     "filteredWord": false
   },
   {
-    "detectedText": "в 32",
+    "detectedText": "B 32",
     "boundingBox": {
       "Height": 0.0224609375,
       "Left": 0.540026843547821,
@@ -63,28 +63,6 @@
       "Width": 0.2063567191362381
     },
     "confidence": 95.98220825195312,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "SERIES",
-    "boundingBox": {
-      "Height": 0.021260617300868034,
-      "Left": 0.1076446995139122,
-      "Top": 0.6952885389328003,
-      "Width": 0.03483998775482178
-    },
-    "confidence": 98.82347106933594,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "2017",
-    "boundingBox": {
-      "Height": 0.017578125,
-      "Left": 0.11467437446117401,
-      "Top": 0.7177734375,
-      "Width": 0.02033233642578125
-    },
-    "confidence": 99.32259368896484,
     "filteredWord": false
   },
   {
