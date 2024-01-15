@@ -21,7 +21,6 @@ function replaceCyrillic(text) {
   return replacedText;
 }
 
-
 function createSerialNumberMappings(filePath) {
   try {
     if (!fs.existsSync(filePath)) {
@@ -74,97 +73,78 @@ function createSerialNumberMappings(filePath) {
   } catch (error) {
     throw {
       status: 400,
-      error: `Error with mapping the serial number `,
-      inputDetails: {},
-      validator: "serialNumberMapping",
+      error: `Error creating Serial Number Mappings ${error} `,
+      inputDetails: {
+
+      },
+      validator: "createSerialNumberMappings",
     };
   }
 }
- 
 
+function getAdditonalDetails(denominationDetails, serialNumber) {
+  let prefixLetter;
 
-  function getAdditonalDetails(denominationDetails, serialNumber) {
-    let prefixLetter;
-    try {
-      if (denominationDetails) {
-        prefixLetter = serialNumber.charAt(0); // Extract prefix letter from serial number
-        const matchedDetail = denominationDetails.find((detail) => {
-          return detail.pattern.test(prefixLetter);
-        });
+  try {
+    if (denominationDetails) {
+      prefixLetter = serialNumber.charAt(0); // Extract prefix letter from serial number
+      const matchedDetail = denominationDetails.find((detail) => detail.pattern.test(prefixLetter));
 
-        if (matchedDetail) {
-          const additonalDetails = {
-            seriesYear: matchedDetail.seriesYear,
-            treasurer: matchedDetail.treasurer,
-            secretary: matchedDetail.secretary,
-          };
-          return additonalDetails;
-        }
+      if (matchedDetail) {
+        return {
+          seriesYear: matchedDetail.seriesYear,
+          treasurer: matchedDetail.treasurer,
+          secretary: matchedDetail.secretary,
+        };
       }
-    } catch (error) {
-      throw {
-        status: 400,
-        error: `Error obtaining additonalDetails, ${error}`,
-        inputDetails: {},
-        validator: "additonalDetails",
-      };
     }
+  } catch (error) {
+    throw {
+      status: 400,
+      error: `Error obtaining additonalDetails, ${error}`,
+      inputDetails: {},
+      validator: "additonalDetails",
+    };
   }
+}
 
 async function detectText(imagePath, outputJsonPath) {
+  
   try {
-    const params = {
-      Image: { Bytes: readFileSync(imagePath) },
-    };
     let additonalDetails;
-    const command = new DetectTextCommand(params);
+    const command = new DetectTextCommand({
+        Image: { Bytes: readFileSync(imagePath) },
+      });
     const response = await rekognition.send(command);
 
     const detectedTextData = [];
-    const filteredWordsData = readFileSync("./filteredWords.json");
-    const { filteredWords } = JSON.parse(filteredWordsData);
+    const { filteredWords } = JSON.parse(readFileSync("./filteredWords.json"));
     const regexPatterns = [
-      /^[A-J]\s*[1-9]\d{0,2}$/,
+      /^[A-L]\s*[1-9]\d{0,2}$/,
       /^([A-Q]\s?[A-L]?|[A-L])\s?(\d{8})\s?([A-L*])$/,
-      /\b(1|2|5|10|20|50|100)\b/,
+      /\b(?:1|2|5|10|20|50|100)\b/,
+      /^(?:FW\s*)?[A-J]\s*\d{1,3}$/,
     ];
 
-    const detectedDenominationAndSerial = await extractDenominationAndSerial(
-      response.TextDetections
-    );
-    console.log(detectedDenominationAndSerial);
-    if (
-      detectedDenominationAndSerial.denomination  &&
-      detectedDenominationAndSerial.serialNumber
-    ) {
-      const { serialNumber } = detectedDenominationAndSerial;
-
+    const  { denomination, serialNumber } = await extractDenominationAndSerial(response.TextDetections);
+    
+    if (denomination && serialNumber) {
+      
       const mappingFilePath = "./mapping_data.txt";
       const denominationDetails =
-        createSerialNumberMappings(mappingFilePath)["$10"];
+        createSerialNumberMappings(mappingFilePath)[`\$${denomination}`];
 
-      additonalDetails = getAdditonalDetails(
-        denominationDetails,
-        serialNumber
-      );
-
-      // console.log("Denomination:", detectedDenominationAndSerial.denomination);
-      // console.log("Serial Number:", detectedDenominationAndSerial.serialNumber);
-      // console.log("Series Year:", additonalDetails.seriesYear);
-      // console.log("Treasurer:", additonalDetails.treasurer);
-      // console.log("Secretary:", additonalDetails.secretary);
+      additonalDetails = getAdditonalDetails(denominationDetails, serialNumber);
     }
 
     for (const text of response.TextDetections) {
       const cleanedText = replaceCyrillic(text.DetectedText.toUpperCase());
       const detectedWords = cleanedText.split();
       for (const word of detectedWords) {
-        
         let foundMatchingPatternForWord = false;
 
         for (const regex of regexPatterns) {
           const isMatch = regex.test(word);
-
           if (
             isMatch &&
             text.Confidence >= 50 &&
@@ -178,7 +158,9 @@ async function detectText(imagePath, outputJsonPath) {
                 entry.boundingBox.Top === text.Geometry.BoundingBox.Top &&
                 entry.boundingBox.Width === text.Geometry.BoundingBox.Width
             );
-            const cleanedText =   replaceCyrillic(text.DetectedText.toUpperCase())
+            const cleanedText = replaceCyrillic(
+              text.DetectedText.toUpperCase()
+            );
             if (existingEntryIndex === -1) {
               detectedTextData.push({
                 detectedText: cleanedText,
@@ -200,100 +182,77 @@ async function detectText(imagePath, outputJsonPath) {
     }
 
     writeFileSync(outputJsonPath, JSON.stringify(detectedTextData, null, 2));
-    
 
     const formattedData = {};
 
-    const federalReserveRegex = /^[A-J]\s*[1-9]\d{0,2}$/;
-    const notePositionRegex = /^[A-J]\s*[1-5]$/
-    const frontPlateNumberRegex = /^[A-J]\s*\d{1,3}$/;
-   
-    let fed; 
-    for (const text of detectedTextData) {
-      // Check if the text matches the federal reserve regex pattern
-     
-  // if (federalReserveRegex.test(text.detectedText)) {
-  //   console.log("!!!!!", text.detectedText)
-  //   if (text.detectedText.charAt(0) === detectedDenominationAndSerial.serialNumber.charAt(1)) {
-  //     // fed = text.detectedText;
-  //     console.log("federalreserveIndicator",text.detectedText)
-  //   } else if (notePositionRegex.test(text.detectedText)) {
-  //    console.log("Note Position",text.detectedText) // Resetting the indicator if condition is not met
-  //   } else if (frontPlateNumberRegex.test(text.detectedText)){
-  //     console.log("Front Plate Number",text.detectedText)
-    
-  //   }
+    const federalReserveRegex = /^[A-L]\s*[1-9]\d{0,2}$/;
+    const notePositionRegex = /^[A-J]\s*[1-5]$/;
+    const frontPlateNumberRegex = /^(?:FW\s*)?[A-J]\s*\d{1,3}$/;
 
-      const key = `${detectedDenominationAndSerial.denomination}-${detectedDenominationAndSerial.serialNumber}`;
-      
+    let fed;
+    for (const text of detectedTextData) {
+      const key = `${denomination}-${serialNumber}`;
 
       if (!formattedData[key]) {
         formattedData[key] = {
-          Denomination: detectedDenominationAndSerial.denomination,
-          SerialNumber: detectedDenominationAndSerial.serialNumber,
+          Denomination: denomination,
+          SerialNumber: serialNumber,
           SeriesYear: additonalDetails.seriesYear,
           Treasurer: additonalDetails.treasurer,
           Secretary: additonalDetails.secretary,
-          federalReserveIndicator: "", // Initialize federalReserveIndicator
-          notePosition: "", // Initialize notePosition
-          frontPlateNumber: "", // Initialize frontPlateNumber"
-          
+          federalReserveIndicator: "",
+          notePosition: "",
+          frontPlateNumber: "",
         };
       }
-      
-// Check if the text matches the federal reserve regex pattern
-if (federalReserveRegex.test(text.detectedText)) {
-  if (text.detectedText.charAt(0) === detectedDenominationAndSerial.serialNumber.charAt(1)) {
-    console.log("!!!!!", text.detectedText);
-    formattedData[key].federalReserveIndicator = text.detectedText;
-    console.log("federalReserveIndicator", text.detectedText);
-  }
-}
 
-// Check if the text matches the note position regex pattern
-if (notePositionRegex.test(text.detectedText)) {
-  console.log("Note Position", text.detectedText);
-  // Resetting the indicator if condition is not met
-  formattedData[key].notePosition = text.detectedText;
-}
+      if (federalReserveRegex.test(text.detectedText)) {
+        const letterToNumberMapping = {
+          A: 1,
+          B: 2,
+          C: 3,
+          D: 4,
+          E: 5,
+          F: 6,
+          G: 7,
+          H: 8,
+          I: 9,
+          J: 10,
+          K: 11,
+          L: 12,
+        };
+        const letter = serialNumber.charAt(1);
+        const correspondingNumber = letterToNumberMapping[letter];
 
-// Check if the text matches the front plate number regex pattern
-if (frontPlateNumberRegex.test(text.detectedText)) {
-  console.log("Front Plate Number", text.detectedText);
-  const frontPlateLetter = text.detectedText.charAt(0);
+        formattedData[key].federalReserveIndicator = `${letter}${correspondingNumber}`;
+      }
 
-  // Check if the front plate letter is different from the note position letter
-  // if (frontPlateLetter !== detectedDenominationAndSerial.serialNumber.charAt(0)) {
-  //   throw new Error("Note and Front Plate Numbers must start with the same letter.");
-  // }
+      if (notePositionRegex.test(text.detectedText)) {
+        formattedData[key].notePosition = text.detectedText;
+      }
 
-  // Resetting the indicator if condition is not met
-  formattedData[key].frontPlateNumber = text.detectedText;
+      if (frontPlateNumberRegex.test(text.detectedText)) {
+        formattedData[key].frontPlateNumber = text.detectedText;
 
-  // If frontPlateNumber is the same as notePosition, use other detected text data
-  if (formattedData[key].frontPlateNumber === formattedData[key].notePosition) {
-    // Loop through the detectedTextData to find matching data based on the regex pattern
-    for (const otherText of detectedTextData) {
-      if (frontPlateNumberRegex.test(otherText.detectedText)) {
-        // Use other detected text data that fits the same regex pattern
-        formattedData[key].frontPlateNumber = otherText.detectedText;
-        break; // Assuming you want to use the first matching data
+        // If frontPlateNumber is the same as notePosition, use other detected text data fitting the regex pattern
+        if (
+          formattedData[key].frontPlateNumber ===
+          formattedData[key].notePosition
+        ) {
+          for (const otherText of detectedTextData) {
+            if (frontPlateNumberRegex.test(otherText.detectedText)) {
+              formattedData[key].frontPlateNumber = otherText.detectedText;
+              break;
+            }
+          }
+        }
       }
     }
-  }
-}
 
-// formattedData[key].texts.push(text.detectedText);
-
-  }
-
-
-    
     const resultArray = Object.values(formattedData);
     console.log(JSON.stringify(resultArray[0]));
-    
+
     return detectedTextData;
-    
   } catch (err) {
     console.error("Error detecting text:", err);
     return [];
@@ -308,8 +267,9 @@ async function extractDenominationAndSerial(textDetections) {
     const denominationMatch = text.DetectedText.match(
       /\b(1|2|5|10|20|50|100)\b/
     );
-    if (denominationMatch && denominationMatch[0]) {
-      detectedDenomination = text.DetectedText;
+
+    if (denominationMatch) {
+      detectedDenomination = denominationMatch[0];
     }
 
     const serialNumberMatch = text.DetectedText.match(
@@ -317,7 +277,6 @@ async function extractDenominationAndSerial(textDetections) {
     );
     if (serialNumberMatch && serialNumberMatch[0]) {
       detectedSerialNumber = serialNumberMatch[0];
-      // break; // Assuming you want to break after finding the first serial number
     }
   }
 
