@@ -1,79 +1,10 @@
-[
-  {
-    "detectedText": "10",
-    "boundingBox": {
-      "Height": 0.11110605299472809,
-      "Left": 0.007475900463759899,
-      "Top": 0.0771072581410408,
-      "Width": 0.12327418476343155
-    },
-    "confidence": 97.77066040039062,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "10",
-    "boundingBox": {
-      "Height": 0.091796875,
-      "Left": 0.8382282257080078,
-      "Top": 0.1494140625,
-      "Width": 0.13544082641601562
-    },
-    "confidence": 77.54598999023438,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "B 32",
-    "boundingBox": {
-      "Height": 0.0224609375,
-      "Left": 0.5462779998779297,
-      "Top": 0.2236328125,
-      "Width": 0.025583267211914062
-    },
-    "confidence": 80.47377014160156,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "A1",
-    "boundingBox": {
-      "Height": 0.055682070553302765,
-      "Left": 0.027521952986717224,
-      "Top": 0.30015289783477783,
-      "Width": 0.041144516319036484
-    },
-    "confidence": 86.87679290771484,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "PA 33831008 A",
-    "boundingBox": {
-      "Height": 0.06347247958183289,
-      "Left": 0.6334969401359558,
-      "Top": 0.6166465282440186,
-      "Width": 0.23136290907859802
-    },
-    "confidence": 95.47637939453125,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "B 2",
-    "boundingBox": {
-      "Height": 0.029390446841716766,
-      "Left": 0.0021524697076529264,
-      "Top": 0.6995040774345398,
-      "Width": 0.023810137063264847
-    },
-    "confidence": 74.26991271972656,
-    "filteredWord": false
-  },
-  {
-    "detectedText": "10",
-    "boundingBox": {
-      "Height": 0.1374097764492035,
-      "Left": 0.014874735847115517,
-      "Top": 0.7287023067474365,
-      "Width": 0.08911366015672684
-    },
-    "confidence": 100,
-    "filteredWord": false
-  }
-]
+{
+  "Denomination": "10",
+  "SerialNumber": "PA 33831008 A",
+  "SeriesYear": "2017A",
+  "Treasurer": "Carranza",
+  "Secretary": "Mnuchin",
+  "federalReserveIndicator": "A1",
+  "notePosition": "B 2",
+  "frontPlateNumber": "B 32"
+}
