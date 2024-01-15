@@ -4,8 +4,8 @@ const serialPatterns = require('../../serialPatterns');
 
 describe('Serial Patterns Testing', () => {
   let coolSerialPatterns;
-
-  beforeEach(() => {
+    let result;
+    beforeEach(() => {
     coolSerialPatterns = {
       serialNumber: "",
       patternMatches: {
@@ -29,13 +29,21 @@ describe('Serial Patterns Testing', () => {
   }
 
   it('should test serial numbers against lowSerialNumber pattern', () => {
-      const result = testSerialNumber('00004567', 'lowSerialNumberPattern');
+      result = testSerialNumber('00004567', 'lowSerialNumberPattern');
     expect(result.patternMatches.lowSerialNumberPattern).toBe(true);
   });
 
   it('should test serial numbers against highSerialNumber pattern', () => {
-    const result = testSerialNumber('99991234', 'highSerialNumberPattern');
+     result = testSerialNumber('99991234', 'highSerialNumberPattern');
     expect(result.patternMatches.highSerialNumberPattern).toBe(true);
   });
+    
+  it('should test serial numbers for laddder pattern', () => {
+     result = testSerialNumber('12345678', 'ladderSerialPattern');
+      expect(result.patternMatches.ladderSerialPattern).toBe(true);
+      
+  });
+    
+    
 
 });

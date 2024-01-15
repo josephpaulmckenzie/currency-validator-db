@@ -8,9 +8,7 @@ module.exports = {
     highSerialNumberPattern: /^9{4}\d{4}$|^9{5}\d{3}$|^9{6}\d{2}$|^9{7}\d{1}$|^(96000000|99200000|99840000|99999999)$/,
   
     // Example: Check if a serial number matches the ladder pattern
-    ladderSerialPattern: /^(0{0,8}1{0,8}2{0,8}3{0,8}4{0,8}5{0,8}6{0,8}7{0,8}|9{0,8}8{0,8}7{0,8}6{0,8}5{0,8}4{0,8}3{0,8}2{0,8})$/,
-  
-    // ... (continue with other patterns)
+    ladderSerialPattern: /^(?:(\d)\1*([^\1]\1*))*$|^(0123456789|9876543210)$/,
   
     // Example: Check if a serial number matches the binary radar pattern
     isBinaryRadarSerial: /^(?:(\d)\1*([^\1]\1*))*$|^([01]+)$/,
