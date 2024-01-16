@@ -277,4 +277,7 @@ async function extractDenominationAndSerial(textDetections) {
   };
 }
 
+detectText('./testing/test_images/IMG_2421.jpg', './output.json')
+
+
 module.exports = detectText;

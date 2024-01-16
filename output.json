@@ -1,4 +1,4 @@
-{
+[{
   "Denomination": "10",
   "SerialNumber": "PA 33831008 A",
   "SeriesYear": "2017A",
@@ -7,4 +7,14 @@
   "federalReserveIndicator": "A1",
   "notePosition": "B 2",
   "frontPlateNumber": "B 32"
-}
+},
+{
+  "Denomination": "20",
+  "SerialNumber": "IE79298491C",
+  "SeriesYear": "2006",
+  "Treasurer": "Cabral",
+  "Secretary": "Paulson",
+  "federalReserveIndicator": "E5",
+  "notePosition": "E2",
+  "frontPlateNumber": "E 175"
+}]
