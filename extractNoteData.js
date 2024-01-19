@@ -1,8 +1,6 @@
 const { readFileSync, writeFileSync } = require("fs");
-const {
-  RekognitionClient,
-  DetectTextCommand,
-} = require("@aws-sdk/client-rekognition");
+const { serialNumberPatterns, noteValidators } = require('./serialPatterns')
+const { RekognitionClient, DetectTextCommand } = require("@aws-sdk/client-rekognition");
 const fs = require("fs");
 
 const rekognition = new RekognitionClient({ region: "us-east-1" }); // Replace with your AWS region
@@ -125,6 +123,8 @@ async function detectText(imagePath, outputJsonPath) {
       /^(?:FW\s*)?[A-J]\s*\d{1,3}$/,
     ];
 
+
+
     const { denomination, serialNumber } = await extractDenominationAndSerial(
       response.TextDetections
     );
@@ -142,7 +142,7 @@ async function detectText(imagePath, outputJsonPath) {
         text.DetectedText.toUpperCase()
       ).split();
 
-      for (const word of detectedWords) {
+      for (const word of Object.values(noteValidators)) {
         let foundMatchingPatternForWord = false;
 
         for (const regex of regexPatterns) {
@@ -277,7 +277,7 @@ async function extractDenominationAndSerial(textDetections) {
   };
 }
 
-detectText('./testing/test_images/IMG_2421.jpg', './output.json')
+detectText('./testing/test_images/IMG_2406.jpg', './output.json')
 
 
 module.exports = detectText;

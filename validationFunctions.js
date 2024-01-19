@@ -1,4 +1,4 @@
-function countDigitInstances(number) {
+function sevenOfAKind(number) {
     const digitCounts = {};
       let pattern;
   
@@ -21,6 +21,7 @@ function countDigitInstances(number) {
     return pattern;
   }
   
-  // Example usage
-  console.log(countDigitInstances("5535555"));
+// console.log(sevenOfAKind("5535555"));
+  
+module.exports = { sevenOfAKind };
   
