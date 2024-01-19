@@ -56,7 +56,7 @@ const serialNumberPatterns = {
   // Example: '01010101'
 
   // Example: Check if a serial number contains the number 420
-  containsNumber420Pattern: /^(\d*420\d*|\d*420|\d*420\d*)$/,
+  containsNumber420Pattern: /^(?:[A-Q]\s?[A-L]?\s?|\s)?(\d*420\d*)(?:\s?[A-Q])?$/,
 };
 
 // serialPatterns.js
@@ -71,10 +71,10 @@ const noteValidators = {
   federalReserveId: /^([A-L)])[[:blank:]]?(?:[1-9]|1[0-2])$/,
 
   // Checks that note position has a Letter ranging from A-J followed by any number from ranging 1-5
-  notePositionIdentId: /^([A-J)])[[:blank:]]?[1-5]$/,
+  notePositionId: /^([A-J)])[[:blank:]]?[1-5]$/,
   // Examples- 'F3,B2,H 2' 
 
-  frontPlateNumber: /^FW?[[:blank:]]?([A-J])[[:blank:]]?(\d{1,4})$/,
+  frontPlateId: /^(FW)?[[:blank:]]?([A-J])[[:blank:]]?(\d{1,4})$/,
   // Examples - 'FW A 1, B2, E 5, FW L 122, FW B999'
 
   validDenomination: /^1|2|5|10|20|50|100$/,

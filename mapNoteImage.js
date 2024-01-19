@@ -6,7 +6,7 @@ async function annotateImage(pathToSavedImage) {
   try {
     const imageBuffer = await sharp(pathToSavedImage).toBuffer();
     const metadata = await sharp(imageBuffer).metadata();
-    const noteData = await detectText("./testing/test_images/IMG_2421.jpg", outputPath);
+    const noteData = await detectText("./testing/test_images/IMG_2426.jpg", outputPath);
 
     if (!noteData || !Array.isArray(noteData)) {
       throw new Error("Note data is not in the expected format or is empty.");
@@ -103,7 +103,7 @@ async function annotateImage(pathToSavedImage) {
   }
 }
 
-annotateImage("./testing/test_images/IMG_2421.jpg")
+annotateImage("./testing/test_images/IMG_2426.jpg")
   .then((annotatedBuffer) => {
     sharp(annotatedBuffer).toFile("./annotated_image.jpg");
   })
