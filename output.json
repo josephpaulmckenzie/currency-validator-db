@@ -9,3 +9,63 @@
   "frontPlateNumber": "G 206",
   "uniqueSerialNumberType": "Detected a 420 note"
 }
+{
+  "Denomination": "5",
+  "SerialNumber": "MD 24206830 C",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "D4",
+  "notePosition": "B4",
+  "frontPlateNumber": "B 214",
+  "backPlateNumber": "265"
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "5",
+  "SerialNumber": "MG 52434206D",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "G7",
+  "notePosition": "",
+  "frontPlateNumber": "",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "5",
+  "SerialNumber": "MG 52434206D",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "G7",
+  "notePosition": "",
+  "frontPlateNumber": "",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "5",
+  "SerialNumber": "MG 52434206D",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "G7",
+  "notePosition": "",
+  "frontPlateNumber": "",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "10",
+  "SerialNumber": "PA 33831008 A",
+  "SeriesYear": "2017A",
+  "Treasurer": "Carranza",
+  "Secretary": "Mnuchin",
+  "federalReserveIndicator": "A1",
+  "notePosition": "B 2",
+  "frontPlateNumber": "B 32"
+}{
+  "Denomination": "10",
+  "SerialNumber": "PA 33831008 A",
+  "SeriesYear": "2017A",
+  "Treasurer": "Carranza",
+  "Secretary": "Mnuchin",
+  "federalReserveIndicator": "A1",
+  "notePosition": "B 2",
+  "frontPlateNumber": "B 32"
+}

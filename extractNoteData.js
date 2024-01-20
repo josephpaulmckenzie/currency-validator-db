@@ -2,7 +2,6 @@ const { readFileSync, writeFileSync, appendFileSync, existsSync } = require('fs'
 const { serialNumberPatterns, noteValidators } = require('./serialPatterns');
 const { RekognitionClient, DetectTextCommand } = require('@aws-sdk/client-rekognition');
 
-
 const rekognition = new RekognitionClient({ region: 'us-east-1' }); // Replace with your AWS region
 
 // Replace Cyrillic characters with English equivalents
@@ -13,26 +12,51 @@ function replaceCyrillic(text) {
 		В: 'B',
 	};
 
-	const replacedText = text.replace(/[а-яА-Я]/g, (match) => cyrillicToEnglishMap[match] || match);
-	return replacedText;
+	return text.replace(/[а-яА-Я]/g, (match) => cyrillicToEnglishMap[match] || match);
 }
 
-// Create mappings from our mapping_data file to obtain secetary and treasurer and series year based off the series letter and denomanation
-function createSerialNumberMappings(filePath) {
+function checkFileExists(filePath) {
 	try {
 		if (!existsSync(filePath)) {
-			throw {
-				status: 400,
-				error: 'File does not exist.',
-				inputDetails: {
-					filePath,
-				},
-				validator: 'fileExistence',
-			};
+			throw new Error('File does not exist.');
 		}
+	} catch (error) {
+		throw {
+			status: 400,
+			error: error.message,
+			inputDetails: {
+				filePath,
+			},
+			validator: 'Check existence of file',
+		};
+	}
+}
 
-		const mappingData = readFileSync(filePath, 'utf8');
-		const lines = mappingData.split('\n');
+function readFile(filePath) {
+	try {
+		checkFileExists(filePath);
+		return readFileSync(filePath, 'utf8');
+	} catch (error) {
+		throw {
+			status: 400,
+			error: `Error reading file: ${error.message}`,
+			inputDetails: {
+				filePath,
+			},
+			validator: 'fileExistence',
+		};
+	}
+}
+
+// Create mappings using both the denomination as well as the series letter from the serial number
+function createSerialNumberMappings(filePath) {
+	try {
+		// const mappingData = readFile(filePath);
+		// const lines = mappingData.split('\n');
+
+		// Using inline vaariables instead - I wanted to give an example of how they did look not using them and how they do using them.
+		// Like pemas in math at school
+		const lines = readFile(filePath).split('\n');
 		const serialNumberMappings = {};
 
 		lines.forEach((line) => {
@@ -70,13 +94,11 @@ function createSerialNumberMappings(filePath) {
 
 // Get additional details based on denomination and serial number
 function getAdditonalDetails(denomination, serialNumber) {
-	let prefixLetter;
-
 	try {
 		if (denomination) {
-			// Get the prefix letter from serial number
-			prefixLetter = serialNumber.charAt(0);
-			const matchedDetail = denomination.find((detail) => detail.pattern.test(prefixLetter));
+			const matchedDetail = denomination.find((detail) => {
+				return detail.pattern.test(serialNumber.charAt(0));
+			});
 
 			if (matchedDetail) {
 				return {
@@ -96,7 +118,7 @@ function getAdditonalDetails(denomination, serialNumber) {
 	}
 }
 
-// Detects text in an image and tests and verify the results found are at least in expected format
+// Detects text in an image and tests and verifies the results found are at least in expected format
 async function detectText(imagePath, outputJsonPath) {
 	try {
 		let additonalDetails;
@@ -219,11 +241,14 @@ async function detectText(imagePath, outputJsonPath) {
 
 			// Check if the detected text matches the noste position pattern
 			if (notePositionRegex.test(detectedText)) {
+				console.log('notePosition', detectedText);
 				// Check if the detected text is not equal to federalReserveIndicator
 				if (detectedText !== formattedData[key].federalReserveIndicator) {
 					// If it's not equal, then update the notePosition
 					formattedData[key].notePosition = detectedText;
 				}
+			} else {
+				// else check if it matches any other patterns that'll help us ensure the odd formats on some notes are accounted for too
 			}
 
 			if (frontPlateNumberRegex.test(detectedText.replace(/\s/g, ''))) {
@@ -251,18 +276,22 @@ async function extractDenominationAndSerial(textDetections) {
 	let detectedDenomination;
 	let detectedSerialNumber;
 
-	for (const text of textDetections) {
-		const denominationMatch = text.DetectedText.match(/\b(1|2|5|10|20|50|100)\b/);
-		const serialNumberMatch = text.DetectedText.match(/^([A-Q]\s?[A-L]?|[A-L])\s?(\d{8})\s?([A-L*])$/);
+	try {
+		for (const text of textDetections) {
+			// Checks for valid denominations ($1,$2,$5,$10,$20,$50,$100)
+			const denominationMatch = text.DetectedText.match(/\b(1|2|5|10|20|50|100)\b/);
+			// Makes sure that the serial number came back as a valid patter. 1-2 Letters followed by 8 digits follwed by 1 Letter (or a star)
+			const serialNumberMatch = text.DetectedText.match(/^([A-Q]\s?[A-L]?|[A-L])\s?(\d{8})\s?([A-L*])$/);
 
-		if (denominationMatch) {
-			detectedDenomination = denominationMatch[0];
-		}
+			if (denominationMatch) {
+				detectedDenomination = denominationMatch[0];
+			}
 
-		if (serialNumberMatch) {
-			detectedSerialNumber = serialNumberMatch[0];
+			if (serialNumberMatch) {
+				detectedSerialNumber = serialNumberMatch[0];
+			}
 		}
-	}
+	} catch (error) {}
 
 	return {
 		denomination: detectedDenomination,
@@ -270,6 +299,6 @@ async function extractDenominationAndSerial(textDetections) {
 	};
 }
 
-detectText('./testing/test_images/MG52.jpg', './output.json');
+detectText('./testing/test_images/IMG_2359.jpg', './output.json');
 
 module.exports = detectText;

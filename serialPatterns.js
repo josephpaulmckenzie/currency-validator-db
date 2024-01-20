@@ -40,7 +40,7 @@ const serialNumberPatterns = {
 
   // Seven-Of-A-Kind - In a seven-of-a-kind serial number, seven digits are all the same.
   
-  // isSevenOfAKindSerialPattern: sevenOfAKind("11212211"),
+  isSevenOfAKindSerialPattern: /(\d)(?:.*?\1){6}/,
   // Example: '11112111'
 
   // Seven-In-A-Row - In a seven-in-a-row serial number, seven consecutive digits are all the same.
