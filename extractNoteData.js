@@ -1,6 +1,7 @@
 const { readFileSync, writeFileSync, appendFileSync, existsSync } = require('fs');
 const { serialNumberPatterns, noteValidators } = require('./serialPatterns');
 const { RekognitionClient, DetectTextCommand } = require('@aws-sdk/client-rekognition');
+const { Console } = require('console');
 
 const rekognition = new RekognitionClient({ region: 'us-east-1' }); // Replace with your AWS region
 
@@ -239,17 +240,17 @@ async function detectText(imagePath, outputJsonPath) {
 				}
 			}
 
-			// Check if the detected text matches the noste position pattern
-			if (notePositionRegex.test(detectedText)) {
-				console.log('notePosition', detectedText);
-				// Check if the detected text is not equal to federalReserveIndicator
-				if (detectedText !== formattedData[key].federalReserveIndicator) {
-					// If it's not equal, then update the notePosition
-					formattedData[key].notePosition = detectedText;
-				}
-			} else {
-				// else check if it matches any other patterns that'll help us ensure the odd formats on some notes are accounted for too
-			}
+	// Check if the detected text matches the note position pattern
+if (notePositionRegex.test(detectedText.replace(/[I.]/g, '1'))) {
+  // Check if the detected text is not equal to federalReserveIndicator
+  if (detectedText !== formattedData[key].federalReserveIndicator) {
+    // If it's not equal, then update the notePosition
+    formattedData[key].notePosition = detectedText.replace(/[I.]/g, '1');
+  }
+} else {
+  // else check if it matches any other patterns that'll help us ensure the odd formats on some notes are accounted for too
+}
+
 
 			if (frontPlateNumberRegex.test(detectedText.replace(/\s/g, ''))) {
 				if (detectedText !== formattedData[key].notePosition && detectedText !== formattedData[key].federalReserveIndicator) {
@@ -277,21 +278,24 @@ async function extractDenominationAndSerial(textDetections) {
 	let detectedSerialNumber;
 
 	try {
-		for (const text of textDetections) {
-			// Checks for valid denominations ($1,$2,$5,$10,$20,$50,$100)
-			const denominationMatch = text.DetectedText.match(/\b(1|2|5|10|20|50|100)\b/);
-			// Makes sure that the serial number came back as a valid patter. 1-2 Letters followed by 8 digits follwed by 1 Letter (or a star)
+    for (const text of textDetections) {
+      // console.log(text)
+			// Checks for valid denominations ($1,$2,$5,$10,$20,$50,$100) * without the $ sign *
+      const denominationMatch = text.DetectedText.match(/^(1|2|5|10|20|50|100)$/);
+			// Makes sure that the serial number came back as a valid pattern. 1-2 Letters followed by 8 digits follwed by 1 Letter (or a star)
 			const serialNumberMatch = text.DetectedText.match(/^([A-Q]\s?[A-L]?|[A-L])\s?(\d{8})\s?([A-L*])$/);
 
-			if (denominationMatch) {
+      if (denominationMatch) {
 				detectedDenomination = denominationMatch[0];
 			}
 
-			if (serialNumberMatch) {
+      if (serialNumberMatch) {
 				detectedSerialNumber = serialNumberMatch[0];
 			}
 		}
-	} catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 
 	return {
 		denomination: detectedDenomination,
@@ -299,6 +303,6 @@ async function extractDenominationAndSerial(textDetections) {
 	};
 }
 
-detectText('./testing/test_images/IMG_2359.jpg', './output.json');
+// detectText('./testing/test_images/IMG_2461.jpg', './output.json');
 
 module.exports = detectText;
