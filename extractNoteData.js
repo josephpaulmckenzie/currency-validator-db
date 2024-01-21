@@ -262,7 +262,7 @@ if (notePositionRegex.test(detectedText.replace(/[I.]/g, '1'))) {
 		const resultArray = Object.values(formattedData);
 		console.log(JSON.stringify(resultArray[0]));
 
-		// Appends the results to the output JSON file
+		// Appends the results to the output JSON files
 		appendFileSync(outputJsonPath, JSON.stringify(resultArray[0], null, 2));
 
 		return detectedTextData;
