@@ -1,18 +1,66 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>File Upload Form</title>
-</head>
-<body>
-  <h2>Upload a File</h2>
-  <form action="http://localhost:3000/upload" method="post" enctype="multipart/form-data">
-    <!-- Use 'multiple' to allow selection of multiple files -->
-    <input type="file" id="file" name="file" accept="image/*" multiple>
-    <br>
-    <button type="submit">Upload</button>
-  </form>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Currency Note Information</title>
+	</head>
+	<body>
+		<h1>Currency Note Information</h1>
+
+		<form id="currencyForm" enctype="multipart/form-data">
+			<label for="fileInput">Choose a file:</label>
+			<input type="file" id="fileInput" name="file" accept=".jpg, .jpeg, .png" required />
+
+			<button type="submit">Submit</button>
+		</form>
+
+		<div>
+			<h2>Detected Information:</h2>
+			<p>Denomination: $<span id="denomination"></span></p>
+			<p>Serial Number: <span id="serialNumber"></span></p>
+			<p>Series Year: <span id="seriesYear"></span></p>
+			<p>Treasurer: <span id="treasurer"></span></p>
+			<p>Secretary: <span id="secretary"></span></p>
+			<p>Federal Reserve Indicator: <span id="federalReserveIndicator"></span></p>
+			<p>Note Position: <span id="notePosition"></span></p>
+			<p>Front Plate Number: <span id="frontPlateNumber"></span></p>
+			<p>Serial Number Type: <span id="serialNumberType"></span></p>
+		</div>
+
+		<script>
+			// Handle form submission and update input fields
+			document.getElementById('currencyForm').addEventListener('submit', async (event) => {
+				event.preventDefault();
+
+				const formData = new FormData();
+				formData.append('file', document.getElementById('fileInput').files[0]);
+
+				// Get Note data fom the backend
+				const response = await fetch('/upload', {
+					method: 'POST',
+					body: formData,
+				});
+
+				if (response.ok) {
+					const { detectedTextData } = await response.json();
+					console.log('detectedTextData', detectedTextData.Denomination);
+
+					document.getElementById('denomination').textContent = detectedTextData.Denomination || '';
+					document.getElementById('serialNumber').textContent = detectedTextData.SerialNumber || '';
+					document.getElementById('seriesYear').textContent = detectedTextData.SeriesYear || '';
+					document.getElementById('treasurer').textContent = detectedTextData.Treasurer || '';
+					document.getElementById('secretary').textContent = detectedTextData.Secretary || '';
+					document.getElementById('federalReserveIndicator').textContent = detectedTextData.federalReserveIndicator || '';
+					document.getElementById('notePosition').textContent = detectedTextData.notePosition || '';
+					document.getElementById('frontPlateNumber').textContent = detectedTextData.frontPlateNumber || '';
+					document.getElementById('serialNumberType').textContent = detectedTextData.uniqueSerialNumberType || '';
+
+					// window.location.href = '/';
+				} else {
+					console.error('Error fetching detected text data');
+				}
+			});
+		</script>
+	</body>
 </html>

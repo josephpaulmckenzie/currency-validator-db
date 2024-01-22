@@ -1,43 +1,12 @@
 {
-  "Denomination": "5",
-  "SerialNumber": "MG 52434206D",
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
   "SeriesYear": "2013",
   "Treasurer": "Rios",
   "Secretary": "Lew",
-  "federalReserveIndicator": "G7",
-  "notePosition": "G1",
-  "frontPlateNumber": "G 206",
-  "uniqueSerialNumberType": "Detected a 420 note"
-}
-{
-  "Denomination": "5",
-  "SerialNumber": "MD 24206830 C",
-  "SeriesYear": "2013",
-  "Treasurer": "Rios",
-  "Secretary": "Lew",
-  "federalReserveIndicator": "D4",
-  "notePosition": "B4",
-  "frontPlateNumber": "B 214",
-  "backPlateNumber": "265"
-  "uniqueSerialNumberType": "Detected a 420 note"
-}{
-  "Denomination": "10",
-  "SerialNumber": "PA 33831008 A",
-  "SeriesYear": "2017A",
-  "Treasurer": "Carranza",
-  "Secretary": "Mnuchin",
-  "federalReserveIndicator": "A1",
-  "notePosition": "B 2",
-  "frontPlateNumber": "B 32"
-}{
-  "Denomination": "10",
-  "SerialNumber": "NG 18714205 A",
-  "SeriesYear": "2017",
-  "Treasurer": "Carranza",
-  "Secretary": "Mnuchin",
-  "federalReserveIndicator": "G7",
-  "notePosition": "F4",
-  "frontPlateNumber": "FW F 20",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
   "uniqueSerialNumberType": "Detected a 420 note"
 }{
   "Denomination": "20",
@@ -51,22 +20,202 @@
   "uniqueSerialNumberType": "Detected a 420 note"
 }{
   "Denomination": "20",
-  "SerialNumber": "PL 30420760B",
-  "SeriesYear": "2017A",
-  "Treasurer": "Carranza",
-  "Secretary": "Mnuchin",
-  "federalReserveIndicator": "L12",
-  "notePosition": "A1",
-  "frontPlateNumber": "FW A 14",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
   "uniqueSerialNumberType": "Detected a 420 note"
 }{
   "Denomination": "20",
-  "SerialNumber": "PK 84201628 A",
-  "SeriesYear": "2017A",
-  "Treasurer": "Carranza",
-  "Secretary": "Mnuchin",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
   "federalReserveIndicator": "K11",
-  "notePosition": "F1",
-  "frontPlateNumber": "",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
+  "uniqueSerialNumberType": "Detected a 420 note"
+}{
+  "Denomination": "20",
+  "SerialNumber": "MK 07304200B",
+  "SeriesYear": "2013",
+  "Treasurer": "Rios",
+  "Secretary": "Lew",
+  "federalReserveIndicator": "K11",
+  "notePosition": "E1",
+  "frontPlateNumber": "FW E 34",
   "uniqueSerialNumberType": "Detected a 420 note"
 }
