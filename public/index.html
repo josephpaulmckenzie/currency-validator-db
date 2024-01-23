@@ -30,6 +30,8 @@
       <p>Treasurer: <span id="treasurer"></span></p>
       <p>Secretary: <span id="secretary"></span></p>
       <p>Federal Reserve Indicator: <span id="federalReserveIndicator"></span></p>
+      <p>Federal Reserve Bank: <span id="federalReserveBank"></span></p>
+
       <p>Note Position: <span id="notePosition"></span></p>
       <p>Front Plate Number: <span id="frontPlateNumber"></span></p>
       <p>Serial Number Type: <span id="serialNumberType"></span></p>
@@ -62,22 +64,19 @@
   console.error('Error fetching detected text data');
 }
       });
-
 // Function to toggle image size on click
 function toggleImageSize() {
   const uploadedImage = document.getElementById('uploadedImage');
-  const isLarge = uploadedImage.style.width === '10%';
+  const currentWidth = uploadedImage.style.width;
 
-  if (isLarge) {
-    uploadedImage.style.width = '10%';
-    uploadedImage.style.maxWidth = '10%';
-  } else {
+  if (currentWidth === '10%') {
     uploadedImage.style.width = '70%';
     uploadedImage.style.maxWidth = '70%';
-
+  } else {
+    uploadedImage.style.width = '10%';
+    uploadedImage.style.maxWidth = '10%';
   }
 }
-
 
       // Function to update detected information
       function updateDetectedInfo(detectedTextData) {
@@ -86,8 +85,8 @@ function toggleImageSize() {
         document.getElementById('seriesYear').textContent = detectedTextData.SeriesYear || '';
         document.getElementById('treasurer').textContent = detectedTextData.Treasurer || '';
         document.getElementById('secretary').textContent = detectedTextData.Secretary || '';
-        document.getElementById('federalReserveIndicator').textContent =
-          detectedTextData.federalReserveIndicator || '';
+        document.getElementById('federalReserveIndicator').textContent = detectedTextData.federalReserveIndicator || '';
+        document.getElementById('federalReserveBank').textContent =  detectedTextData.federalReserveBank || '';
         document.getElementById('notePosition').textContent = detectedTextData.notePosition || '';
         document.getElementById('frontPlateNumber').textContent = detectedTextData.frontPlateNumber || '';
         document.getElementById('serialNumberType').textContent = detectedTextData.uniqueSerialNumberType || '';

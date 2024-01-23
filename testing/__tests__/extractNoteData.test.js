@@ -10,10 +10,12 @@ describe("validateData Lambda Function", () => {
                 denomination: "$20",
                 serialNumber: "PC78646654A",
                 federalReserveIndicator: "C3",
+                federalReserveBank:'Philadelphia, PA',
                 notePosition: "B2",
                 frontPlateNumber: "B38",
                 backPlateNumber: "47",
-                fortWorthNote: false
+                fortWorthNote: false,
+                
             }),
         };
     });
@@ -33,7 +35,7 @@ describe("validateData Lambda Function", () => {
         const updatedEvent = { ...event };
         updatedEvent.body = JSON.stringify({
             ...JSON.parse(updatedEvent.body),
-            denomination: "$500",
+            denomination: "$580",
         });
 
         const result = await lambdaHandler.validateData(updatedEvent);
@@ -134,7 +136,7 @@ describe("validateData Lambda Function", () => {
         const updatedEvent = { ...event };
         updatedEvent.body = JSON.stringify({
             ...JSON.parse(updatedEvent.body),
-            backPlateNumber: "Joe",
+            backPlateNumber: "A23452",
         });
 
         const result = await lambdaHandler.validateData(updatedEvent);
@@ -147,4 +149,20 @@ describe("validateData Lambda Function", () => {
         expect(result).toMatchObject(invalidFrontPlateNumber);
     });
 
+    it("should return a matched pattern type for the serial number", async () => {
+        const updatedEvent = { ...event };
+        updatedEvent.body = JSON.stringify({
+            ...JSON.parse(updatedEvent.body),
+            uniqueSerialNumberType: 'Detected a 420 note',
+        });
+
+        const result = await lambdaHandler.validateData(updatedEvent);
+
+        // const invalidFrontPlateNumber = {
+        //     statusCode: 400,
+        //     body: "Invalid Back Plate Number Format.",
+        // };
+
+        // expect(result).toMatchObject(invalidFrontPlateNumber);
+    });
 });

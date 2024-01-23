@@ -189,6 +189,7 @@ async function detectText(imagePath, outputJsonPath) {
 					Treasurer: additonalDetails.treasurer,
 					Secretary: additonalDetails.secretary,
 					federalReserveIndicator: '',
+					federalReserveBank: '',
 					notePosition: '',
 					frontPlateNumber: '',
 				};
@@ -202,6 +203,20 @@ async function detectText(imagePath, outputJsonPath) {
 
 			if (federalReserveRegex.test(detectedText)) {
 				if (!formattedData[key].federalReserveIndicator) {
+					const federalReserveMapping = {
+						A1: 'Boston, MA',
+						B2: 'New York City, NY',
+						C3: 'Philadelphia, PA',
+						D4: 'Cleveland, OH',
+						E5: 'Richmond, VA',
+						F6: 'Atlanta, GA',
+						G7: 'Chicago, IL',
+						H8: 'St. Louis, MO',
+						I9: 'Minneapolis, ME',
+						J10: 'Kansas City, MO',
+						K11: 'Dallas, TX',
+						L12: 'San Francisco, CAs',
+					  };
 					const letterToNumberMapping = {
 						A: 1,
 						B: 2,
@@ -216,9 +231,14 @@ async function detectText(imagePath, outputJsonPath) {
 						K: 11,
 						L: 12,
 					};
+					
 					const letter = serialNumber.charAt(1);
 					const correspondingNumber = letterToNumberMapping[letter];
+					const matchingBank = federalReserveMapping[detectedText];
+
 					formattedData[key].federalReserveIndicator = `${letter}${correspondingNumber}`;
+					formattedData[key].federalReserveBank = matchingBank;
+
 				}
 			}
 			// Here it seems that a lot of times a number 1 will be detected as an 'I' or a '.' so we attemp to make it right

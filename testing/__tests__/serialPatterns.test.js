@@ -1,62 +1,62 @@
-// __tests__/serialPatterns.test.js
+const { serialNumberPatterns } = require("../../serialPatterns");
 
-const serialPatterns = require("../../serialPatterns");
+let coolSerialPatterns;
+
+beforeEach(() => {
+  coolSerialPatterns = {
+    serialNumber: "",
+    patternMatches: {
+      lowSerialNumber: false,
+      highSerialNumber: false,
+      ladderSerialNumber: false,
+      isBinaryRadarSerial: false,
+      isSevenInARowSerial: false,
+      isSevenOfAKindSerial: false,
+      isRepeaterRadarSerial: false,
+    },
+  };
+});
+
+function testSingleSerialNumber(serialNumber, patternName) {
+  const pattern = new RegExp(serialNumberPatterns[patternName]);
+  coolSerialPatterns.serialNumber = serialNumber;
+  const isMatch = pattern.test(serialNumber);
+  coolSerialPatterns.patternMatches[patternName] = isMatch;
+  return coolSerialPatterns;
+}
 
 describe("Serial Patterns Testing", () => {
-  let coolSerialPatterns;
-  let result;
-  beforeEach(() => {
-    coolSerialPatterns = {
-      serialNumber: "",
-      patternMatches: {
-        lowSerialNumber: false,
-        highSerialNumber: false,
-        ladderSerialNumber: false,
-        isBinaryRadarSerial: false,
-        isSevenInARowSerial: false,
-        isSevenOfAKindSerial: false,
-        isRepeaterRadarSerial: false,
-      },
-    };
-  });
-  function testSerialNumber(serialNumber, patternName) {
-    coolSerialPatterns.serialNumber = serialNumber;
+  describe("Single Serial Number Tests", () => {
+    it("should test serial numbers against lowSerialNumber pattern", () => {
+      let result = testSingleSerialNumber("00004567", "lowSerialNumberPattern");
+      expect(result.patternMatches.lowSerialNumberPattern).toBe(true);
+    });
 
-    const isMatch = serialPatterns[patternName].test(serialNumber);
-    coolSerialPatterns.patternMatches[patternName] = isMatch;
+    it("should test serial numbers that will not match lowSerialNumber pattern", () => {
+      let result = testSingleSerialNumber("99992345", "lowSerialNumberPattern");
+      expect(result.patternMatches.lowSerialNumberPattern).toBe(false);
+    });
 
-    return coolSerialPatterns;
-  }
+    it("should test serial numbers against highSerialNumber pattern", () => {
+      let result = testSingleSerialNumber("99999933", "highSerialNumberPattern");
+      expect(result.patternMatches.highSerialNumberPattern).toBe(true);
+    });
 
-  it("should test serial numbers against lowSerialNumber pattern", () => {
-    result = testSerialNumber("00004567", "lowSerialNumberPattern");
-    expect(result.patternMatches.lowSerialNumberPattern).toBe(true);
-  });
-
-  it("should test serial numbers against highSerialNumber pattern", () => {
-    result = testSerialNumber("99991234", "highSerialNumberPattern");
-    expect(result.patternMatches.highSerialNumberPattern).toBe(true);
-  });
-
-  const ladderPatterns = [
-    { serialNumber: "12345678", pattern: "ladderSerialPattern" },
-    { serialNumber: "87654321", pattern: "ladderSerialPattern" },
-    { serialNumber: "98765432", pattern: "ladderSerialPattern" },
-  ];
-
-  ladderPatterns.forEach(({ serialNumber, pattern }) => {
-    it(`should test the serial number ${serialNumber} agaisnt the ${pattern}`, () => {
-      const result = testSerialNumber(serialNumber, pattern);
-      expect(result.patternMatches[pattern]).toBe(true);
+    it("should test serial number dont match highSerialNumber pattern", () => {
+      let result = testSingleSerialNumber("12345678", "highSerialNumberPattern");
+      expect(result.patternMatches.highSerialNumberPattern).toBe(false);
     });
   });
 
-  it("should test serial numbers against binaryRadarSerial pattern", () => {
-    result = testSerialNumber("10101010", "isBinaryRadarSerialPattern");
-    expect(result.patternMatches.isBinaryRadarSerialPattern).toBe(true);
+  describe("Multiple Serial Numbers Tests", () => {
+    test.each([
+      ["12345678", "ladderSerialPattern"],
+      ["87654321", "ladderSerialPattern"],
+      ["10101010", "isBinaryRadarSerialPattern"],
+      // Add more test cases as needed
+    ])('should test the serial number %s against the %s', (serialNumber, pattern) => {
+      let result = testSingleSerialNumber(serialNumber, pattern);
+      expect(result.patternMatches[pattern]).toBe(true);
+    });
   });
-    
-    // it()
-
-  isBinaryRadarSerialPattern;
 });

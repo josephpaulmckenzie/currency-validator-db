@@ -5,11 +5,11 @@ const serialNumberPatterns = {
   
   // Example: Check if a serial number matches the low serial number pattern
   lowSerialNumberPattern:
-    /^[A-Q]?[A-L]?[[:blank:]]?0{4}\d{4,7}[[:blank:]]?[A-Q]?$/,
+  /^0{4}(\d{4})?$|^0{5}(\d{3})?$|^0{6}(\d{2})?$|^0{7}(\d{1})?$/,
 
   // Example: Check if a serial number matches the high serial number pattern
   highSerialNumberPattern:
-    /^[A-Q]?[A-L]?[[:blank:]]?9{4}\d{3,7}[[:blank:]]?[A-Q]?$/,
+  /^9{4}(\d{4})?$|^9{5}(\d{3})?$|^9{6}(\d{2})?$|^9{7}(\d{1})?$/,
 
   // Example: Check if a serial number matches the ladder pattern
   ladderSerialPattern: /^(?:(\d)\1*([^\1]\1*))*$|^(012345678|987654321)$/,
@@ -59,8 +59,6 @@ const serialNumberPatterns = {
   containsNumber420Pattern: /^(?:[A-Q]\s?[A-L]?\s?|\s)?(\d*420\d*)(?:\s?[A-Q])?$/,
 };
 
-// serialPatterns.js
-
 const noteValidators = {
 
   // Valid Serial Number Pattern - Check if a serial number matches the serial number pattern(s)
@@ -68,10 +66,10 @@ const noteValidators = {
   // Examples: 'AB12345678C,AB 12345678 C, PA42003287 D, LD 56709823E'
 
   // Makes Sure that the federal reserve ID is in the correct format(s).
-  federalReserveId: /^([A-L)])[[:blank:]]?(?:[1-9]|1[0-2])$/,
+  federalReserveId: /^([A-L])[[:blank:]]?(?:[1-9]|1[0-2])$/,
 
   // Checks that note position has a Letter ranging from A-J followed by any number from ranging 1-5
-  notePositionId: /^([A-J)])[[:blank:]]?[1-5]$/,
+  notePositionId: /^([A-J])[[:blank:]]?[1-5]$/,
   // Examples- 'F3,B2,H 2' 
 
   frontPlateId: /^(FW)?[[:blank:]]?([A-J])[[:blank:]]?(\d{1,4})$/,
