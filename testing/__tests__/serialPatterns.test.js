@@ -48,6 +48,8 @@ describe("Serial Patterns Testing", () => {
     });
   });
 
+// I reckon we will do a multiple pattern(s) test to ensure that we can test multiple serials at the same go. 
+
   describe("Multiple Serial Numbers Tests", () => {
     test.each([
       ["12345678", "ladderSerialPattern"],
