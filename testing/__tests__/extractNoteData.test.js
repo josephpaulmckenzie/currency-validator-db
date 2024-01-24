@@ -132,7 +132,7 @@ describe("validateData Lambda Function", () => {
         expect(result).toMatchObject(invalidFrontPlateNumber);
     });
 
-    it("should throw an error on an invalid front plate number", async () => {
+    it("should throw an error on an invalid back plate number", async () => {
         const updatedEvent = { ...event };
         updatedEvent.body = JSON.stringify({
             ...JSON.parse(updatedEvent.body),
@@ -141,12 +141,12 @@ describe("validateData Lambda Function", () => {
 
         const result = await lambdaHandler.validateData(updatedEvent);
 
-        const invalidFrontPlateNumber = {
+        const invalidBackPlateNumber = {
             statusCode: 400,
             body: "Invalid Back Plate Number Format.",
         };
 
-        expect(result).toMatchObject(invalidFrontPlateNumber);
+        expect(result).toMatchObject(invalidBackPlateNumber);
     });
 
     it("should return a matched pattern type for the serial number", async () => {
