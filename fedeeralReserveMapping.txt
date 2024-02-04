@@ -1,6 +1,0 @@
-
-INDICATOR	BANK	INDICATOR	BANK	INDICATOR	BANK
-A1	Boston	E5	Richmond	I9	Minneapolis
-B2	New York City	F6	Atlanta	J10	Kansas City, MO
-C3	Philadelphia	G7	Chicago	K11	Dallas
-D4	Cleveland	H8	St. Louis	L12	San Francisco

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        form div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style for the preview image container */
+        .preview-container {
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: auto; /* Set container height to auto */
+        }
+
+        /* Style for the preview image */
+        #previewImage {
+            max-width: 100%; /* Set maximum width to 100% of container width */
+            max-height: 90vh; /* Set maximum height to 90% of viewport height */
+            border: 1px solid #ccc; /* Add a border for visual clarity */
+            border-radius: 4px; /* Add border-radius for rounded corners */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        /* Style for the enlarged image overlay */
+        #enlargedImage {
+            display: none; /* Initially hide the enlarged image */
+            position: fixed; /* Position the enlarged image fixed to the viewport */
+            top: 0;
+            left: 0;
+            width: 100%; /* Make the enlarged image take up the full width of the viewport */
+            height: 100%; /* Make the enlarged image take up the full height of the viewport */
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+            z-index: 9999; /* Set z-index to ensure it appears above other elements */
+            text-align: center; /* Center the image horizontally and vertically */
+            overflow: auto; /* Allow scrolling if the image is larger than the viewport */
+        }
+
+        /* Style for the enlarged image itself */
+        #enlargedImage img {
+            margin: 20px auto; /* Add some margin for visual appeal */
+            max-width: 90%; /* Limit the maximum width of the enlarged image */
+            max-height: 90%; /* Limit the maximum height of the enlarged image */
+        }
+
+        /* Style for the close button */
+        #closeBtn {
+            position: absolute; /* Position the close button relative to its containing div */
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Successful</h1>
+        <h2>Edit Response Data:</h2>
+        <form id="dataForm">
+            <div class="preview-container">
+                <!-- Image element displaying the preview image -->
+                <img id="previewImage" src="<%= dataURL %>" alt="Preview Image">
+            </div>
+
+            <div id="enlargedImage">
+                <span id="closeBtn">&times;</span> <!-- Close button -->
+                <img id="enlargedImg" src="" alt="Enlarged Image">
+            </div>
+
+            <!-- Form fields for editing response data -->
+            <div>
+                <label for="validDenomination">Valid Denomination:</label>
+                <input type="text" id="validDenomination" name="validDenomination" value="<%= result.validDenomination %>">
+            </div>
+            <div>
+                <label for="frontPlateId">Front Plate ID:</label>
+                <input type="text" id="frontPlateId" name="frontPlateId" value="<%= result.frontPlateId %>">
+            </div>
+            <div>
+                <label for="SerialPatternMatch">Serial Pattern Match:</label>
+                <input type="text" id="SerialPatternMatch" name="SerialPatternMatch" value="<%= result.SerialPatternMatch %>">
+            </div>
+            <div>
+                <label for="serialNumber">Serial Number:</label>
+                <input type="text" id="serialNumber" name="serialNumber" value="<%= result.serialNumber %>">
+            </div>
+            <div>
+                <label for="federalReserveId">Federal Reserve ID:</label>
+                <input type="text" id="federalReserveId" name="federalReserveId" value="<%= result.federalReserveId %>">
+            </div>
+            <div>
+                <label for="federalReserveLocation">Federal Reserve Location:</label>
+                <input type="text" id="federalReserveLocation" name="federalReserveLocation" value="<%= result.federalReserveLocation %>">
+            </div>
+            <div>
+                <label for="notePositionId">Note Position Id:</label>
+                <input type="text" id="notePositionId" name="notePositionId" value="<%= result.notePositionId %>">
+            </div>
+            <div>
+                <label for="seriesYear">Series Year:</label>
+                <input type="text" id="seriesYear" name="seriesYear" value="<%= result.seriesYear %>">
+            </div>
+            <div>
+                <label for="Treasurer">Treasurer:</label>
+                <input type="text" id="treasurer" name="treasurer" value="<%= result.treasurer %>">
+            </div>
+            <div>
+                <label for="secretary">Secretary:</label>
+                <input type="text" id="secretary" name="secretary" value="<%= result.secretary %>">
+            </div>>
+
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        // Get references to the preview image and the enlarged image overlay
+        const previewImage = document.getElementById('previewImage');
+        const enlargedImage = document.getElementById('enlargedImage');
+        const enlargedImg = document.getElementById('enlargedImg');
+        const closeBtn = document.getElementById('closeBtn');
+    
+        // Add event listener to the preview image to toggle the enlarged image overlay
+        previewImage.addEventListener('click', () => {
+            if (enlargedImage.style.display === 'block') {
+                enlargedImage.style.display = 'none'; // Hide the enlarged image overlay
+            } else {
+                enlargedImg.src = previewImage.src; // Set the source of the enlarged image
+                enlargedImage.style.display = 'block'; // Show the enlarged image overlay
+            }
+        });
+    
+        // Add event listener to the enlarged image to revert it back to the preview size when clicked
+        enlargedImage.addEventListener('click', () => {
+            enlargedImage.style.display = 'none'; // Hide the enlarged image overlay
+        });
+    
+        // Add event listener to the close button to hide the enlarged image overlay
+        closeBtn.addEventListener('click', () => {
+            enlargedImage.style.display = 'none'; // Hide the enlarged image overlay
+        });
+    </script>
+    
+</body>
+</html>
