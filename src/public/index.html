@@ -1,52 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Image</title>
-</head>
-<body>
-    <h1>Upload Image</h1>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" id="fileInput" accept="image/*">
-        <button type="submit">Upload</button>
-    </form>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Upload Image</title>
+	</head>
+	<body>
+		<h1>Upload Image</h1>
+		<form id="uploadForm" enctype="multipart/form-data">
+			<input type="file" id="fileInput" accept="image/*" />
+			<button type="submit">Upload</button>
+		</form>
 
-    <script>
-        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+		<script>
+			document.getElementById('uploadForm').addEventListener('submit', async function (event) {
+				// Stops you from being able to hit submit until eiter a picture is taken or a photo is selected from a saved file.
+				event.preventDefault();
 
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+				const fileInput = document.getElementById('fileInput');
+				const file = fileInput.files[0];
 
-            if (!file) {
-                alert('Please select a file');
-                return;
-            }
+				// Photo hasn't been selected or taken yet.
+				if (!file) {
+					alert('Please select a file');
+					return;
+				}
 
-            const formData = new FormData();
-            formData.append('image', file);
-            try {
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
+				const formData = new FormData();
+				formData.append('image', file);
 
-                if (!response.ok) {
-                    throw new Error('Failed to upload image');
-                }
+				// Attempt to upload the chosen photo to our server
+				try {
+					const response = await fetch('/upload', {
+						method: 'POST',
+						body: formData,
+					});
 
-                const responseData = await response.json();
-                console.log(responseData);
+					if (!response.ok) {
+						throw new Error('Failed to upload image');
+					}
 
-                // Redirect to a new page with the data
-                window.location.href = '/success'; // Adjust the URL as needed
+					try {
+						const responseData = await response.json();
+						console.log(responseData);
+					} catch (parseError) {
+						console.error('Error parsing response:', parseError);
+					}
 
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to upload image. Please try again.');
-            }
-        });
-    </script>
-</body>
+					window.location.href = '/success';
+				} catch (error) {
+					console.error('Error:', error);
+					alert('Failed to upload image. Please try again.');
+				}
+			});
+		</script>
+	</body>
 </html>

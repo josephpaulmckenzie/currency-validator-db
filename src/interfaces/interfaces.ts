@@ -44,6 +44,20 @@ interface DynamoDBItem {
   [key: string]: any;
 }
 
+interface result {
+  validDenomination: string;
+  frontPlateId: string;
+  SerialPatternMatch: string;
+  serialNumber: string;
+  federalReserveId: string;
+  federalReserveLocation: string;
+  notePositionId: string;
+  seriesYear: string;
+  treasurer: string;
+  secretary: string;
+  s3Url: String;
+};
+
 // Export all interfaces together
 export {
   RegExValidators,
@@ -53,4 +67,5 @@ export {
   MatchedDetail,
   DenominationDetail,
   DynamoDBItem,
+  result,
 };
