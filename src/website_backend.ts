@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import multer from 'multer'; // For handling file uploads
 import path from 'path';
 // import {getTextDetections} from '.';
-import fs from 'fs'; // Import the fs module
+import fs, { unlink } from 'fs'; // Import the fs module
 import {getTextDetections} from '.';
 
 const app = express();
@@ -40,6 +40,7 @@ let result: {
 let dataURL: string;
 let buffer: string | Buffer;
 const upload = multer({storage: storage});
+let fileName: string;
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
@@ -52,7 +53,6 @@ app.post(
   '/upload',
   upload.single('image'),
   async (req: Request, res: Response) => {
-    let fileName;
 
     try {
       if (!req.file) {
@@ -61,12 +61,8 @@ app.post(
       fileName = req.file.filename;
       const imagePath = req.file.path;
       buffer = fs.readFileSync(imagePath);
-// console.log('Filename',req.file.filename)
-      dataURL = `data:image/jpeg;base64,${buffer.toString('base64')}`;
-      //   const crop = await processImage(imagePath);
-      result = await getTextDetections(buffer,fileName);
-      
-      res.json({success: true, result, dataURL: dataURL});
+      dataURL = `data:image/jpeg;base64,${buffer.toString('base64')}`;      
+      res.json({success: true, dataURL: dataURL});
     } catch (error) {
       console.error('Error:', error);
       res.status(500).json({message: `Failed to upload image ${fileName}`});
@@ -74,11 +70,13 @@ app.post(
   }
 );
 
-app.get('/success', (req: Request, res: Response) => {
-  // const {result} = req.query; // Access the result from query parameters
-
-  // You can now use the result data in the success route handler
-  res.render('success', {result: result, dataURL: dataURL}); // Parse the result string to JSON
+app.get('/success', async (req: Request, res: Response) => {
+  result = await getTextDetections(buffer,`uploads/${fileName}`);
+  unlink(`uploads/${fileName}`, (err) => {
+    if (err) throw err;
+    console.log(`uploads/${fileName} was deleted`);
+  }); 
+  res.render('success', {result: result, dataURL: dataURL}); 
 });
 
 // Start the server

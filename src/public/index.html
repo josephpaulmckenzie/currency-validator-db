@@ -8,7 +8,7 @@
 <body>
     <h1>Upload Image</h1>
     <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" id="fileInput" accept="image/*" capture="environment">
+        <input type="file" id="fileInput" accept="image/*">
         <button type="submit">Upload</button>
     </form>
 
@@ -27,26 +27,25 @@
             const formData = new FormData();
             formData.append('image', file);
             try {
-    const response = await fetch('/upload', {
-        method: 'POST',
-        body: formData
-    });
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
 
-    if (!response.ok) {
-        throw new Error('Failed to upload image');
-    }
+                if (!response.ok) {
+                    throw new Error('Failed to upload image');
+                }
 
-    const responseData = await response.json();
-    console.log(responseData);
+                const responseData = await response.json();
+                console.log(responseData);
 
-    // Redirect to a new page with the data
-    window.location.href = '/success'; // Adjust the URL as needed
+                // Redirect to a new page with the data
+                window.location.href = '/success'; // Adjust the URL as needed
 
-} catch (error) {
-    console.error('Error:', error);
-    alert('Failed to upload image. Please try again.');
-}
-
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to upload image. Please try again.');
+            }
         });
     </script>
 </body>
