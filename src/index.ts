@@ -1,3 +1,4 @@
+//index.ts
 import {
   RekognitionClient,
   DetectTextCommand,
@@ -5,13 +6,13 @@ import {
 } from '@aws-sdk/client-rekognition';
 
 import * as Interfaces from './interfaces/interfaces';
-import {uploadingToS3} from './s3Functions';
+import { uploadingToS3 } from './s3Functions';
 import {
   createSerialNumberMappings,
   federalReserveMapping,
 } from './additional_mapping';
 
-async function getTextDetections(imageData: string | Buffer) {
+async function getTextDetections(imageData: string | Buffer, fileName: string) {
   try {
     if (!imageData || imageData.length === 0) {
       throw new Error('Image data is empty or undefined.');
@@ -40,16 +41,8 @@ async function getTextDetections(imageData: string | Buffer) {
       throw new Error('No text detections found in the response.');
     }
 
-    const noteDetails = await checkRegexPatterns(response.TextDetections);
+    const noteDetails = await checkRegexPatterns(response.TextDetections, fileName );
 
-    const federalReserveId = noteDetails.federalReserveId;
-
-    if (federalReserveId && federalReserveMapping[federalReserveId]) {
-      noteDetails.federalReserveLocation =
-        federalReserveMapping[federalReserveId];
-    }
-
-    console.log('noteDetails', noteDetails);
     return noteDetails;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -93,11 +86,11 @@ function getAdditionalDetails(
     };
   }
 }
-
-async function checkRegexPatterns(textDetections: TextDetection[]) {
+async function checkRegexPatterns(textDetections: TextDetection[], fileName: string) {
   try {
     const matchedWordsHash: Record<string, string> = {};
 
+    // Iterate over each text detection
     for (const text of textDetections) {
       const detectedText = text.DetectedText?.replace(/ /g, '');
 
@@ -116,6 +109,8 @@ async function checkRegexPatterns(textDetections: TextDetection[]) {
 
           if (pattern.test(correctedText)) {
             matchedWordsHash['SerialPatternMatch'] = patternKey;
+            // You may want to break here if you only want to match against the first pattern
+            // break;
           }
         }
 
@@ -130,35 +125,50 @@ async function checkRegexPatterns(textDetections: TextDetection[]) {
       }
     }
 
+    // Get additional details based on matched patterns
     const denomination = matchedWordsHash.validDenomination;
     const serialNumber = matchedWordsHash.validSerialNumberPattern;
-
     const additionalDetails = getAdditionalDetails(
       createSerialNumberMappings('./mapping_data.txt')[`$${denomination}`],
       serialNumber
     );
 
-    const s3Url = await uploadingToS3({s3Url: '', serialNumber});
 
+ 
+    // Upload image to S3 and get the URL
+    // const s3Url = await uploadingToS3({ s3Url: '', serialNumber }, fileName);
+
+    // Construct details object to return
     const details = {
       validDenomination: matchedWordsHash.validDenomination,
       frontPlateId: matchedWordsHash.frontPlateId,
       SerialPatternMatch: matchedWordsHash.SerialPatternMatch,
       serialNumber: matchedWordsHash.validSerialNumberPattern,
       federalReserveId: matchedWordsHash.federalReserveId,
-      federalReserveLocation: '',
+      federalReserveLocation:'',
       notePositionId: matchedWordsHash.notePositionId,
       seriesYear: additionalDetails?.seriesYear,
       treasurer: additionalDetails?.treasurer,
       secretary: additionalDetails?.secretary,
-      s3Url: s3Url,
+      s3Url: '',
     };
+  
+   // const federalReserveId = noteDetails.federalReserveId;
+   if (matchedWordsHash.federalReserveId && federalReserveMapping[matchedWordsHash.federalReserveId]) {
+    details.federalReserveLocation =
+    federalReserveMapping[matchedWordsHash.federalReserveId];
+}
 
-    return details;
+
+    await uploadingToS3(details , fileName);
+
+
+    return details; // Return the constructed details object
   } catch (error) {
     throw new Error(`Error in checkRegexPatterns ${JSON.stringify(error)}`);
   }
 }
+
 
 function checkPotentialMistakenLetter(detectedText: string) {
   if (/[A-L]\s?[i]/.test(detectedText)) {

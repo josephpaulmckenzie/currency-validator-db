@@ -1,4 +1,6 @@
-import express, {Request, Response} from 'express';
+//website_backend.ts
+
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import multer from 'multer'; // For handling file uploads
 import path from 'path';
@@ -18,6 +20,10 @@ const storage = multer.diskStorage({
     cb(null, file.originalname); // Use the original filename
   },
 });
+
+
+
+
 let result: {
   validDenomination: string;
   frontPlateId: string;
@@ -46,22 +52,24 @@ app.post(
   '/upload',
   upload.single('image'),
   async (req: Request, res: Response) => {
+    let fileName;
+
     try {
       if (!req.file) {
         throw res.status(400).json({message: 'No file uploaded'});
       }
-
+      fileName = req.file.filename;
       const imagePath = req.file.path;
       buffer = fs.readFileSync(imagePath);
-
+// console.log('Filename',req.file.filename)
       dataURL = `data:image/jpeg;base64,${buffer.toString('base64')}`;
       //   const crop = await processImage(imagePath);
-      result = await getTextDetections(buffer);
-
+      result = await getTextDetections(buffer,fileName);
+      
       res.json({success: true, result, dataURL: dataURL});
     } catch (error) {
       console.error('Error:', error);
-      res.status(500).json({message: 'Failed to upload image'});
+      res.status(500).json({message: `Failed to upload image ${fileName}`});
     }
   }
 );

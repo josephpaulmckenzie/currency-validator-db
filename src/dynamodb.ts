@@ -1,5 +1,8 @@
+//dynamodb.ts
+
 import AWS = require('aws-sdk');
 import {DynamoDBItem} from './interfaces/interfaces';
+import { getTextDetections } from '.';
 
 async function putItemToDynamoDB(
   item: DynamoDBItem,
@@ -14,7 +17,7 @@ async function putItemToDynamoDB(
 
   try {
     await dynamodb.put(params).promise();
-    console.log('Item added to DynamoDB successfully');
+    // console.log('Item added to DynamoDB successfully');
   } catch (error) {
     console.error('Error putting item to DynamoDB:', error);
     throw error;
@@ -24,7 +27,7 @@ async function putItemToDynamoDB(
 async function insertIntoDynamo(item: DynamoDBItem) {
   try {
     await putItemToDynamoDB(item, 'currency');
-    console.log('Item added to DynamoDB');
+    // console.log('Item added to DynamoDB');
   } catch (error) {
     console.error('An error occurred:', error);
   }
