@@ -1,0 +1,41 @@
+.
+├── __tests__
+│   └── serialPatterns.test.ts
+├── directory_structure.txt
+├── mapping_data.txt
+├── src
+│   ├── additional_mapping.ts
+│   ├── classes
+│   │   └── errorClasses.ts
+│   ├── crop.ts
+│   ├── helpers
+│   │   ├── dynamodb.ts
+│   │   ├── fileOperations.ts
+│   │   └── s3Functions.ts
+│   ├── index.ts
+│   ├── interfaces
+│   │   └── interfaces.ts
+│   ├── jest.config.js
+│   ├── mappings
+│   │   └── mapping_data.txt
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── index.html
+│   │   └── success.html
+│   ├── s3Functions.ts
+│   ├── services
+│   │   └── serialPatterns.ts
+│   ├── textDetections.json
+│   ├── tsconfig.json
+│   └── website_backend.ts
+├── uploads
+│   ├── IMG_2486.jpeg
+│   ├── IMG_2492.jpeg
+│   ├── IMG_2493.jpeg
+│   ├── MK.jpg
+│   └── image.jpg
+└── views
+    └── success.ejs
+
+11 directories, 28 files

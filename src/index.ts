@@ -10,19 +10,19 @@ import { uploadingToS3 } from './s3Functions';
 import {
   createSerialNumberMappings,
   federalReserveMapping,
-} from './additional_mapping';
+} from './mappings/additional_mapping';
 
 async function getTextDetections(imageData: string | Buffer, fileName: string) {
   try {
-    if (!imageData || imageData.length === 0) {
+    if (!imageData || (typeof imageData === 'string' && imageData.length === 0) || (Buffer.isBuffer(imageData) && imageData.length === 0)) {
       throw new Error('Image data is empty or undefined.');
     }
 
-    const client = new RekognitionClient({region: 'us-east-1'});
+    const client = new RekognitionClient({ region: 'us-east-1' });
 
     const command = new DetectTextCommand({
       Image: {
-        Bytes: imageData instanceof Buffer ? imageData : Buffer.from(imageData),
+        Bytes: Buffer.isBuffer(imageData) ? imageData : Buffer.from(imageData, 'base64'),
       },
       Filters: {
         WordFilter: {
@@ -33,15 +33,11 @@ async function getTextDetections(imageData: string | Buffer, fileName: string) {
 
     const response = await client.send(command);
 
-    if (
-      !response ||
-      !response.TextDetections ||
-      response.TextDetections.length === 0
-    ) {
+    if (!response || !response.TextDetections || response.TextDetections.length === 0) {
       throw new Error('No text detections found in the response.');
     }
 
-    const noteDetails = await checkRegexPatterns(response.TextDetections, fileName );
+    const noteDetails = await checkRegexPatterns(response.TextDetections, fileName);
 
     return noteDetails;
   } catch (error: unknown) {
@@ -129,7 +125,7 @@ async function checkRegexPatterns(textDetections: TextDetection[], fileName: str
     const denomination = matchedWordsHash.validDenomination;
     const serialNumber = matchedWordsHash.validSerialNumberPattern;
     const additionalDetails = getAdditionalDetails(
-      createSerialNumberMappings('./mapping_data.txt')[`$${denomination}`],
+      createSerialNumberMappings('./src/mappings/additionalMAppingDetails.txt')[`$${denomination}`],
       serialNumber
     );
 

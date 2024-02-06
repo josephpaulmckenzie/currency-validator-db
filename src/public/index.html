@@ -14,7 +14,8 @@
 
 		<script>
 			document.getElementById('uploadForm').addEventListener('submit', async function (event) {
-				// Stops you from being able to hit submit until eiter a picture is taken or a photo is selected from a saved file.
+				
+                // Stops you from being able to hit submit until eiter a picture is taken or a photo is selected from a saved file.
 				event.preventDefault();
 
 				const fileInput = document.getElementById('fileInput');
@@ -29,17 +30,18 @@
 				const formData = new FormData();
 				formData.append('image', file);
 
-				// Attempt to upload the chosen photo to our server
+				// Attempt to upload the chosen photo to the server
 				try {
 					const response = await fetch('/upload', {
 						method: 'POST',
 						body: formData,
 					});
-
+                    // Error when attempting to upload the selected/taken photo 
 					if (!response.ok) {
 						throw new Error('Failed to upload image');
 					}
 
+                    // Yet a different stupid error when parsing the return from image upload
 					try {
 						const responseData = await response.json();
 						console.log(responseData);

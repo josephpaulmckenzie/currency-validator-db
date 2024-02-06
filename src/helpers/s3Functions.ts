@@ -1,9 +1,9 @@
 // s3Functions.ts
 
 import * as fs from 'fs';
-import * as dynamo from './helpers/dynamodb'
+import * as dynamo from './dynamodb';
 import AWS from 'aws-sdk';
-import { DynamoDBItem } from './interfaces/interfaces';
+import { DynamoDBItem } from '../interfaces/interfaces';
 
 async function uploadToS3(filePath: string, Key: string): Promise<string> {
   const s3 = new AWS.S3();

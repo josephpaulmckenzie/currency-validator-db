@@ -1,7 +1,7 @@
-import {readFile} from './fileOperations';
-import * as Interfaces from '@interfaces/interfaces';
+import {readFile} from '../helpers/fileOperations';
+import { SerialNumberMappings, federalReserveMapping } from '../interfaces/interfaces';
 
-const federalReserveMapping: Record<string, string> = {
+const federalReserveMapping: federalReserveMapping = {
   A1: 'Boston, MA',
   B2: 'New York City, NY',
   C3: 'Philadelphia, PA',
@@ -18,10 +18,10 @@ const federalReserveMapping: Record<string, string> = {
 
 function createSerialNumberMappings(
   filePath: string
-): Interfaces.SerialNumberMappings {
+): SerialNumberMappings {
   try {
     const lines = readFile(filePath).split('\n');
-    const serialNumberMappings: Interfaces.SerialNumberMappings = {};
+    const serialNumberMappings: SerialNumberMappings = {};
 
     lines.forEach(line => {
       if (line.trim() !== '') {

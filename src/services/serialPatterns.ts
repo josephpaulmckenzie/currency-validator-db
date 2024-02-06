@@ -1,6 +1,6 @@
 // serialPatterns.js
 
-import {RegExValidators} from './interfaces/interfaces';
+import { RegExValidators } from "../interfaces/interfaces";
 
 const serialNumberPatterns: RegExValidators = {
   // Example: Check if a serial number matches the low serial number pattern

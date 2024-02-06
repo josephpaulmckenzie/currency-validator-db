@@ -2,17 +2,20 @@ interface RegExValidators {
   [key: string]: RegExp;
 }
 
-interface SerialNumberMapping {
-  pattern: RegExp;
-  denomination: string;
-  seriesYear: string;
-  treasurer: string;
-  secretary: string;
+interface SerialNumberMappings {
+  [key: string]: {
+    pattern: RegExp;
+    denomination: string;
+    seriesYear: string;
+    treasurer: string;
+    secretary: string;
+  }[];
 }
 
-interface SerialNumberMappings {
-  [key: string]: SerialNumberMapping[];
+interface FederalReserveMapping {
+  [key: string]: string;
 }
+
 
 interface NoteDetails {
   validDenomination: string;
@@ -59,6 +62,7 @@ interface result {
 };
 
 // Export all interfaces together
+// Export all interfaces together
 export {
   RegExValidators,
   SerialNumberMapping,
@@ -68,4 +72,5 @@ export {
   DenominationDetail,
   DynamoDBItem,
   result,
+  federalReserveMapping,
 };

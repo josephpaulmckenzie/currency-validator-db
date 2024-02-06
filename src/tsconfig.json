@@ -1,16 +1,15 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
   "ts-node": {
     "files": true,
     "transpileOnly": true,
-    "compiler": "typescript",
+    "compiler": "typescript"
   },
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
       "@root/*": ["./*"],
       "@src/*": ["src/*"],
-      "@uploads/*": ["/src/uploads/*"],
+      "@uploads/*": ["src/uploads/*"],
       "@interfaces/*": ["src/interfaces/*"],
       "@classes/*": ["src/classes/*"],
       "@tests/*": ["./__tests__/*"]
@@ -18,11 +17,11 @@
     "module": "CommonJS",
     "esModuleInterop": true,
     "rootDir": ".",
-    "outDir": "build",
+    "outDir": "build"
   },
   "include": [
     "src/**/*.ts",
     "test/**/*.ts",
-    "__tests__/serialPatterns.test.ts",
-  ],
+    "__tests__/serialPatterns.test.ts"
+  ]
 }

@@ -1,5 +1,5 @@
 import {existsSync, readFileSync} from 'fs';
-import {FileNotFoundError} from './classes/errorClasses';
+import { FileNotFoundError } from '../classes/errorClasses';
 
 function checkFileExists(filePath: string) {
   if (!existsSync(filePath)) {

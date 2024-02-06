@@ -1,8 +1,7 @@
 //dynamodb.ts
 
-import AWS = require('aws-sdk');
-import {DynamoDBItem} from './interfaces/interfaces';
-import { getTextDetections } from '.';
+import AWS from 'aws-sdk';
+import { DynamoDBItem } from '../interfaces/interfaces';
 
 async function putItemToDynamoDB(
   item: DynamoDBItem,
