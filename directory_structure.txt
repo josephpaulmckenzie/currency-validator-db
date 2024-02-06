@@ -2,9 +2,7 @@
 ├── __tests__
 │   └── serialPatterns.test.ts
 ├── directory_structure.txt
-├── mapping_data.txt
 ├── src
-│   ├── additional_mapping.ts
 │   ├── classes
 │   │   └── errorClasses.ts
 │   ├── crop.ts
@@ -17,7 +15,8 @@
 │   │   └── interfaces.ts
 │   ├── jest.config.js
 │   ├── mappings
-│   │   └── mapping_data.txt
+│   │   ├── additionalMappingDetails.txt
+│   │   └── additional_mapping.ts
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── public
@@ -33,9 +32,8 @@
 │   ├── IMG_2486.jpeg
 │   ├── IMG_2492.jpeg
 │   ├── IMG_2493.jpeg
-│   ├── MK.jpg
-│   └── image.jpg
+│   └── MK.jpg
 └── views
     └── success.ejs
 
-11 directories, 28 files
+11 directories, 26 files
