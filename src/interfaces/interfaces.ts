@@ -1,7 +1,13 @@
+/**
+ * Interface representing regular expression validators.
+ */
 interface RegExValidators {
   [key: string]: RegExp;
 }
 
+/**
+ * Interface representing mappings of serial numbers.
+ */
 interface SerialNumberMappings {
   [key: string]: {
     pattern: RegExp;
@@ -12,11 +18,16 @@ interface SerialNumberMappings {
   }[];
 }
 
+/**
+ * Interface representing mappings of Federal Reserve IDs.
+ */
 interface FederalReserveMapping {
   [key: string]: string;
 }
 
-
+/**
+ * Interface representing details of a banknote.
+ */
 interface NoteDetails {
   validDenomination: string;
   frontPlateId: string;
@@ -30,12 +41,18 @@ interface NoteDetails {
   federalReserveLocation?: string;
 }
 
+/**
+ * Interface representing matched details of a banknote.
+ */
 interface MatchedDetail {
   seriesYear: string;
   treasurer: string;
   secretary: string;
 }
 
+/**
+ * Interface representing details of a banknote denomination.
+ */
 interface DenominationDetail {
   pattern: RegExp | string;
   seriesYear: string;
@@ -43,34 +60,62 @@ interface DenominationDetail {
   secretary: string;
 }
 
-interface DynamoDBItem {
-  [key: string]: any;
+/**
+ * Interface representing detected text on an image.
+ */
+interface DetectedText {
+  [x: string]: string;
+  /** Valid denomination detected in the text. */
+  validDenomination: string;
+  /** Front plate ID detected in the text. */
+  frontPlateId: string;
+  /** Serial pattern match detected in the text. */
+  SerialPatternMatch: string;
+  /** Serial number detected in the text. */
+  serialNumber: string;
+  /** Federal reserve ID detected in the text. */
+  federalReserveId: string;
+  /** Note position ID detected in the text. */
+  notePositionId: string;
 }
 
-interface result {
-  validDenomination: string;
-  frontPlateId: string;
-  SerialPatternMatch: string;
-  serialNumber: string;
-  federalReserveId: string;
-  federalReserveLocation: string;
-  notePositionId: string;
+/**
+ * Interface representing mapped data based on detected text.
+ */
+interface MappedData {
+  /** Series year mapped from detected text. */
   seriesYear: string;
+  /** Treasurer mapped from detected text. */
   treasurer: string;
+  /** Secretary mapped from detected text. */
   secretary: string;
-  s3Url: String;
-};
+  /** Federal reserve location mapped from detected text. */
+  federalReserveLocation: string;
+}
 
-// Export all interfaces together
-// Export all interfaces together
+/**
+ * Interface representing extended detected text including mapped data.
+ * @extends DetectedText
+ * @extends MappedData
+ */
+interface ExtendedDetectedText extends DetectedText, MappedData {}
+
+/**
+ * Interface representing data to be uploaded to DynamoDB.
+ * @extends ExtendedDetectedText
+ */
+interface UploadData extends ExtendedDetectedText {
+  /** URL of the image stored in Amazon S3. */
+  s3Url: string;
+}
+
 export {
   RegExValidators,
-  SerialNumberMapping,
   SerialNumberMappings,
   NoteDetails,
   MatchedDetail,
   DenominationDetail,
-  DynamoDBItem,
-  result,
-  federalReserveMapping,
+  DetectedText,
+  ExtendedDetectedText,
+  UploadData
 };

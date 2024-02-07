@@ -111,7 +111,7 @@
 <body>
     <div class="container">
         <h1>Upload Successful</h1>
-        <form id="dataForm">
+        <form id="dataForm" action="/save" method="POST">
             <div class="preview-container">
                 <!-- Image element displaying the preview image -->
                 <img id="previewImage" src="<%= dataURL %>" alt="Preview Image">
@@ -125,43 +125,43 @@
             <!-- Form fields for editing response data -->
             <div>
                 <label for="validDenomination">Valid Denomination:</label>
-                <input type="text" id="validDenomination" name="validDenomination" value="<%= result.validDenomination %>">
+                <input type="text" id="validDenomination" name="validDenomination" value="<%= detectedText.validDenomination %>">
             </div>
             <div>
                 <label for="frontPlateId">Front Plate ID:</label>
-                <input type="text" id="frontPlateId" name="frontPlateId" value="<%= result.frontPlateId %>">
+                <input type="text" id="frontPlateId" name="frontPlateId" value="<%= detectedText.frontPlateId %>">
             </div>
             <div>
                 <label for="SerialPatternMatch">Serial Pattern Match:</label>
-                <input type="text" id="SerialPatternMatch" name="SerialPatternMatch" value="<%= result.SerialPatternMatch %>">
+                <input type="text" id="SerialPatternMatch" name="SerialPatternMatch" value="<%= detectedText.SerialPatternMatch %>">
             </div>
             <div>
                 <label for="serialNumber">Serial Number:</label>
-                <input type="text" id="serialNumber" name="serialNumber" value="<%= result.serialNumber %>">
+                <input type="text" id="serialNumber" name="serialNumber" value="<%= detectedText.serialNumber %>">
             </div>
             <div>
                 <label for="federalReserveId">Federal Reserve ID:</label>
-                <input type="text" id="federalReserveId" name="federalReserveId" value="<%= result.federalReserveId %>">
+                <input type="text" id="federalReserveId" name="federalReserveId" value="<%= detectedText.federalReserveId %>">
             </div>
             <div>
                 <label for="federalReserveLocation">Federal Reserve Location:</label>
-                <input type="text" id="federalReserveLocation" name="federalReserveLocation" value="<%= result.federalReserveLocation %>">
+                <input type="text" id="federalReserveLocation" name="federalReserveLocation" value="<%= detectedText.federalReserveLocation %>">
             </div>
             <div>
                 <label for="notePositionId">Note Position Id:</label>
-                <input type="text" id="notePositionId" name="notePositionId" value="<%= result.notePositionId %>">
+                <input type="text" id="notePositionId" name="notePositionId" value="<%= detectedText.notePositionId %>">
             </div>
             <div>
                 <label for="seriesYear">Series Year:</label>
-                <input type="text" id="seriesYear" name="seriesYear" value="<%= result.seriesYear %>">
+                <input type="text" id="seriesYear" name="seriesYear" value="<%= detectedText.seriesYear %>">
             </div>
             <div>
                 <label for="Treasurer">Treasurer:</label>
-                <input type="text" id="treasurer" name="treasurer" value="<%= result.treasurer %>">
+                <input type="text" id="treasurer" name="treasurer" value="<%= detectedText.treasurer %>">
             </div>
             <div>
                 <label for="secretary">Secretary:</label>
-                <input type="text" id="secretary" name="secretary" value="<%= result.secretary %>">
+                <input type="text" id="secretary" name="secretary" value="<%= detectedText.secretary %>">
             </div>>
 
             <button type="submit">Save Changes</button>
@@ -169,12 +169,36 @@
     </div>
 
     <script>
+         // Get a reference to the form and the save button
+         const dataForm = document.getElementById('dataForm');
+        const saveButton = document.getElementById('saveButton');
+
+        // Add an event listener to the form submission
+        dataForm.addEventListener('saveButton', async (event) => {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+
+            try {
+                // Submit the form programmatically
+                await fetch(dataForm.action, {
+                    method: dataForm.method,
+                    body: new FormData(dataForm)
+                });
+
+                // Redirect the user to the desired route
+                // window.location.href = '/'; // Replace with your saveandupload route
+            } catch (error) {
+                console.error('Error saving data:', error);
+                // Handle errors if needed
+            }
+        });
+
         // Get references to the preview image and the enlarged image overlay
         const previewImage = document.getElementById('previewImage');
         const enlargedImage = document.getElementById('enlargedImage');
         const enlargedImg = document.getElementById('enlargedImg');
         const closeBtn = document.getElementById('closeBtn');
-    
+
         // Add event listener to the preview image to toggle the enlarged image overlay
         previewImage.addEventListener('click', () => {
             if (enlargedImage.style.display === 'block') {
@@ -184,17 +208,16 @@
                 enlargedImage.style.display = 'block'; // Show the enlarged image overlay
             }
         });
-    
+
         // Add event listener to the enlarged image to revert it back to the preview size when clicked
         enlargedImage.addEventListener('click', () => {
             enlargedImage.style.display = 'none'; // Hide the enlarged image overlay
         });
-    
+
         // Add event listener to the close button to hide the enlarged image overlay
         closeBtn.addEventListener('click', () => {
             enlargedImage.style.display = 'none'; // Hide the enlarged image overlay
         });
-    </script>
-    
+    </script>    
 </body>
 </html>
