@@ -1,12 +1,16 @@
 .
 ├── __tests__
-│   └── serialPatterns.test.ts
+│   └── serialPatterns.tes.tsw
 ├── directory_structure.txt
+├── package-lock.json
+├── package.json
 ├── src
+│   ├── MK.jpeg
 │   ├── classes
 │   │   └── errorClasses.ts
-│   ├── crop.ts
 │   ├── helpers
+│   │   ├── awsFunctions.ts
+│   │   ├── cropNotePhoto.ts
 │   │   ├── dynamodb.ts
 │   │   ├── fileOperations.ts
 │   │   └── s3Functions.ts
@@ -17,23 +21,23 @@
 │   ├── mappings
 │   │   ├── additionalMappingDetails.txt
 │   │   └── additional_mapping.ts
-│   ├── package-lock.json
-│   ├── package.json
 │   ├── public
 │   │   ├── index.html
 │   │   └── success.html
-│   ├── s3Functions.ts
 │   ├── services
 │   │   └── serialPatterns.ts
 │   ├── textDetections.json
-│   ├── tsconfig.json
 │   └── website_backend.ts
+├── tsconfig.json
 ├── uploads
+│   ├── IMG_1384.jpeg
 │   ├── IMG_2486.jpeg
 │   ├── IMG_2492.jpeg
-│   ├── IMG_2493.jpeg
-│   └── MK.jpg
+│   ├── MK.jpeg
+│   ├── MK.jpg
+│   ├── five.jpeg
+│   └── image.jpg
 └── views
     └── success.ejs
 
-11 directories, 26 files
+11 directories, 30 files
