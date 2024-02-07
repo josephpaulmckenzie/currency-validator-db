@@ -1,9 +1,4 @@
 {
-  "ts-node": {
-    "files": true,
-    "transpileOnly": true,
-    "compiler": "typescript"
-  },
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
@@ -12,16 +7,16 @@
       "@uploads/*": ["src/uploads/*"],
       "@interfaces/*": ["src/interfaces/*"],
       "@classes/*": ["src/classes/*"],
-      "@tests/*": ["./__tests__/*"]
+      "@tests/*": ["__tests__/*"]
     },
-    "module": "CommonJS",
+    "module": "commonjs",
     "esModuleInterop": true,
-    "rootDir": ".",
-    "outDir": "build"
+    "rootDir": "./",
+    "outDir": "./build",
+    "strict": true
   },
   "include": [
     "src/**/*.ts",
-    "test/**/*.ts",
-    "__tests__/serialPatterns.test.ts"
-  ]
+    "__tests__/**/*.ts"
+, "__tests__/serialPatterns.tes.tsw"  ]
 }

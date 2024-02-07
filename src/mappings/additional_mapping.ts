@@ -1,7 +1,7 @@
 import {readFile} from '../helpers/fileOperations';
-import { SerialNumberMappings, federalReserveMapping } from '../interfaces/interfaces';
+import { SerialNumberMappings, FederalReserveMapping } from '../interfaces/interfaces';
 
-const federalReserveMapping: federalReserveMapping = {
+const federalReserveMapping: FederalReserveMapping = {
   A1: 'Boston, MA',
   B2: 'New York City, NY',
   C3: 'Philadelphia, PA',

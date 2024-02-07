@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 import { getTextDetections } from '.';
-import { DetectedText } from '../src/interfaces/interfaces';
+import { DetectedText, UploadData } from '../src/interfaces/interfaces';
 import { awsUpload } from './helpers/awsFunctions';
 
 const app = express();
@@ -60,7 +60,7 @@ let fileName: string;
  * The detected text from the uploaded image.
  * @type {DetectedText}
  */
-let detectedText: DetectedText;
+let detectedText: UploadData;
 
 
 /**

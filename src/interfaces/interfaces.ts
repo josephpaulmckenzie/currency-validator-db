@@ -64,7 +64,6 @@ interface DenominationDetail {
  * Interface representing detected text on an image.
  */
 interface DetectedText {
-  [x: string]: string;
   /** Valid denomination detected in the text. */
   validDenomination: string;
   /** Front plate ID detected in the text. */
@@ -117,5 +116,6 @@ export {
   DenominationDetail,
   DetectedText,
   ExtendedDetectedText,
-  UploadData
+  UploadData,
+  FederalReserveMapping
 };

@@ -12,12 +12,11 @@ import AWS from 'aws-sdk';
 
 async function saveToS3(filePath: string, Key: string): Promise<string> {
     const s3 = new AWS.S3();
-    const fileContent = fs.readFileSync(`uploads/${filePath}`);
 
     const params = {
         Bucket: 'currencydb',
         Key: Key,
-        Body: fileContent,
+        Body: fs.readFileSync(`uploads/${filePath}`),
     };
 
     try {

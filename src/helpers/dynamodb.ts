@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { DynamoDBItem } from '../interfaces/interfaces';
+import { UploadData } from '../interfaces/interfaces';
 
 /**
  * Inserts an item into DynamoDB.
@@ -7,7 +7,7 @@ import { DynamoDBItem } from '../interfaces/interfaces';
  * @returns A Promise that resolves when the item is successfully inserted.
  * @throws An error if the insertion fails.
  */
-async function insertIntoDynamo(item: DynamoDBItem): Promise<void> {
+async function insertIntoDynamo(item: UploadData): Promise<void> {
     // Create a new instance of the AWS DynamoDB DocumentClient
     const dynamodb = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
 
@@ -29,5 +29,4 @@ async function insertIntoDynamo(item: DynamoDBItem): Promise<void> {
     }
 }
 
-// Export the insertIntoDynamo function for use in other modules
 export { insertIntoDynamo };
