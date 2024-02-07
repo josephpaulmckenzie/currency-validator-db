@@ -9,3 +9,5 @@ commands.txt
 event.json
 
 .DS_Store
+
+build/*

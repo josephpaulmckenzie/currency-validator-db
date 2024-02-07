@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 import { getTextDetections } from '.';
-import { DetectedText, UploadData } from '../src/interfaces/interfaces';
+import { UploadData } from '../src/interfaces/interfaces';
 import { awsUpload } from './helpers/awsFunctions';
 
 const app = express();
