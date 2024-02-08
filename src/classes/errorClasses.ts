@@ -1,5 +1,3 @@
-import { RouteErrors } from '../interfaces/interfaces';
-
 /**
  * Custom error class for file not found errors.
  * Extends the built-in Error class.
