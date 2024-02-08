@@ -7,8 +7,8 @@ import { getTextDetections } from '.';
 import { UploadData } from '../src/interfaces/interfaces';
 import AwsService from './helpers/awsFunctions';
 import { RouteError } from './classes/errorClasses';
-import { handleRouteError } from './middleware/errorHandler';
 
+// Initialize Express app
 const app = express();
 app.set('view engine', 'ejs');
 
@@ -29,29 +29,21 @@ let buffer: Buffer;
 let fileName: string;
 let detectedText: UploadData;
 
+// Middleware to parse urlencoded bodies and serve static files
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
-app.use(handleRouteError);
-/**
- * Route for serving the HTML form.
- * @param {Request} req - The Express request object.
- * @param {Response} res - The Express response object.
- */
+
+// Route for serving the HTML form
 app.get('/', (req: Request, res: Response) => {
 	res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-/**
- * Route for handling file upload.
- * @param {Request} req - The Express request object.
- * @param {Response} res - The Express response object.
- * @param {NextFunction} next - The next middleware function in the stack.
-
- */
+// Route for handling file upload
 app.post('/upload', upload.single('image'), async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		if (!req.file) {
-			throw new RouteError(400, 'No file uploaded');
+			// Send a JSON response with the error message
+			return res.status(400).json({ message: 'No file uploaded' });
 		}
 
 		fileName = req.file.filename;
@@ -63,22 +55,12 @@ app.post('/upload', upload.single('image'), async (req: Request, res: Response, 
 	}
 });
 
-/**
- * Route for rendering the success page.
- * @param {Request} req - The Express request object.
- * @param {Response} res - The Express response object.
- */
 app.get('/success', async (req: Request, res: Response) => {
 	detectedText = await getTextDetections(buffer, `uploads/${fileName}`);
 	res.render('success', { detectedText: detectedText, dataURL: dataURL });
 });
 
-/**
- * Route for saving data to AWS and responding with the results.
- * @param {Request} req - The Express request object.
- * @param {Response} res - The Express response object.
- * @param {NextFunction} next - The next middleware function in the stack.
- */
+// Route for saving data to AWS and responding with the results
 app.post('/save', async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const uploadResult = await AwsService.uploadToAws(detectedText, fileName);
@@ -93,3 +75,5 @@ app.post('/save', async (req: Request, res: Response, next: NextFunction) => {
 app.listen(3000, () => {
 	console.log(`Server is running on port ${3000}`);
 });
+
+export { app };

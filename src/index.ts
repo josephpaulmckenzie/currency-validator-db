@@ -41,34 +41,34 @@ async function getTextDetections(imageData: string | Buffer, fileName: string) {
 }
 
 function getAdditionalDetails(denomination: Interfaces.DenominationDetail[], serialNumber: string): Interfaces.MatchedDetail {
-    try {
-        if (!denomination) {
-            throw new Error('Denomination of the note was not detected or provided.');
-        }
+	try {
+		if (!denomination) {
+			throw new Error('Denomination of the note was not detected or provided.');
+		}
 
-        const matchedDetail = denomination.find((detail) => {
-            // Checks if the pattern is already a RegExp or if it is a string creates a RegExp object
-            const regex = typeof detail.pattern === 'string' ? new RegExp(detail.pattern) : detail.pattern;
-            return regex.test(serialNumber.charAt(0));
-        });
+		const matchedDetail = denomination.find((detail) => {
+			// Checks if the pattern is already a RegExp or if it is a string creates a RegExp object
+			const regex = typeof detail.pattern === 'string' ? new RegExp(detail.pattern) : detail.pattern;
+			return regex.test(serialNumber.charAt(0));
+		});
 
-        if (!matchedDetail) {
-            throw new Error('No matching detail found');
-        }
+		if (!matchedDetail) {
+			throw new Error('No matching detail found');
+		}
 
-        return {
-            seriesYear: matchedDetail.seriesYear,
-            treasurer: matchedDetail.treasurer,
-            secretary: matchedDetail.secretary,
-        };
-    } catch (error) {
-        throw {
-            status: 400,
-            error: `Error obtaining additionalDetails: ${error}`,
-            inputDetails: {},
-            validator: 'additionalDetails',
-        };
-    }
+		return {
+			seriesYear: matchedDetail.seriesYear,
+			treasurer: matchedDetail.treasurer,
+			secretary: matchedDetail.secretary,
+		};
+	} catch (error) {
+		throw {
+			status: 400,
+			error: `Error obtaining additionalDetails: ${error}`,
+			inputDetails: {},
+			validator: 'additionalDetails',
+		};
+	}
 }
 
 

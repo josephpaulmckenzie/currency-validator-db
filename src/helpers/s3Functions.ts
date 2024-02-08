@@ -11,22 +11,22 @@ import AWS from 'aws-sdk';
  */
 
 async function saveToS3(filePath: string, Key: string): Promise<string> {
-    const s3 = new AWS.S3();
+	const s3 = new AWS.S3();
 
-    const params = {
-        Bucket: 'currencydb',
-        Key: Key,
-        Body: fs.readFileSync(`uploads/${filePath}`),
-    };
+	const params = {
+		Bucket: 'currencydb',
+		Key: Key,
+		Body: fs.readFileSync(`uploads/${filePath}`),
+	};
 
-    try {
-        const response = await s3.upload(params).promise();
-        console.log('S3 Response:', response);
-        return response.Location; // Return the S3 object URL
-    } catch (error) {
-        console.error('Error uploading file to S3:', error);
-        throw error; // Re-throw the error
-    }
+	try {
+		const response = await s3.upload(params).promise();
+		console.log('S3 Response:', response);
+		return response.Location; // Return the S3 object URL
+	} catch (error) {
+		console.error('Error uploading file to S3:', error);
+		throw error; // Re-throw the error
+	}
 }
 
 export { saveToS3 };
