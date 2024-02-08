@@ -129,7 +129,15 @@ interface FileReader {
 	 */
 	readFile(filePath: string): string;
 }
-s;
+
+interface AWSService {
+	insertIntoDynamo: (item: UploadData) => Promise<AWS.DynamoDB.DocumentClient.PutItemOutput>;
+	saveToS3: (filePath: string, Key: string) => Promise<string>;
+}
+
+interface RouteErrors extends Error {
+	status: number; // HTTP status code
+}
 
 export {
 	RegExValidators,
@@ -143,4 +151,6 @@ export {
 	FederalReserveMapping,
 	FileChecker,
 	FileReader,
+	AWSService,
+	RouteErrors,
 };
