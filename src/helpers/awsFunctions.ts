@@ -5,13 +5,20 @@ import { DynamoDBInsertionError, S3UploadError } from '../classes/errorClasses';
 
 /**
  * Service for uploading data to AWS S3 and DynamoDB.
+ * @namespace AwsService
  */
 const AwsService = {
 	/**
 	 * Uploads data to AWS S3 and DynamoDB.
+	 * @async
+	 * @function uploadToAws
+	 * @memberof AwsService
 	 * @param {UploadData} details - The data to be uploaded, including detected text and other details.
 	 * @param {string} s3Key - The key to use when uploading the data to S3.
 	 * @returns {Promise<{ success: boolean; message?: string }>} A promise indicating the success of the upload operation.
+	 * If the upload is successful, the promise resolves with an object containing `{ success: true }`.
+	 * If an error occurs during the upload, the promise resolves with an object containing `{ success: false, message: string }`,
+	 * where `message` contains information about the error.
 	 */
 	async uploadToAws(details: UploadData, s3Key: string): Promise<{ success: boolean; message?: string }> {
 		try {

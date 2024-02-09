@@ -3,10 +3,11 @@ import { UploadData } from '../interfaces/interfaces';
 
 /**
  * Inserts an item into DynamoDB.
- * @parma tableName The table name to insert item into. // Currently hardcoded but we will make it more veristable
- * @param item The item to insert into DynamoDB.
- * @returns A Promise that resolves upon successful insertion.
- * @throws An error if the insertion fails.
+ * @async
+ * @function insertIntoDynamo
+ * @param {UploadData} item - The item to insert into DynamoDB.
+ * @returns {Promise<AWS.DynamoDB.DocumentClient.PutItemOutput>} A Promise that resolves upon successful insertion.
+ * @throws {Error} An error if the insertion fails.
  */
 async function insertIntoDynamo(item: UploadData): Promise<AWS.DynamoDB.DocumentClient.PutItemOutput> {
 	// Create a new instance of the AWS DynamoDB DocumentClient
@@ -14,7 +15,7 @@ async function insertIntoDynamo(item: UploadData): Promise<AWS.DynamoDB.Document
 
 	// Define the parameters for the putItem operation
 	const params: AWS.DynamoDB.DocumentClient.PutItemInput = {
-		TableName: 'currency',
+		TableName: 'currency', // Currently hardcoded but we will make it more versatile
 		Item: item,
 	};
 
@@ -29,7 +30,7 @@ async function insertIntoDynamo(item: UploadData): Promise<AWS.DynamoDB.Document
 	} catch (error) {
 		// If an error occurs during the operation, log it and throw the error
 		console.error('Error putting item to DynamoDB:', error);
-		throw error;
+		throw new Error('Insertion failed');
 	}
 }
 
