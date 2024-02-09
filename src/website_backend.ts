@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import fs from 'fs';
@@ -66,7 +66,7 @@ app.post('/upload', upload.single('image'), async (req, res, next) => {
 /**
  * Route for displaying success page.
  */
-app.get('/success', async (req, res) => {
+app.get('/success', async (_req, res) => {
 	detectedText = await getTextDetections(buffer);
 	res.render('success', { detectedText, dataURL });
 });
@@ -74,7 +74,7 @@ app.get('/success', async (req, res) => {
 /**
  * Route for saving data to AWS and responding with the results.
  */
-app.post('/save', async (req, res, next) => {
+app.post('/save', async (_req, res, next) => {
 	try {
 		const uploadResult = await AwsService.uploadToAws(detectedText, fileName);
 		res.json(uploadResult);
