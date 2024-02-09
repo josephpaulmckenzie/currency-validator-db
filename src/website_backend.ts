@@ -11,16 +11,17 @@ import AwsService from './helpers/awsFunctions';
  * Initialize Express app.
  */
 const app = express();
+const port = 3000;
 app.set('view engine', 'ejs');
 
 /**
  * Configure multer for handling file uploads.
  */
 const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
+	destination: function (_req, _file, cb) {
 		cb(null, 'uploads/');
 	},
-	filename: function (req, file, cb) {
+	filename: function (_req, file, cb) {
 		cb(null, file.originalname);
 	},
 });
@@ -40,7 +41,7 @@ app.use(express.static('public'));
 /**
  * Route for serving the HTML form.
  */
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
 	res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -87,8 +88,8 @@ app.post('/save', async (_req, res, next) => {
 /**
  * Start the server.
  */
-app.listen(3000, () => {
-	console.log(`Server is running on port ${3000}`);
+app.listen(port, () => {
+	console.log(`Server is running on port ${port}`);
 });
 
 export { app };

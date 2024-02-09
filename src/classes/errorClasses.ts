@@ -8,11 +8,8 @@ export class FileNotFoundError extends Error {
 	 * @param {string} message - The error message.
 	 */
 	constructor(message: string) {
-		// Call the constructor of the base class (Error) with the provided message
 		super(message);
-		// Set the name property of the error
 		this.name = 'FileNotFoundError';
-		// Ensure that the prototype chain is properly set
 		Object.setPrototypeOf(this, FileNotFoundError.prototype);
 	}
 }
@@ -27,17 +24,14 @@ export class TextDetectionsError extends Error {
 	 * @param {string} message - The error message.
 	 */
 	constructor(message: string) {
-		// Call the constructor of the base class (Error) with the provided message
 		super(message);
-		// Set the name property of the error
 		this.name = 'TextDetectionsError';
-		// Ensure that the prototype chain is properly set
 		Object.setPrototypeOf(this, TextDetectionsError.prototype);
 	}
 }
 
 /**
- * Custom error class for S3 errors.
+ * Custom error class for S3 upload errors.
  * Extends the built-in Error class.
  */
 export class S3UploadError extends Error {
@@ -46,40 +40,42 @@ export class S3UploadError extends Error {
 	 * @param {string} message - The error message.
 	 */
 	constructor(message: string) {
-		// Call the constructor of the base class (Error) with the provided message
 		super(message);
-		// Set the name property of the error
 		this.name = 'S3UploadError';
-		// Ensure that the prototype chain is properly set
 		Object.setPrototypeOf(this, S3UploadError.prototype);
 	}
 }
 
 /**
- * Custom error class for DynamnodDB errors.
+ * Custom error class for DynamoDB insertion errors.
  * Extends the built-in Error class.
  */
 export class DynamoDBInsertionError extends Error {
 	/**
-	 * Creates a new instance of TextDetectionsError.
+	 * Creates a new instance of DynamoDBInsertionError.
 	 * @param {string} message - The error message.
 	 */
 	constructor(message: string) {
-		// Call the constructor of the base class (Error) with the provided message
 		super(message);
-		// Set the name property of the error
 		this.name = 'DynamoDBInsertionError';
-		// Ensure that the prototype chain is properly set
 		Object.setPrototypeOf(this, DynamoDBInsertionError.prototype);
 	}
 }
 
+/**
+ * Custom error class for route errors.
+ * Extends the built-in Error class.
+ */
 export class RouteError extends Error {
-	status: number;
-
+	/**
+	 * Creates a new instance of RouteError.
+	 * @param {number} status - The HTTP status code.
+	 * @param {string} message - The error message.
+	 */
 	constructor(status: number, message: string) {
 		super(message);
 		this.name = 'RouteError';
 		this.status = status;
 	}
+	status: number;
 }
