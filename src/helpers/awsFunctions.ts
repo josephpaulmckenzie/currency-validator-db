@@ -19,7 +19,7 @@ const AwsService = {
 			const s3Upload = await saveToS3(s3Key, details.serialNumber);
 			// Sets the location of uploaded note image so we can include it when we insert our note data to DynamoDB
 			details.s3Url = s3Upload;
-		} catch (error: any) {
+		} catch (error) {
 			if (error instanceof S3UploadError) {
 				return { success: false, message: error.message };
 			} else {
@@ -33,7 +33,7 @@ const AwsService = {
 			await insertIntoDynamo(details);
 			console.log('Upload and save completed successfully.');
 			return { success: true }; // Indicate success
-		} catch (error: any) {
+		} catch (error) {
 			if (error instanceof DynamoDBInsertionError) {
 				return { success: false, message: error.message };
 			} else {

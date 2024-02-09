@@ -3,13 +3,15 @@
     "baseUrl": "./",
     "paths": {
       "@root/*": ["./*"],
-      "@src/*": ["src/*"],
-      "@uploads/*": ["src/uploads/*"],
-      "@interfaces/*": ["src/interfaces/*"],
-      "@classes/*": ["src/classes/*"],
+      "@src/*": ["./src/*"],
+      "@uploads/*": ["./src/uploads/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@classes/*": ["./src/classes/*"],
       "@tests/*": ["__tests__/*"]
     },
     "module": "commonjs",
+    "target": "ES6",
+    "declaration": true,
     "esModuleInterop": true,
     "rootDir": "./",
     "outDir": "./build",
@@ -18,5 +20,8 @@
   "include": [
     "src/**/*.ts",
     "__tests__/**/*.ts"
-, "__tests__/serialPatterns.tes.tsw"  ]
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,7 +1,36 @@
 .
 ├── __tests__
-│   └── serialPatterns.tes.tsw
+│   ├── classes
+│   │   └── errorClasses.test.ts
+│   ├── helpers
+│   ├── interfaces
+│   ├── mappings
+│   ├── middleware
+│   └── services
+├── build
+│   ├── __tests__
+│   │   └── routes.test.js
+│   └── src
+│       ├── classes
+│       │   └── errorClasses.js
+│       ├── helpers
+│       │   ├── awsFunctions.js
+│       │   ├── cropNotePhoto.js
+│       │   ├── dynamodb.js
+│       │   ├── fileOperations.js
+│       │   └── s3Functions.js
+│       ├── index.js
+│       ├── interfaces
+│       │   └── interfaces.js
+│       ├── mappings
+│       │   └── additional_mapping.js
+│       ├── middleware
+│       │   └── errorHandler.js
+│       ├── services
+│       │   └── serialPatterns.js
+│       └── website_backend.js
 ├── directory_structure.txt
+├── jest.config.js
 ├── package-lock.json
 ├── package.json
 ├── src
@@ -21,6 +50,8 @@
 │   ├── mappings
 │   │   ├── additionalMappingDetails.txt
 │   │   └── additional_mapping.ts
+│   ├── middleware
+│   │   └── errorHandler.ts
 │   ├── public
 │   │   ├── index.html
 │   │   └── success.html
@@ -40,4 +71,4 @@
 └── views
     └── success.ejs
 
-11 directories, 30 files
+27 directories, 45 files

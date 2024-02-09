@@ -1,12 +1,14 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response } from 'express';
 import { RouteError } from '../classes/errorClasses';
 
 /**
  * Handle errors in routes by sending an appropriate response.
- * @param {any} error - The error object.
+ * @param {Error} error - The error object.
+ * @param {Request} req - The Express request object.
  * @param {Response} res - The Express response object.
+ * @param {NextFunction} next - The Express next function.
  */
-function handleRouteError(error: any, res: Response) {
+function handleRouteError(error: Error, res: Response) {
 	console.error('Error:', error);
 
 	// Check if the error is an instance of RouteError

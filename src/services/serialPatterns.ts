@@ -1,8 +1,6 @@
-import * as Interfaces from '../interfaces/interfaces';
-
+import type * as Interfaces from '../interfaces/interfaces';
 
 const serialNumberPatterns: Interfaces.RegExValidators = {
-	
 	// Checks to see if a serial number matches a low serial number pattern
 	isLowSerialNumberPattern: /^[A-Q]?[A-L]\s?0{4}\d{4}\s?[A-Q]$/,
 	// Examples: ' AB00000011C, BL 00001234 D , DA 00000001L'
@@ -78,4 +76,4 @@ const noteValidators: Interfaces.RegExValidators = {
 	// Examples - '1,2,5,10,20,50,100's
 };
 
-export {serialNumberPatterns,noteValidators};
+export { serialNumberPatterns, noteValidators };

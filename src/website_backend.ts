@@ -6,40 +6,48 @@ import multer from 'multer';
 import { getTextDetections } from '.';
 import { UploadData } from '../src/interfaces/interfaces';
 import AwsService from './helpers/awsFunctions';
-import { RouteError } from './classes/errorClasses';
 
-// Initialize Express app
+/**
+ * Initialize Express app.
+ */
 const app = express();
 app.set('view engine', 'ejs');
 
-// Configure multer for handling file uploads
+/**
+ * Configure multer for handling file uploads.
+ */
 const storage = multer.diskStorage({
-	destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
+	destination: function (req, file, cb) {
 		cb(null, 'uploads/');
 	},
-	filename: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
+	filename: function (req, file, cb) {
 		cb(null, file.originalname);
 	},
 });
-
 const upload = multer({ storage: storage });
 
-let dataURL: string;
-let buffer: Buffer;
-let fileName: string;
+let dataURL = '';
+let buffer: string | Buffer;
+let fileName = '';
 let detectedText: UploadData;
 
-// Middleware to parse urlencoded bodies and serve static files
+/**
+ * Middleware to parse urlencoded bodies and serve static files.
+ */
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
-// Route for serving the HTML form
-app.get('/', (req: Request, res: Response) => {
+/**
+ * Route for serving the HTML form.
+ */
+app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Route for handling file upload
-app.post('/upload', upload.single('image'), async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * Route for handling file upload.
+ */
+app.post('/upload', upload.single('image'), async (req, res, next) => {
 	try {
 		if (!req.file) {
 			// Send a JSON response with the error message
@@ -55,13 +63,18 @@ app.post('/upload', upload.single('image'), async (req: Request, res: Response, 
 	}
 });
 
-app.get('/success', async (req: Request, res: Response) => {
-	detectedText = await getTextDetections(buffer, `uploads/${fileName}`);
-	res.render('success', { detectedText: detectedText, dataURL: dataURL });
+/**
+ * Route for displaying success page.
+ */
+app.get('/success', async (req, res) => {
+	detectedText = await getTextDetections(buffer);
+	res.render('success', { detectedText, dataURL });
 });
 
-// Route for saving data to AWS and responding with the results
-app.post('/save', async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * Route for saving data to AWS and responding with the results.
+ */
+app.post('/save', async (req, res, next) => {
 	try {
 		const uploadResult = await AwsService.uploadToAws(detectedText, fileName);
 		res.json(uploadResult);
@@ -71,7 +84,9 @@ app.post('/save', async (req: Request, res: Response, next: NextFunction) => {
 	}
 });
 
-// Start the server
+/**
+ * Start the server.
+ */
 app.listen(3000, () => {
 	console.log(`Server is running on port ${3000}`);
 });

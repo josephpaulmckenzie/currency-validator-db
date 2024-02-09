@@ -1,4 +1,4 @@
-import { FileNotFoundError, TextDetectionsError, S3UploadError, DynamoDBInsertionError, RouteError } from '../src/classes/errorClasses';
+import { FileNotFoundError, TextDetectionsError } from '../../src/classes/errorClasses';
 
 describe('Custom Error Classes', () => {
 	describe('FileNotFoundError', () => {
