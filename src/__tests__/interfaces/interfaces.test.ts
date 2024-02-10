@@ -1,4 +1,5 @@
 import { PutItemOutput } from 'aws-sdk/clients/dynamodb';
+import fs from 'fs';
 import {
 	RegExValidators,
 	SerialNumberMappings,
@@ -9,7 +10,6 @@ import {
 	ExtendedDetectedText,
 	UploadData,
 	FederalReserveMapping,
-	FileChecker,
 	FileOperations,
 	AWSService,
 	MockedDynamoDbResponse,
@@ -23,7 +23,7 @@ import {
 jest.mock('aws-sdk', () => ({
 	S3: jest.fn().mockImplementation(() => ({
 		putObject: jest.fn().mockReturnThis(),
-		promise: jest.fn().mockResolvedValue({ Location: 's3Url' }), // Return a dummy S3 URL
+		promise: jest.fn().mockResolvedValue({ Location: 's3Url' }),
 	})),
 }));
 
@@ -311,41 +311,39 @@ describe('UploadData', () => {
  * @test {FileOperations}
  */
 describe('FileOperations', () => {
-	/**
-	 * @test {FileOperations}#checkFileExists
-	 * @test {FileOperations}#readFile
-	 */
-	it('should have methods for checking file existence and reading files', () => {
+	it('should return true if the file exists', () => {
+		// Replace the implementation of checkFileExists with actual file existence check
 		const fileOperations: FileOperations = {
-			checkFileExists: () => {
-				// Dummy implementation for test
-				return true;
-			},
-			readFile: function (): string {
+			checkFileExists: (filePath: string) => fs.existsSync(filePath),
+			readFile: () => {
 				throw new Error('Function not implemented.');
 			},
 		};
-		// Call the method and assert its behavior
-		expect(fileOperations.checkFileExists('/path/to/file')).toBe(true);
+		// Provide a valid file path that exists in the file system
+		const existingFilePath = '/path/to/existing/file';
+		expect(fileOperations.checkFileExists(existingFilePath)).toBe(true);
 	});
-});
 
-/**
- * @test {FileChecker}#checkFileExists
- */
-describe('FileChecker', () => {
-	/**
-	 * Test case to ensure the FileChecker interface has a checkFileExists method
-	 */
-	it('should have a checkFileExists method', () => {
-		const fileChecker: FileChecker = {
-			checkFileExists: () => {
-				// Omit the filePath parameter
-				// Dummy implementation for test
-				return true;
+	it('should return false if the file does not exist', () => {
+		const fileOperations: FileOperations = {
+			checkFileExists: () => false,
+			readFile: () => {
+				throw new Error('Function not implemented.');
 			},
 		};
-		expect(fileChecker.checkFileExists('/path/to/file')).toBe(true);
+		expect(fileOperations.checkFileExists('/path/to/nonexistent/file')).toBe(false);
+	});
+
+	it('should throw an error if the file path is invalid', () => {
+		const fileOperations: FileOperations = {
+			checkFileExists: () => {
+				throw new Error('Invalid file path.');
+			},
+			readFile: () => {
+				throw new Error('Function not implemented.');
+			},
+		};
+		expect(() => fileOperations.checkFileExists('/invalid/file/path')).toThrow('Invalid file path.');
 	});
 });
 
