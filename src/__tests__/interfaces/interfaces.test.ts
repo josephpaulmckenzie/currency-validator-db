@@ -320,7 +320,7 @@ describe('FileOperations', () => {
 			},
 		};
 		// Provide a valid file path that exists in the file system
-		const existingFilePath = '/path/to/existing/file';
+		const existingFilePath = '/Users/josephmckenzie/Documents/Code/currency-validator-db/directory_structure.txt';
 		expect(fileOperations.checkFileExists(existingFilePath)).toBe(true);
 	});
 
