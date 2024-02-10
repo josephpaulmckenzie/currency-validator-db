@@ -196,6 +196,16 @@ interface FileOperations {
 	readFile(filePath: string): string;
 }
 
+// Define a custom error class RouteError that extends Error
+class RouteError extends Error {
+	status: number; // Add a status property to the custom error class
+
+	constructor(message: string, status: number) {
+		super(message);
+		this.status = status;
+	}
+}
+
 export {
 	RegExValidators,
 	SerialNumberMappings,
@@ -213,4 +223,5 @@ export {
 	MockedDynamoDbResponse,
 	DynamoDbResponse,
 	FileOperations,
+	RouteError,
 };
