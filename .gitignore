@@ -11,3 +11,6 @@ event.json
 .DS_Store
 
 build/*
+
+# My visual studio personalitions
+.vscode
