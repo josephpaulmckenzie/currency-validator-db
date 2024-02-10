@@ -175,6 +175,27 @@ interface RouteErrors extends Error {
 	status: number; // HTTP status code
 }
 
+/**
+ * Interface representing file operations.
+ */
+interface FileOperations {
+	/**
+	 * Checks if a file exists at the specified path.
+	 * @param {string} filePath - The path of the file to check.
+	 * @returns {boolean} True if the file exists, false otherwise.
+	 * @throws {FileNotFoundError} Throws an error if the file does not exist.
+	 */
+	checkFileExists(filePath: string): boolean;
+
+	/**
+	 * Reads the contents of a file.
+	 * @param {string} filePath - The path of the file to read.
+	 * @returns {string} The content of the file as a string.
+	 * @throws {Error} Throws an error if there are any issues reading the file.
+	 */
+	readFile(filePath: string): string;
+}
+
 export {
 	RegExValidators,
 	SerialNumberMappings,
@@ -191,4 +212,5 @@ export {
 	RouteErrors,
 	MockedDynamoDbResponse,
 	DynamoDbResponse,
+	FileOperations,
 };

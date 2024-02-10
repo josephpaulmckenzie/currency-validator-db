@@ -1,12 +1,12 @@
 import { existsSync, readFileSync } from 'fs';
 import { FileNotFoundError } from '../classes/errorClasses';
-import { FileChecker, FileReader } from '../interfaces/interfaces';
+import { FileOperations } from '../interfaces/interfaces';
 
 /**
  * Object combining file checking and reading operations.
- * @type {FileChecker & FileReader}
+ * @type {FileOperations}
  */
-const fileOperations: FileChecker & FileReader = {
+const fileOperations: FileOperations = {
 	/**
 	 * Checks if a file exists at the specified path.
 	 * @param {string} filePath - The path of the file to check.
@@ -29,13 +29,12 @@ const fileOperations: FileChecker & FileReader = {
 	 */
 	readFile(filePath: string): string {
 		try {
-			this.checkFileExists(filePath); // Use `this` to refer to the current object
+			this.checkFileExists(filePath);
 			return readFileSync(filePath, 'utf8');
 		} catch (error) {
 			if (error instanceof FileNotFoundError) {
-				throw error; // Re-throw the FileNotFoundError
+				throw error;
 			}
-			// For all other errors, including instances of Error, throw the error directly
 			throw error;
 		}
 	},

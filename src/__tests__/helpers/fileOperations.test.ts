@@ -1,15 +1,16 @@
 import { FileNotFoundError } from '../../classes/errorClasses';
 import { fileOperations } from '../../helpers/fileOperations';
-import { existsSync, readFileSync } from 'fs'; // Import existsSync and readFileSync directly from 'fs'
+import { existsSync, readFileSync } from 'fs';
 
-jest.mock('fs'); // Mock the 'fs' module
+jest.mock('fs');
 
 describe('fileOperations', () => {
 	describe('checkFileExists', () => {
 		it('should return true if the file exists', () => {
 			const filePath = '/Users/josephmckenzie/Documents/Code/currency-validator-db/directory_structure.txt';
 			(existsSync as jest.Mock).mockReturnValue(true); // Mock existsSync to return true
-			expect(fileOperations.checkFileExists(filePath)).toBe(true);
+			const fileExists = fileOperations.checkFileExists(filePath);
+			expect(fileExists).toBe(true);
 		});
 
 		it('should throw FileNotFoundError if the file does not exist', () => {
@@ -25,7 +26,8 @@ describe('fileOperations', () => {
 			const fileContents = 'This is the file content.';
 			(existsSync as jest.Mock).mockReturnValue(true); // Mock existsSync to return true
 			(readFileSync as jest.Mock).mockReturnValue(fileContents); // Mock readFileSync to return file contents
-			expect(fileOperations.readFile(filePath)).toBe(fileContents);
+			const content = fileOperations.readFile(filePath);
+			expect(content).toBe(fileContents);
 		});
 
 		it('should throw FileNotFoundError if the file does not exist', () => {
