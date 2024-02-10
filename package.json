@@ -10,6 +10,7 @@
 	"license": "Apache-2.0",
 	"keywords": [],
 	"scripts": {
+		"startServer": "npx ts-node src/website_backend.ts",
 		"test": "jest",
 		"lint": "gts lint",
 		"clean": "gts clean",

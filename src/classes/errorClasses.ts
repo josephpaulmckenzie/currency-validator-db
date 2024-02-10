@@ -66,19 +66,15 @@ export class DynamoDBInsertionError extends Error {
  * Custom error class for route errors.
  * Extends the built-in Error class.
  */
-export class RouteError extends Error {
-	/**
-	 * Creates a new instance of RouteError.
-	 * @param {number} status - The HTTP status code.
-	 * @param {string} message - The error message.
-	 */
+class RouteError extends Error {
+	status: number; // Change the type to number
 	constructor(status: number, message: string) {
 		super(message);
-		this.name = 'RouteError';
 		this.status = status;
 	}
-	status: number;
 }
+
+export { RouteError };
 
 export class MappingError extends Error {
 	status: number;

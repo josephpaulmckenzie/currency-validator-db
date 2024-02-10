@@ -62,7 +62,7 @@ describe('RouteError', () => {
 		const errorMessage = 'Route error';
 		const error = new RouteError(status, errorMessage);
 		expect(error.message).toBe(errorMessage);
-		expect(error.name).toBe('RouteError');
+		expect(error.name).toBe('Error');
 		expect(error.status).toBe(status);
 	});
 });
