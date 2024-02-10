@@ -3,7 +3,7 @@
  * @module ErrorClassTests
  */
 
-import { DynamoDBInsertionError, FileNotFoundError, RouteError, S3UploadError, TextDetectionsError } from '../../src/classes/errorClasses';
+import { DynamoDBInsertionError, FileNotFoundError, RouteError, S3UploadError, TextDetectionsError } from '../../classes/errorClasses';
 
 /**
  * Test suite for FileNotFoundError class.

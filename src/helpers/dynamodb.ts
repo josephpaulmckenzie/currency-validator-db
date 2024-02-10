@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { UploadData } from '../interfaces/interfaces';
+import { DynamoDbResponse, UploadData } from '../interfaces/interfaces';
 
 /**
  * Inserts an item into DynamoDB.
@@ -9,29 +9,34 @@ import { UploadData } from '../interfaces/interfaces';
  * @returns {Promise<AWS.DynamoDB.DocumentClient.PutItemOutput>} A Promise that resolves upon successful insertion.
  * @throws {Error} An error if the insertion fails.
  */
-async function insertIntoDynamo(item: UploadData): Promise<AWS.DynamoDB.DocumentClient.PutItemOutput> {
-	// Create a new instance of the AWS DynamoDB DocumentClient
+async function insertIntoDynamo(item: UploadData): Promise<DynamoDbResponse> {
 	const dynamodb = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
-
-	// Define the parameters for the putItem operation
 	const params: AWS.DynamoDB.DocumentClient.PutItemInput = {
-		TableName: 'currency', // Currently hardcoded but we will make it more versatile
+		TableName: 'currency',
 		Item: item,
 	};
 
 	try {
-		// Perform the putItem operation and await the response
 		const response = await dynamodb.put(params).promise();
 
-		// Log a success message if the operation completes successfully
-		console.log('Item added to DynamoDB successfully');
+		// Check if the response is defined and if it contains any error information
+		if (response && response.$response && response.$response.error) {
+			throw new Error('Insertion failed: ' + response.$response.error.message);
+		}
 
-		return response; // Return the response object
+		// If the response is not defined or if there's no error, consider the insertion successful
+		console.log('Item added to DynamoDB successfully', response);
+
+		return {
+			status: 'success',
+			item: { ...item }, // Return a copy of the input item
+		};
 	} catch (error) {
-		// If an error occurs during the operation, log it and throw the error
 		console.error('Error putting item to DynamoDB:', error);
 		throw new Error('Insertion failed');
 	}
 }
+
+// type MockedDynamoDbResponse = UploadData & { status: string };
 
 export { insertIntoDynamo };

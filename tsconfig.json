@@ -7,7 +7,7 @@
       "@uploads/*": ["./src/uploads/*"],
       "@interfaces/*": ["./src/interfaces/*"],
       "@classes/*": ["./src/classes/*"],
-      "@tests/*": ["__tests__/*"]
+      "@tests/*": ["src/__tests__/*"]
     },
     "module": "commonjs",
     "target": "ES6",
@@ -19,7 +19,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "__tests__/**/*.ts"
+    "src/__tests__/**/*.ts"
   ],
   "exclude": [
     "node_modules"

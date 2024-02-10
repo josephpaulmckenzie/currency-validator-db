@@ -4,20 +4,20 @@
  */
 
 // Mocking dependencies
-jest.mock('../../src/helpers/s3Functions', () => ({
+jest.mock('../../helpers/s3Functions', () => ({
 	saveToS3: jest.fn(), // Mock saveToS3 function
 }));
 
-jest.mock('../../src/helpers/dynamodb', () => ({
+jest.mock('../../helpers/dynamodb', () => ({
 	insertIntoDynamo: jest.fn(), // Mock insertIntoDynamo function
 }));
 
 // Importing dependencies and interfaces
-import AwsService from '../../src/helpers/awsFunctions';
-import { saveToS3 } from '../../src/helpers/s3Functions';
-import { insertIntoDynamo } from '../../src/helpers/dynamodb';
-import { UploadData } from '../../src/interfaces/interfaces'; // Assuming the correct path to interfaces
-import { DynamoDBInsertionError, S3UploadError } from '../../src/classes/errorClasses'; // Assuming the correct path to error classes
+import AwsService from '../../helpers/awsFunctions';
+import { saveToS3 } from '../../helpers/s3Functions';
+import { insertIntoDynamo } from '../../helpers/dynamodb';
+import { UploadData } from '../../interfaces/interfaces'; // Assuming the correct path to interfaces
+import { DynamoDBInsertionError, S3UploadError } from '../../classes/errorClasses'; // Assuming the correct path to error classes
 
 // Mock data
 const mockDetails: UploadData = {

@@ -1,3 +1,5 @@
+// interfaces.ts
+
 /**
  * Interface representing regular expression validators.
  */
@@ -107,6 +109,40 @@ interface UploadData extends ExtendedDetectedText {
 	/** URL of the image stored in Amazon S3. */
 	s3Url: string;
 }
+
+/**
+ * Common properties interface
+ */
+interface CommonProperties {
+	s3Url: string;
+	validDenomination: string;
+	frontPlateId: string;
+	SerialPatternMatch: string;
+	serialNumber: string;
+	federalReserveId: string;
+	notePositionId: string;
+	seriesYear: string;
+	treasurer: string;
+	secretary: string;
+	federalReserveLocation: string;
+}
+
+/**
+ * Combined response interface
+ */
+interface MockedDynamoDbResponse extends CommonProperties {
+	item(item: UploadData): unknown;
+	status: string;
+}
+
+/**
+ * Function return type
+ */
+type DynamoDbResponse = {
+	status: string;
+	item: UploadData;
+};
+
 interface FileChecker {
 	/**
 	 * Checks if a file exists at the specified path.
@@ -153,4 +189,6 @@ export {
 	FileReader,
 	AWSService,
 	RouteErrors,
+	MockedDynamoDbResponse,
+	DynamoDbResponse,
 };
