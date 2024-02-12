@@ -1,5 +1,3 @@
-// interfaces.ts
-
 /**
  * Interface representing regular expression validators.
  */
@@ -102,35 +100,51 @@ interface MappedData {
 interface ExtendedDetectedText extends DetectedText, MappedData {}
 
 /**
- * Interface representing data to be uploaded to DynamoDB.
- * @extends ExtendedDetectedText
+
+ * Interface representing a bounding box.
  */
-interface UploadData extends ExtendedDetectedText {
-	/** URL of the image stored in Amazon S3. */
-	s3Url: string;
+interface BoundingBox {
+	// BoundingBox: {
+	Width: number;
+	Height: number;
+	Left: number;
+	Top: number;
+	// };
 }
 
-/**
- * Common properties interface
- */
-interface CommonProperties {
-	s3Url: string;
-	validDenomination: string;
-	frontPlateId: string;
-	SerialPatternMatch: string;
-	serialNumber: string;
-	federalReserveId: string;
-	notePositionId: string;
-	seriesYear: string;
-	treasurer: string;
-	secretary: string;
-	federalReserveLocation: string;
+interface WordDetection {
+	text: string;
+	boundingBox: BoundingBox;
 }
+/**
+ * Interface representing a polygon.
+ */
+interface Polygon {
+	X: number;
+	Y: number;
+}
+
+// /**
+//  * Common properties interface
+//  */
+// interface CommonProperties {
+// 	s3Url: string;
+// 	validDenomination: string;
+// 	frontPlateId: string;
+// 	SerialPatternMatch: string;
+// 	serialNumber: string;
+// 	federalReserveId: string;
+// 	notePositionId: string;
+// 	seriesYear: string;
+// 	treasurer: string;
+// 	secretary: string;
+// 	federalReserveLocation: string;
+// }
 
 /**
  * Combined response interface
  */
-interface MockedDynamoDbResponse extends CommonProperties {
+interface MockedDynamoDbResponse {
 	item(item: UploadData): unknown;
 	status: string;
 }
@@ -206,6 +220,38 @@ class RouteError extends Error {
 	}
 }
 
+interface WordDetails {
+	[word: string]: {
+		// boundingBox: {
+		Width: number;
+		Height: number;
+		Left: number;
+		Top: number;
+		// };
+	};
+}
+
+interface TextWithBoundingBox {
+	text: string;
+	boundingBox: BoundingBox;
+}
+
+interface UploadData {
+	text(s3Key: string, text: any): unknown;
+	validDenomination: TextWithBoundingBox | string;
+	frontPlateId: TextWithBoundingBox | string;
+	SerialPatternMatch: TextWithBoundingBox | string;
+	serialNumber: TextWithBoundingBox | string; // Adjusted to accept both string and TextWithBoundingBox
+	federalReserveId: TextWithBoundingBox | string;
+	federalReserveLocation: string;
+	notePositionId: TextWithBoundingBox | string;
+	seriesYear: string;
+	treasurer: string;
+	secretary: string;
+	s3Url: string;
+	validSerialNumberPattern: TextWithBoundingBox | string;
+}
+
 export {
 	RegExValidators,
 	SerialNumberMappings,
@@ -224,4 +270,8 @@ export {
 	DynamoDbResponse,
 	FileOperations,
 	RouteError,
+	BoundingBox,
+	Polygon,
+	WordDetection,
+	WordDetails,
 };

@@ -22,8 +22,10 @@ const AwsService = {
 	 */
 	async uploadToAws(details: UploadData, s3Key: string): Promise<{ success: boolean; message?: string }> {
 		try {
+			const serialNumberText = typeof details.serialNumber === 'string' ? details.serialNumber : details.serialNumber?.text ?? '';
+
 			// Upload a copy of the note image to an S3 bucket
-			const s3Upload = await saveToS3(s3Key, details.serialNumber);
+			const s3Upload = await saveToS3(s3Key, serialNumberText);
 			// Sets the location of uploaded note image so we can include it when we insert our note data to DynamoDB
 			details.s3Url = s3Upload;
 		} catch (error) {
