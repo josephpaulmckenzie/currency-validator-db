@@ -237,7 +237,6 @@ interface TextWithBoundingBox {
 }
 
 interface UploadData {
-	text(s3Key: string, text: any): unknown;
 	validDenomination: TextWithBoundingBox | string;
 	frontPlateId: TextWithBoundingBox | string;
 	SerialPatternMatch: TextWithBoundingBox | string;
@@ -246,8 +245,8 @@ interface UploadData {
 	federalReserveLocation: string;
 	notePositionId: TextWithBoundingBox | string;
 	seriesYear: string;
-	treasurer: string;
-	secretary: string;
+	treasurer: TextWithBoundingBox | string;
+	secretary: TextWithBoundingBox | string;
 	s3Url: string;
 	validSerialNumberPattern: TextWithBoundingBox | string;
 }

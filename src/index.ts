@@ -22,7 +22,7 @@ async function getTextDetections(imageData: string | Buffer): Promise<Interfaces
 		});
 
 		const response = await new RekognitionClient({ region: 'us-east-1' }).send(command);
-
+		console.log('response', response);
 		if (!response.TextDetections || response.TextDetections.length === 0) {
 			throw new Error('No text detections found in the response.');
 		}
@@ -148,13 +148,16 @@ async function checkRegexPatterns(textDetections: TextDetection[]) {
 				boundingBox: wordDetails.notePositionId?.boundingBox ?? {},
 			},
 			seriesYear: additionalDetails?.seriesYear ?? '',
-			treasurer: additionalDetails?.treasurer ?? '',
-			secretary: additionalDetails?.secretary ?? '',
+			treasurer: {
+				text: additionalDetails?.treasurer ?? '',
+				boundingBox: wordDetails.Treasurer?.boundingBox ?? {},
+			},
+			secretary: {
+				text: additionalDetails?.secretary ?? '',
+				boundingBox: wordDetails.Secretary?.boundingBox ?? {},
+			},
 			s3Url: '',
 			validSerialNumberPattern: '',
-			text: function (s3Key: string, text: any): unknown {
-				throw new Error('Function not implemented.');
-			},
 		};
 
 		if (matchedWordsHash.federalReserveId && federalReserveMapping[matchedWordsHash.federalReserveId]) {

@@ -74,6 +74,10 @@ const noteValidators: Interfaces.RegExValidators = {
 
 	validDenomination: /^(?:1|2|5|10|20|50|100)$/,
 	// Examples - '1,2,5,10,20,50,100's
+
+	Treasurer: /\bTreasurer\b/,
+
+	Secretary: /\bSecretary\b/,
 };
 
 export { serialNumberPatterns, noteValidators };
