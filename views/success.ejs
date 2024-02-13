@@ -66,6 +66,7 @@
 				justify-content: center; /* Center horizontally */
 				align-items: center; /* Center vertically */
 				height: auto; /* Set container height to auto */
+				position: relative; /* Make the container relative for absolute positioning */
 			}
 
 			/* Style for the preview image */
@@ -107,20 +108,39 @@
 				font-size: 24px;
 				cursor: pointer;
 			}
+			/* Style for the bounding box */
+			.bounding-box {
+				position: absolute;
+				border: 2px solid red;
+				z-index: 50; /* Ensure bounding boxes appear above the enlarged image overlay */
+				/* pointer-events: none; Make the bounding box not clickable */
+			}
+
+			/* CSS */
+			.tooltip {
+				position: absolute;
+				background-color: #f0f0f0;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				padding: 8px;
+				display: none;
+				z-index: 100; /* Ensure tooltips appear above the enlarged image overlay */
+			}
 		</style>
 	</head>
+
 	<body>
 		<div class="container">
 			<h1>Upload Successful</h1>
 			<form id="dataForm" action="/save" method="POST">
 				<div class="preview-container">
-					<!-- Image element displaying the preview image -->
+					<!-- Preview Image -->
 					<img id="previewImage" src="<%= dataURL %>" alt="Preview Image" />
 				</div>
 
+				<!-- Enlarged Image Overlay -->
 				<div id="enlargedImage">
 					<span id="closeBtn">&times;</span>
-					<!-- Close button -->
 					<img id="enlargedImg" src="" alt="Enlarged Image" />
 				</div>
 
@@ -129,10 +149,9 @@
 					<label for="validDenomination">Valid Denomination:</label>
 					<input type="text" id="validDenomination" name="validDenomination" value="<%= detectedText.validDenomination.text %>" />
 				</div>
-				<div>
-					<label for="frontPlateId">Front Plate ID:</label>
-					<input type="text" id="frontPlateId" name="frontPlateId" value="<%= detectedText.frontPlateId.text %>" />
-				</div>
+				<label for="frontPlateId" id="frontPlateLabel">Front Plate ID:<span class="tooltip" id="frontPlateTooltip"></span></label>
+				<input type="text" id="frontPlateId" name="frontPlateId" value="<%= detectedText.frontPlateId.text %>" />
+
 				<div>
 					<label for="SerialPatternMatch">Serial Pattern Match:</label>
 					<input type="text" id="SerialPatternMatch" name="SerialPatternMatch" value="<%= detectedText.SerialPatternMatch.text %>" />
@@ -158,7 +177,7 @@
 					<input type="text" id="seriesYear" name="seriesYear" value="<%= detectedText.seriesYear %>" />
 				</div>
 				<div>
-					<label for="Treasurer">Treasurer:</label>
+					<label for="treasurer">Treasurer:</label>
 					<input type="text" id="treasurer" name="treasurer" value="<%= detectedText.treasurer.text %>" />
 				</div>
 				<div>
@@ -166,42 +185,17 @@
 					<input type="text" id="secretary" name="secretary" value="<%= detectedText.secretary.text %>" />
 				</div>
 
+				<!-- Submit button to save changes -->
 				<button type="submit">Save Changes</button>
 			</form>
 		</div>
-
 		<script>
-			// Get a reference to the form and the save button
-			const dataForm = document.getElementById('dataForm');
-			const saveButton = document.getElementById('saveButton');
-
-			// Add an event listener to the form submission
-			dataForm.addEventListener('saveButton', async (event) => {
-				// Prevent the default form submission behavior
-				event.preventDefault();
-
-				try {
-					// Submit the form programmatically
-					await fetch(dataForm.action, {
-						method: dataForm.method,
-						body: new FormData(dataForm),
-					});
-
-					// Redirect the user to the desired route
-					// window.location.href = '/'; // Replace with your saveandupload route
-				} catch (error) {
-					console.error('Error saving data:', error);
-					// Handle errors if needed
-				}
-			});
-
-			// Get references to the preview image and the enlarged image overlay
-			const previewImage = document.getElementById('previewImage');
+			// const previewImage = document.getElementById('previewImage');
 			const enlargedImage = document.getElementById('enlargedImage');
 			const enlargedImg = document.getElementById('enlargedImg');
 			const closeBtn = document.getElementById('closeBtn');
 
-			// Add event listener to the preview image to toggle the enlarged image overlay
+			// Event listener for preview image click to toggle enlarged image overlay
 			previewImage.addEventListener('click', () => {
 				if (enlargedImage.style.display === 'block') {
 					enlargedImage.style.display = 'none'; // Hide the enlarged image overlay
@@ -211,12 +205,123 @@
 				}
 			});
 
-			// Add event listener to the enlarged image to revert it back to the preview size when clicked
-			enlargedImage.addEventListener('click', () => {
-				enlargedImage.style.display = 'none'; // Hide the enlarged image overlay
+			// Event listener for form field click to draw or remove bounding box
+			const formFields = document.querySelectorAll('input[type="text"]');
+			formFields.forEach((field) => {
+				let boundingBoxDrawn = false; // Track if a bounding box is drawn
+				field.addEventListener('click', () => {
+					if (!boundingBoxDrawn) {
+						// Get bounding box coordinates for the corresponding field
+						const boundingBox = getBoundingBox(field.id);
+						// console.log(boundingBox);
+						// Draw a box around the area on the image
+						drawBox(boundingBox);
+						boundingBoxDrawn = true;
+					} else {
+						// If bounding box is already drawn, remove it
+						removeBox();
+						boundingBoxDrawn = false;
+					}
+				});
 			});
 
-			// Add event listener to the close button to hide the enlarged image overlay
+			// Function to remove the bounding box
+			function removeBox() {
+				const existingBox = document.querySelector('.bounding-box');
+				if (existingBox) {
+					existingBox.parentNode.removeChild(existingBox);
+				}
+			}
+
+			// Function to get bounding box coordinates based on form field id
+			function getBoundingBox(fieldId) {
+				// Accessing dynamically based on fieldId
+				const detectedTextStr = '<%- JSON.stringify(detectedText) %>';
+				const detectedText = JSON.parse(detectedTextStr);
+				const boundingBoxDetails = detectedText[fieldId].boundingBox;
+				// console.log('BBDetails', boundingBoxDetails);
+
+				// Calculate bounding box coordinates relative to the preview image dimensions
+				const previewWidth = previewImage.clientWidth;
+				const previewHeight = previewImage.clientHeight;
+				const left = boundingBoxDetails.Left * previewWidth;
+				const top = boundingBoxDetails.Top * previewHeight;
+				const width = boundingBoxDetails.Width * previewWidth;
+				const height = boundingBoxDetails.Height * previewHeight;
+
+				return { left, top, width, height };
+			}
+
+			// Function to draw a box around the specified area on the image
+			function drawBox(boundingBox) {
+				const box = document.createElement('div');
+				box.className = 'bounding-box';
+				box.style.left = `${boundingBox.left}px`;
+				box.style.top = `${boundingBox.top}px`;
+				box.style.width = `${boundingBox.width}px`;
+				box.style.height = `${boundingBox.height}px`;
+
+				// Append the box to the preview image container
+				if (previewImage.parentElement) {
+					previewImage.parentElement.appendChild(box);
+				}
+			}
+			const tooltips = {
+				validDenomination: 'Denomination',
+				frontPlateId: 'Front Plate ID',
+				SerialPatternMatch: 'Type of Cool serial number',
+				serialNumber: 'Serial Number',
+				federalReserveId: 'Federal Reserve ID',
+				federalReserveLocation: 'Federal Reserve Location',
+				notePositionId: 'Note Position ID',
+				seriesYear: 'Series Year',
+				treasurer: 'Treasurer',
+				secretary: 'Secretary',
+			};
+			// Add tooltips to form fields
+			formFields.forEach((field) => {
+				// Get the corresponding label and create a tooltip element
+				const label = document.querySelector(`label[for="${field.id}"]`);
+				const tooltip = document.createElement('span');
+				tooltip.className = 'tooltip';
+
+				// Get the tooltip message based on the field name
+				const tooltipMessage = tooltips[field.id];
+
+				// Set tooltip content
+				tooltip.textContent = tooltipMessage;
+
+				// Append the tooltip to the label
+				label.appendChild(tooltip);
+
+				// Show tooltip when hovering over the label
+				label.addEventListener('mouseover', () => {
+					tooltip.style.display = 'block';
+				});
+
+				// Hide tooltip when mouse leaves the label
+				label.addEventListener('mouseout', () => {
+					tooltip.style.display = 'none';
+				});
+			});
+
+			// Add tooltips to bounding boxes on the image
+			document.querySelectorAll('.bounding-box').forEach((box) => {
+				// Get the corresponding tooltip
+				const tooltip = box.querySelector('.tooltip');
+				console.log(tooltip);
+				// Show tooltip when hovering over the bounding box
+				box.addEventListener('mouseover', () => {
+					tooltip.style.display = 'block';
+				});
+
+				// Hide tooltip when mouse leaves the bounding box
+				box.addEventListener('mouseout', () => {
+					tooltip.style.display = 'none';
+				});
+			});
+
+			// Event listener for close button click to hide the enlarged image overlay
 			closeBtn.addEventListener('click', () => {
 				enlargedImage.style.display = 'none'; // Hide the enlarged image overlay
 			});
