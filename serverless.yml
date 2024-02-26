@@ -1,0 +1,35 @@
+service: my-service
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+
+resources:
+  Resources:
+    MyS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: currencydb
+        VersioningConfiguration:
+          Status: Enabled
+
+    NoteDetailsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: NoteDetails
+        AttributeDefinitions:
+          - AttributeName: serialNumber
+            AttributeType: S
+        KeySchema:
+          - AttributeName: serialNumber
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        Tags:
+          - Key: Name
+            Value: NoteDetailsTable
+
+plugins:
+  - serverless-offline

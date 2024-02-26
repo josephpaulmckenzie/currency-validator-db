@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
-import { getTextDetections } from '.';
+import { getTextDetections } from './helpers';
 import { UploadData } from '../src/interfaces/interfaces';
 import AwsService from './helpers/awsFunctions';
 
@@ -19,7 +19,7 @@ app.set('view engine', 'ejs');
  */
 const storage = multer.diskStorage({
 	destination: function (_req, _file, cb) {
-		cb(null, 'uploads/');
+		cb(null, 'public/uploads/');
 	},
 	filename: function (_req, file, cb) {
 		cb(null, file.originalname);
@@ -36,13 +36,14 @@ let detectedText: UploadData;
  * Middleware to parse urlencoded bodies and serve static files.
  */
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 /**
- * Route for serving the HTML form.
+ * Route for serving the index page.
  */
-app.get('/', (_req, res) => {
-	res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/', async (_req, res) => {
+	res.render('index');
 });
 
 /**
@@ -77,6 +78,7 @@ app.get('/success', async (_req, res) => {
  */
 app.post('/save', async (_req, res, next) => {
 	try {
+		console.log('detected', detectedText);
 		const uploadResult = await AwsService.uploadToAws(detectedText, fileName);
 		res.json(uploadResult);
 		console.log('AWS Upload Results:', uploadResult);

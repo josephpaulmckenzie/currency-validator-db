@@ -16,7 +16,7 @@ async function saveToS3(filePath: string, Key: string): Promise<string> {
 	const params = {
 		Bucket: 'currencydb',
 		Key: Key,
-		Body: fs.readFileSync(`uploads/${filePath}`),
+		Body: fs.readFileSync(`public/uploads/${filePath}`),
 	};
 
 	const response = await s3.upload(params).promise();

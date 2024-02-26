@@ -14,3 +14,6 @@ build/*
 
 # My visual studio personalitions
 .vscode
+
+#Enviromental varaiables
+.env

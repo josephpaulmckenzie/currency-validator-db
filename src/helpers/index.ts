@@ -1,8 +1,7 @@
 import { RekognitionClient, DetectTextCommand, TextDetection } from '@aws-sdk/client-rekognition';
-import * as Interfaces from './interfaces/interfaces';
-import { createSerialNumberMappings, federalReserveMapping } from './mappings/additional_mapping';
-import { noteValidators, serialNumberPatterns } from './services/serialPatterns';
-import { BoundingBox, WordDetection } from './interfaces/interfaces';
+import * as Interfaces from '../interfaces/interfaces';
+import { createSerialNumberMappings, federalReserveMapping } from '../mappings/additional_mapping';
+import { noteValidators, serialNumberPatterns } from '../services/serialPatterns';
 
 async function getTextDetections(imageData: string | Buffer): Promise<Interfaces.UploadData> {
 	try {
@@ -29,7 +28,7 @@ async function getTextDetections(imageData: string | Buffer): Promise<Interfaces
 
 		const noteDetails = await checkRegexPatterns(response.TextDetections);
 		return noteDetails;
-	} catch (error: unknown) {
+	} catch (error) {
 		if (error instanceof Error) {
 			throw new Error(`Error processing image: ${error.message}`);
 		} else {
@@ -71,7 +70,7 @@ function getAdditionalDetails(denomination: Interfaces.DenominationDetail[], ser
 async function checkRegexPatterns(textDetections: TextDetection[]) {
 	try {
 		const matchedWordsHash: Record<string, string> = {};
-		const wordDetails: Record<string, WordDetection> = {};
+		const wordDetails: Record<string, Interfaces.WordDetection> = {};
 		for (const text of textDetections) {
 			const detectedText = text.DetectedText?.replace(/ /g, '');
 			if (detectedText) {

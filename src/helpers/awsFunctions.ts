@@ -1,7 +1,7 @@
 import { UploadData } from '../interfaces/interfaces';
 import { saveToS3 } from './s3Functions';
-import { insertIntoDynamo } from './dynamodb';
 import { DynamoDBInsertionError, S3UploadError } from '../classes/errorClasses';
+import { insertNoteDetail } from './insertRecord';
 
 /**
  * Service for uploading data to AWS S3 and DynamoDB.
@@ -20,13 +20,10 @@ const AwsService = {
 	 * If an error occurs during the upload, the promise resolves with an object containing `{ success: false, message: string }`,
 	 * where `message` contains information about the error.
 	 */
-	async uploadToAws(details: UploadData, s3Key: string): Promise<{ success: boolean; message?: string }> {
+	async uploadToAws(details: any, s3Key: string): Promise<{ success: boolean; message?: string }> {
 		try {
 			const serialNumberText = typeof details.serialNumber === 'string' ? details.serialNumber : details.serialNumber?.text ?? '';
-
-			// Upload a copy of the note image to an S3 bucket
 			const s3Upload = await saveToS3(s3Key, serialNumberText);
-			// Sets the location of uploaded note image so we can include it when we insert our note data to DynamoDB
 			details.s3Url = s3Upload;
 		} catch (error) {
 			if (error instanceof S3UploadError) {
@@ -38,8 +35,9 @@ const AwsService = {
 		}
 
 		try {
-			// Saves detected text to DynamoDB
-			await insertIntoDynamo(details);
+			``;
+			console.log('Hey here i am inside the function for saving the record to the db ', details);
+			await insertNoteDetail(details);
 			console.log('Upload and save completed successfully.');
 			return { success: true }; // Indicate success
 		} catch (error) {

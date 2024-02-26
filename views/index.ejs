@@ -98,10 +98,10 @@
 	<body>
 		<div id="successMessage" class="success-message">Upload to AWS successful!</div>
 
-		<form id="uploadForm" enctype="multipart/form-data">
+		<form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post">
 			<h1>Upload Image</h1>
 			<label for="fileInput">Select Image</label>
-			<input type="file" id="fileInput" accept="image/*" />
+			<input type="file" id="fileInput" name="image" accept="image/*" />
 			<button type="submit">Upload</button>
 			<div class="loader-container">
 				<div class="loader">

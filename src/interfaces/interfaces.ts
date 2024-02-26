@@ -251,6 +251,16 @@ interface UploadData {
 	validSerialNumberPattern: TextWithBoundingBox | string;
 }
 
+interface NoteDetailsItem {
+	text: string;
+	boundingBox: {
+		Width: number;
+		Height: number;
+		Left: number;
+		Top: number;
+	};
+}
+
 export {
 	RegExValidators,
 	SerialNumberMappings,
@@ -273,4 +283,6 @@ export {
 	Polygon,
 	WordDetection,
 	WordDetails,
+	// DynamoDBOperations,
+	NoteDetailsItem,
 };
