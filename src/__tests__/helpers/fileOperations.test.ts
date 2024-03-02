@@ -1,5 +1,5 @@
 import { FileNotFoundError } from '../../classes/errorClasses';
-import { fileOperations } from '../../helpers/fileOperations';
+import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
 import { existsSync, readFileSync } from 'fs';
 
 jest.mock('fs');

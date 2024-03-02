@@ -1,9 +1,10 @@
 import { RekognitionClient, DetectTextCommand, TextDetection } from '@aws-sdk/client-rekognition';
-import * as Interfaces from '../interfaces/interfaces';
+import { UploadData, DenominationDetail, MatchedDetail, WordDetection } from '../interfaces/interfaces';
 import { createSerialNumberMappings, federalReserveMapping } from '../mappings/additional_mapping';
 import { noteValidators, serialNumberPatterns } from '../services/serialPatterns';
+import { response } from 'express';
 
-async function getTextDetections(imageData: string | Buffer): Promise<Interfaces.UploadData> {
+async function getTextDetections(imageData: string | Buffer): Promise<UploadData> {
 	try {
 		if (!imageData || (typeof imageData === 'string' && imageData.length === 0) || (Buffer.isBuffer(imageData) && imageData.length === 0)) {
 			throw new Error('Image data is empty or undefined.');
@@ -37,7 +38,7 @@ async function getTextDetections(imageData: string | Buffer): Promise<Interfaces
 	}
 }
 
-function getAdditionalDetails(denomination: Interfaces.DenominationDetail[], serialNumber: string): Interfaces.MatchedDetail {
+function getAdditionalDetails(denomination: DenominationDetail[], serialNumber: string): MatchedDetail {
 	try {
 		if (!denomination) {
 			throw new Error('Denomination of the note was not detected or provided.');
@@ -49,7 +50,15 @@ function getAdditionalDetails(denomination: Interfaces.DenominationDetail[], ser
 		});
 
 		if (!matchedDetail) {
-			throw new Error('No matching detail found');
+			throw {
+				status: response.statusCode,
+				error: `'There was a problem when attempting to map the data `,
+				inputDetails: {
+					denomination: denomination,
+					serialNumber: serialNumber,
+				},
+				validator: 'Treasurer and Secetary Mapping',
+			};
 		}
 
 		return {
@@ -70,7 +79,7 @@ function getAdditionalDetails(denomination: Interfaces.DenominationDetail[], ser
 async function checkRegexPatterns(textDetections: TextDetection[]) {
 	try {
 		const matchedWordsHash: Record<string, string> = {};
-		const wordDetails: Record<string, Interfaces.WordDetection> = {};
+		const wordDetails: Record<string, WordDetection> = {};
 		for (const text of textDetections) {
 			const detectedText = text.DetectedText?.replace(/ /g, '');
 			if (detectedText) {
@@ -120,7 +129,7 @@ async function checkRegexPatterns(textDetections: TextDetection[]) {
 			serialNumber
 		);
 
-		const details: Interfaces.UploadData = {
+		const details: UploadData = {
 			validDenomination: {
 				text: wordDetails.validDenomination?.text ?? '',
 				boundingBox: wordDetails.validDenomination?.boundingBox ?? {},

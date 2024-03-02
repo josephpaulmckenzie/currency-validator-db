@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import AWS from 'aws-sdk';
-import { saveToS3 } from '../../helpers/s3Functions';
+import { saveToS3 } from '../../helpers/storage/aws/s3Operations';
 
 jest.mock('fs'); // Mock the fs module
 jest.mock('aws-sdk'); // Mock the AWS SDK

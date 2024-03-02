@@ -1,3 +1,5 @@
+import { Result, ValidationError } from 'express-validator';
+
 /**
  * Interface representing regular expression validators.
  */
@@ -261,6 +263,29 @@ interface NoteDetailsItem {
 	};
 }
 
+type DatabaseErrorType = '23505' | '42P01';
+
+interface NoteDetail {
+	s3url: string;
+	validdenomination: string;
+	frontPlateId: string;
+	serialPatternMatch: string;
+	serialNumber: string;
+	federalReserveId: string;
+	notePositionId: string;
+	seriesYear: string;
+	treasurer: string;
+	secretary: string;
+	federalReserveLocation: string;
+}
+
+interface DatabaseError {
+	code: DatabaseErrorType;
+	constraint?: string;
+	table?: string;
+}
+type ValidationResult = Result<ValidationError>;
+
 export {
 	RegExValidators,
 	SerialNumberMappings,
@@ -284,5 +309,8 @@ export {
 	WordDetection,
 	WordDetails,
 	// DynamoDBOperations,
+	NoteDetail,
 	NoteDetailsItem,
+	DatabaseError,
+	ValidationResult,
 };

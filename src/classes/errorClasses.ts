@@ -79,3 +79,27 @@ export class RouteError extends Error {
 	}
 	status: number;
 }
+
+// Define a custom error class for database errors
+export class DatabaseError extends Error {
+	code: string;
+	constraint?: string;
+	table?: string;
+
+	constructor(message: string, code: string, constraint?: string, table?: string) {
+		super(message);
+		this.code = code;
+		this.constraint = constraint;
+		this.table = table;
+	}
+}
+
+export class StorageError extends Error {
+	code: string;
+
+	constructor(message: string, code: string) {
+		super(message);
+		this.code = code;
+		this.name = 'StorageError';
+	}
+}

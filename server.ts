@@ -18,13 +18,22 @@ app.set('view engine', 'ejs');
  * Configure multer for handling file uploads.
  */
 const storage = multer.diskStorage({
-	destination: function (_req, _file, cb) {
-		cb(null, 'uploads/');
+	destination: async (_req, _file) => {
+		try {
+			return 'uploads/';
+		} catch (error) {
+			throw error;
+		}
 	},
-	filename: function (_req, file, cb) {
-		cb(null, file.originalname);
+	filename: async (_req, file) => {
+		try {
+			return file.originalname;
+		} catch (error) {
+			throw error;
+		}
 	},
 });
+
 const upload = multer({ storage: storage });
 
 let dataURL = '';

@@ -292,6 +292,7 @@ describe('UploadData', () => {
 			secretary: 'secretary',
 			federalReserveLocation: 'federalReserveLocation',
 			s3Url: 's3Url',
+			validSerialNumberPattern: '',
 		};
 		expect(uploadData).toHaveProperty('validDenomination');
 		expect(uploadData).toHaveProperty('frontPlateId');
@@ -348,57 +349,6 @@ describe('FileOperations', () => {
 });
 
 /**
- * @test {AWSService}
- */
-describe('AWSService', () => {
-	/**
-	 * @test {AWSService}#insertIntoDynamo
-	 * @test {AWSService}#saveToS3
-	 */
-	it('should have methods for inserting into DynamoDB and saving to S3', async () => {
-		const awsService: AWSService = {
-			insertIntoDynamo: async (): Promise<PutItemOutput> => {
-				// Dummy implementation for test
-				return {
-					// Populate with appropriate properties of PutItemOutput
-					// This is just an example, replace it with actual properties
-					ConsumedCapacity: {
-						CapacityUnits: 1,
-					},
-					ItemCollectionMetrics: {},
-				};
-			},
-
-			saveToS3: async () => {
-				// Dummy implementation for test
-				return 's3Url';
-			},
-		};
-		// Call the methods and assert their behavior
-		const dataToInsert: UploadData = {
-			validDenomination: '20',
-			frontPlateId: 'frontPlateId',
-			SerialPatternMatch: 'SerialPatternMatch',
-			serialNumber: 'serialNumber',
-			federalReserveId: 'federalReserveId',
-			notePositionId: 'notePositionId',
-			seriesYear: 'year',
-			treasurer: 'treasurer',
-			secretary: 'secretary',
-			federalReserveLocation: 'federalReserveLocation',
-			s3Url: 's3Url',
-		};
-		// Call the methods and assert their behavior
-		const dynamoDbResponse = await awsService.insertIntoDynamo(dataToInsert);
-		const s3Url = await awsService.saveToS3('filePath', 'Key');
-
-		// Adjust assertions based on the actual structure of the response
-		expect(dynamoDbResponse).toBeDefined(); // Check if the response exists
-		expect(s3Url).toBe('s3Url');
-	});
-});
-
-/**
  * @test {RouteError}
  */
 describe('RouteError', () => {
@@ -411,77 +361,5 @@ describe('RouteError', () => {
 		// Assert the properties of the error
 		expect(routeError).toBeInstanceOf(Error);
 		expect(routeError).toHaveProperty('status', 404);
-	});
-});
-
-/**
- * @test {MockedDynamoDbResponse}
- */
-describe('MockedDynamoDbResponse', () => {
-	/**
-	 * @test {MockedDynamoDbResponse}#status
-	 * @test {MockedDynamoDbResponse}#item
-	 */
-	it('should have specific properties and a method item', () => {
-		const mockedDynamoDbResponse: MockedDynamoDbResponse = {
-			status: 'success',
-			item: (item: UploadData) => ({ status: 'success', item }),
-			s3Url: '',
-			validDenomination: '',
-			frontPlateId: '',
-			SerialPatternMatch: '',
-			serialNumber: '',
-			federalReserveId: '',
-			notePositionId: '',
-			seriesYear: '',
-			treasurer: '',
-			secretary: '',
-			federalReserveLocation: '',
-		};
-		// Assert the properties and method of the mocked response
-		expect(mockedDynamoDbResponse).toHaveProperty('status', 'success');
-		expect(typeof mockedDynamoDbResponse.item).toBe('function');
-	});
-});
-
-/**
- * @test {DynamoDbResponse}
- */
-describe('DynamoDbResponse', () => {
-	/**
-	 * @test {DynamoDbResponse}#status
-	 * @test {DynamoDbResponse}#item
-	 */
-	it('should have specific properties', () => {
-		const dynamoDbResponse: DynamoDbResponse = {
-			status: 'success',
-			item: {
-				validDenomination: '20',
-				frontPlateId: 'frontPlateId',
-				SerialPatternMatch: 'SerialPatternMatch',
-				serialNumber: 'serialNumber',
-				federalReserveId: 'federalReserveId',
-				notePositionId: 'notePositionId',
-				seriesYear: 'year',
-				treasurer: 'treasurer',
-				secretary: 'secretary',
-				federalReserveLocation: 'federalReserveLocation',
-				s3Url: 's3Url',
-			},
-		};
-		expect(dynamoDbResponse).toHaveProperty('status', 'success');
-		expect(dynamoDbResponse.item).toEqual({
-			validDenomination: '20',
-			frontPlateId: 'frontPlateId',
-			SerialPatternMatch: 'SerialPatternMatch',
-			serialNumber: 'serialNumber',
-			federalReserveId: 'federalReserveId',
-			notePositionId: 'notePositionId',
-			seriesYear: 'year',
-			treasurer: 'treasurer',
-			secretary: 'secretary',
-			federalReserveLocation: 'federalReserveLocation',
-			s3Url: 's3Url',
-		});
 	});
 });

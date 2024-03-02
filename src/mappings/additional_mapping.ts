@@ -1,4 +1,4 @@
-import { fileOperations } from '../helpers/fileOperations';
+import { fileOperations } from '../helpers/storage/localSystem/fileOperations';
 import { SerialNumberMappings, FederalReserveMapping } from '../interfaces/interfaces';
 
 const federalReserveMapping: FederalReserveMapping = {

@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
-import { FileNotFoundError } from '../classes/errorClasses';
-import { FileOperations } from '../interfaces/interfaces';
+import { FileNotFoundError } from '../../../classes/errorClasses';
+import { FileOperations } from '../../../interfaces/interfaces';
 
 /**
  * Object combining file checking and reading operations.

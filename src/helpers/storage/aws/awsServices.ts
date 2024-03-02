@@ -1,7 +1,7 @@
-import { UploadData } from '../interfaces/interfaces';
-import { saveToS3 } from './s3Functions';
-import { DynamoDBInsertionError, S3UploadError } from '../classes/errorClasses';
-import { insertNoteDetail } from './insertRecord';
+import { UploadData } from '../../../interfaces/interfaces';
+import { saveToS3 } from './s3Operations';
+import { DynamoDBInsertionError, S3UploadError } from '../../../classes/errorClasses';
+import { insertNoteDetail } from '../../insertRecord';
 
 /**
  * Service for uploading data to AWS S3 and DynamoDB.
