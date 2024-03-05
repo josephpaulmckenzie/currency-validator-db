@@ -389,9 +389,9 @@ describe('UploadData', () => {
 			s3Url: 's3Url',
 			validSerialNumberPattern: '',
 		};
-		expect(uploadData).toHaveProperty('validDenomination');
+		expect(uploadData).toHaveProperty('validdenomination');
 		expect(uploadData).toHaveProperty('frontPlateId');
-		expect(uploadData).toHaveProperty('SerialPatternMatch');
+		expect(uploadData).toHaveProperty('serialPatternMatch');
 		expect(uploadData).toHaveProperty('serialNumber');
 		expect(uploadData).toHaveProperty('federalReserveId');
 		expect(uploadData).toHaveProperty('notePositionId');

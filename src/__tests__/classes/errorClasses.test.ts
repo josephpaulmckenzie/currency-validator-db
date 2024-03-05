@@ -3,7 +3,15 @@
  * @module ErrorClassTests
  */
 
-import { DynamoDBInsertionError, FileNotFoundError, RouteError, S3UploadError, TextDetectionsError } from '../../classes/errorClasses';
+import {
+	DatabaseError,
+	DynamoDBInsertionError,
+	FileNotFoundError,
+	RouteError,
+	S3UploadError,
+	StorageError,
+	TextDetectionsError,
+} from '../../classes/errorClasses';
 
 /**
  * Test suite for FileNotFoundError class.
@@ -79,5 +87,36 @@ describe('TextDetectionsError', () => {
 		const error = new TextDetectionsError(errorMessage);
 		expect(error.message).toBe(errorMessage);
 		expect(error.name).toBe('TextDetectionsError');
+	});
+});
+
+describe('DatabaseError', () => {
+	it('should create a DatabaseError instance with provided properties', () => {
+		const errorMessage = 'Database error occurred';
+		const errorCode = '23505';
+		const errorConstraint = 'unique_key_constraint';
+		const errorTable = 'users';
+
+		const databaseError = new DatabaseError(errorMessage, errorCode, errorConstraint, errorTable);
+
+		expect(databaseError instanceof DatabaseError).toBe(true);
+		expect(databaseError.message).toBe(errorMessage);
+		expect(databaseError.code).toBe(errorCode);
+		expect(databaseError.constraint).toBe(errorConstraint);
+		expect(databaseError.table).toBe(errorTable);
+	});
+});
+
+describe('StorageError', () => {
+	it('should create a StorageError instance with the provided message and code', () => {
+		const errorMessage = 'An error occurred while accessing storage';
+		const errorCode = 'STORAGE_ACCESS_ERROR';
+
+		const storageError = new StorageError(errorMessage, errorCode);
+
+		expect(storageError instanceof StorageError).toBe(true);
+		expect(storageError.message).toBe(errorMessage);
+		expect(storageError.code).toBe(errorCode);
+		expect(storageError.name).toBe('StorageError');
 	});
 });
