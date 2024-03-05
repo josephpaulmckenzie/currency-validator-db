@@ -3,17 +3,16 @@ import express, { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
-import { getTextDetections } from './helpers';
-import { AwsService } from './helpers/storage/aws/awsServices';
-import { NoteDetail, UploadData } from './interfaces/interfaces';
-import { Note } from 'aws-sdk/clients/ioteventsdata';
+// import { getTextDetections } from './helpers';
+import { AwsService } from '../helpers/storage/aws/awsServices';
+// import { NoteDetail, UploadData } from './interfaces/interfaces';
+// import { Note } from 'aws-sdk/clients/ioteventsdata';
 
 /**
  * Initialize Express app.
  * @const {Express.Application} app - The Express application instance.
  */
 const app: express.Application = express();
-const port: number = 3000;
 app.set('view engine', 'ejs');
 
 // Initialize multer with the storage engine
@@ -27,24 +26,6 @@ const upload = multer({
 		},
 	}),
 });
-
-/**
- * Data URL for uploaded file.
- * @type {string|null} - Data URL for uploaded file.
- */
-let imageDataUrl: string | null = null;
-
-/**
- * Buffer for uploaded file.
- * @type {string | Buffer} - Buffer for uploaded file.
- */
-let buffer: string | Buffer;
-
-/**
- * Detected text from the uploaded image.
- * @type {UploadData} - Detected text from the uploaded image.
- */
-let noteDetails: UploadData;
 
 /**
  * Middleware to parse urlencoded bodies and serve static files.
@@ -89,8 +70,8 @@ app.post('/upload', upload.single('image'), async (request: Request, response: R
 		// Use request.file.destination to get the destination directory
 		const destinationDir = request.file.destination;
 		console.log('destinationDir', destinationDir);
-		buffer = fs.readFileSync(request.file.path);
-		imageDataUrl = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+		const buffer = fs.readFileSync(request.file.path);
+		const imageDataUrl = `data:image/jpeg;base64,${buffer.toString('base64')}`;
 		return response.json({ success: true, dataURL: imageDataUrl });
 	} catch (error) {
 		next(error); // Pass the error to the next middleware
@@ -107,8 +88,9 @@ app.post('/upload', upload.single('image'), async (request: Request, response: R
  */
 app.get('/success', async (_req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
-		noteDetails = await getTextDetections(buffer);
-		return res.render('success', { noteDetails, dataURL: imageDataUrl });
+		const noteDetails = {}; // Define noteDetails appropriately
+		const dataURL: string = ''; // Define dataURL appropriately
+		return res.render('success', { noteDetails, dataURL });
 	} catch (error) {
 		next(error);
 	}
@@ -125,6 +107,11 @@ app.get('/success', async (_req: Request, res: Response, next: NextFunction): Pr
 
 app.post('/save', async (req: Request, res: Response): Promise<Response | void> => {
 	try {
+		const noteDetails = req.body.noteDetails; // Assuming the noteDetails are passed in the request body
+		if (!noteDetails || !noteDetails.serialNumber) {
+			return res.status(400).json({ error: 'Invalid note details' });
+		}
+
 		const s3Key = typeof noteDetails.serialNumber === 'string' ? noteDetails.serialNumber : noteDetails.serialNumber.text;
 		const uploadResult = await AwsService.uploadToAws(noteDetails, s3Key);
 		return res.json(uploadResult);
@@ -135,10 +122,6 @@ app.post('/save', async (req: Request, res: Response): Promise<Response | void> 
 });
 
 /**
- * Start the server.
+ * Export the Express app instance.
  */
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
-});
-
 export { app };

@@ -16,6 +16,7 @@ import {
 /**
  * Test suite for FileNotFoundError class.
  */
+
 describe('FileNotFoundError', () => {
 	/**
 	 * Test case: should create a new instance with the provided message.

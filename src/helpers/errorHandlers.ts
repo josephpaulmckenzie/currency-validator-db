@@ -5,7 +5,6 @@
  */
 
 import { DatabaseError } from '../classes/errorClasses';
-// import { DatabaseError } from "../interfaces/interfaces";
 
 /**
  * Handle database errors and log them appropriately.

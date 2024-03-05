@@ -10,14 +10,13 @@
 	"license": "Apache-2.0",
 	"keywords": [],
 	"scripts": {
-		"startServer": "npx ts-node src/server.ts",
+		"startServer": "npx ts-node src/startServer.ts",
 		"test": "nyc jest",
 		"lint": "eslint . --ext .ts",
 		"compile": "tsc",
 		"prepare": "npm run compile",
 		"pretest": "npm run compile",
 		"posttest": "npm run lint",
-		"detect-text": "npm run copy-files && ts-node src/index.ts",
 		"copy-files": "copyfiles -u 1 src/**/*.jpeg build"
 	},
 	"devDependencies": {
