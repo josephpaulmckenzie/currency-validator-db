@@ -3,9 +3,10 @@ import express, { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
-import { UploadData } from '../src/interfaces/interfaces';
 import { getTextDetections } from './helpers';
-// import AwsService from './helpers/awsFunctions';
+import { AwsService } from './helpers/storage/aws/awsServices';
+import { NoteDetail, UploadData } from './interfaces/interfaces';
+import { Note } from 'aws-sdk/clients/ioteventsdata';
 
 /**
  * Initialize Express app.
@@ -40,16 +41,10 @@ let imageDataUrl: string | null = null;
 let buffer: string | Buffer;
 
 /**
- * Filename of the uploaded file.
- * @type {string} - Filename of the uploaded file.
- */
-let fileName: string;
-
-/**
  * Detected text from the uploaded image.
  * @type {UploadData} - Detected text from the uploaded image.
  */
-let detectedText: UploadData;
+let noteDetails: UploadData;
 
 /**
  * Middleware to parse urlencoded bodies and serve static files.
@@ -84,22 +79,21 @@ app.get('/', async (_req: Request, res: Response, next: NextFunction): Promise<R
  * @param {NextFunction} next - The Express next middleware function.
  * @returns {Promise<Response | void>} The Express response object.
  */
-app.post('/upload', async (req, res, next) => {
+
+app.post('/upload', upload.single('image'), async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
+	if (!request.file) {
+		return response.status(400).json({ message: 'No file uploaded' });
+	}
+
 	try {
-		if (!req.file) {
-			return res.status(400).json({ message: 'No file uploaded' });
-		}
-
-		const { filename, path } = req.file;
-		const buffer = fs.readFileSync(path);
-		const imageDataUrl = `data:image/jpeg;base64,${buffer.toString('base64')}`;
-
-		return res.json({
-			success: true,
-			dataURL: imageDataUrl,
-		});
-	} catch (err) {
-		next(err);
+		// Use request.file.destination to get the destination directory
+		const destinationDir = request.file.destination;
+		console.log('destinationDir', destinationDir);
+		buffer = fs.readFileSync(request.file.path);
+		imageDataUrl = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+		return response.json({ success: true, dataURL: imageDataUrl });
+	} catch (error) {
+		next(error); // Pass the error to the next middleware
 	}
 });
 
@@ -113,8 +107,8 @@ app.post('/upload', async (req, res, next) => {
  */
 app.get('/success', async (_req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
-		detectedText = await getTextDetections(buffer);
-		return res.render('success', { detectedText, dataURL: imageDataUrl });
+		noteDetails = await getTextDetections(buffer);
+		return res.render('success', { noteDetails, dataURL: imageDataUrl });
 	} catch (error) {
 		next(error);
 	}
@@ -128,11 +122,12 @@ app.get('/success', async (_req: Request, res: Response, next: NextFunction): Pr
  * @param {Response} res - The Express response object.
  * @returns {Promise<Response | void>} The Express response object.
  */
+
 app.post('/save', async (req: Request, res: Response): Promise<Response | void> => {
 	try {
-		console.log('detected', detectedText);
-		// const uploadResult = await AwsService.uploadToAws(detectedText, fileName);
-		// return res.json(uploadResult);
+		const s3Key = typeof noteDetails.serialNumber === 'string' ? noteDetails.serialNumber : noteDetails.serialNumber.text;
+		const uploadResult = await AwsService.uploadToAws(noteDetails, s3Key);
+		return res.json(uploadResult);
 	} catch (error) {
 		console.error('Error uploading to AWS:', error);
 		return res.status(500).json({ error: 'An error occurred while uploading to AWS' });

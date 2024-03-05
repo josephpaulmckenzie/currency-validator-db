@@ -62,62 +62,18 @@ interface DenominationDetail {
 	secretary: string;
 }
 
-/**
- * Interface representing detected text on an image.
- */
-interface DetectedText {
-	/** Valid denomination detected in the text. */
-	validDenomination: string;
-	/** Front plate ID detected in the text. */
-	frontPlateId: string;
-	/** Serial pattern match detected in the text. */
-	SerialPatternMatch: string;
-	/** Serial number detected in the text. */
-	serialNumber: string;
-	/** Federal reserve ID detected in the text. */
-	federalReserveId: string;
-	/** Note position ID detected in the text. */
-	notePositionId: string;
-}
-
-/**
- * Interface representing mapped data based on detected text.
- */
-interface MappedData {
-	/** Series year mapped from detected text. */
-	seriesYear: string;
-	/** Treasurer mapped from detected text. */
-	treasurer: string;
-	/** Secretary mapped from detected text. */
-	secretary: string;
-	/** Federal reserve location mapped from detected text. */
-	federalReserveLocation: string;
-}
-
-/**
- * Interface representing extended detected text including mapped data.
- * @extends DetectedText
- * @extends MappedData
- */
-interface ExtendedDetectedText extends DetectedText, MappedData {}
-
-/**
-
- * Interface representing a bounding box.
- */
 interface BoundingBox {
-	// BoundingBox: {
 	Width: number;
 	Height: number;
 	Left: number;
 	Top: number;
-	// };
 }
 
 interface WordDetection {
 	text: string;
 	boundingBox: BoundingBox;
 }
+
 /**
  * Interface representing a polygon.
  */
@@ -233,16 +189,36 @@ interface WordDetails {
 	};
 }
 
-interface TextWithBoundingBox {
-	text: string;
-	boundingBox: BoundingBox;
-}
-
-interface UploadData {
+interface DetectedText {
 	validDenomination: TextWithBoundingBox | string;
 	frontPlateId: TextWithBoundingBox | string;
 	SerialPatternMatch: TextWithBoundingBox | string;
-	serialNumber: TextWithBoundingBox | string; // Adjusted to accept both string and TextWithBoundingBox
+	serialNumber: TextWithBoundingBox | string;
+	federalReserveId: TextWithBoundingBox | string;
+	federalReserveLocation: string;
+	notePositionId: TextWithBoundingBox | string;
+	seriesYear: string;
+	treasurer: TextWithBoundingBox | string;
+	secretary: TextWithBoundingBox | string;
+}
+
+interface TextWithBoundingBox {
+	text: string;
+	boundingBox?: BoundingBox; // Make boundingBox optional
+}
+
+interface BoundingBox {
+	Width: number;
+	Height: number;
+	Left: number;
+	Top: number;
+}
+
+interface UploadData {
+	validdenomination: TextWithBoundingBox | string;
+	frontPlateId: TextWithBoundingBox | string;
+	serialPatternMatch: TextWithBoundingBox | string;
+	serialNumber: TextWithBoundingBox | string;
 	federalReserveId: TextWithBoundingBox | string;
 	federalReserveLocation: string;
 	notePositionId: TextWithBoundingBox | string;
@@ -266,17 +242,18 @@ interface NoteDetailsItem {
 type DatabaseErrorType = '23505' | '42P01';
 
 interface NoteDetail {
-	s3url: string;
-	validdenomination: string;
-	frontPlateId: string;
-	serialPatternMatch: string;
-	serialNumber: string;
-	federalReserveId: string;
-	notePositionId: string;
+	s3Url: string;
+	validdenomination: TextWithBoundingBox | string;
+	frontPlateId: TextWithBoundingBox | string;
+	serialPatternMatch: TextWithBoundingBox | string;
+	serialNumber: TextWithBoundingBox | string;
+	federalReserveId: TextWithBoundingBox | string;
+	notePositionId: TextWithBoundingBox | string;
 	seriesYear: string;
-	treasurer: string;
-	secretary: string;
+	treasurer: TextWithBoundingBox | string;
+	secretary: TextWithBoundingBox | string;
 	federalReserveLocation: string;
+	s3url?: string; // Optional property
 }
 
 interface DatabaseError {
@@ -293,7 +270,6 @@ export {
 	MatchedDetail,
 	DenominationDetail,
 	DetectedText,
-	ExtendedDetectedText,
 	UploadData,
 	FederalReserveMapping,
 	FileChecker,
@@ -308,7 +284,6 @@ export {
 	Polygon,
 	WordDetection,
 	WordDetails,
-	// DynamoDBOperations,
 	NoteDetail,
 	NoteDetailsItem,
 	DatabaseError,

@@ -1,4 +1,3 @@
-import { PutItemOutput } from 'aws-sdk/clients/dynamodb';
 import fs from 'fs';
 import {
 	RegExValidators,
@@ -7,13 +6,9 @@ import {
 	MatchedDetail,
 	DenominationDetail,
 	DetectedText,
-	ExtendedDetectedText,
 	UploadData,
 	FederalReserveMapping,
 	FileOperations,
-	AWSService,
-	MockedDynamoDbResponse,
-	DynamoDbResponse,
 	RouteError,
 } from '../../interfaces/interfaces';
 
@@ -204,6 +199,10 @@ describe('DetectedText', () => {
 			serialNumber: 'serialNumber',
 			federalReserveId: 'federalReserveId',
 			notePositionId: 'notePositionId',
+			federalReserveLocation: 'Federal Reserve Loacation ',
+			seriesYear: 'Series Year',
+			treasurer: 'Treasurer',
+			secretary: 'Secretary',
 		};
 		expect(detectedText).toHaveProperty('validDenomination');
 		expect(detectedText).toHaveProperty('frontPlateId');
@@ -211,12 +210,10 @@ describe('DetectedText', () => {
 		expect(detectedText).toHaveProperty('serialNumber');
 		expect(detectedText).toHaveProperty('federalReserveId');
 		expect(detectedText).toHaveProperty('notePositionId');
-		expect(typeof detectedText.validDenomination).toBe('string');
-		expect(typeof detectedText.frontPlateId).toBe('string');
-		expect(typeof detectedText.SerialPatternMatch).toBe('string');
-		expect(typeof detectedText.serialNumber).toBe('string');
-		expect(typeof detectedText.federalReserveId).toBe('string');
-		expect(typeof detectedText.notePositionId).toBe('string');
+		expect(detectedText).toHaveProperty('federalReserveLocation');
+		expect(detectedText).toHaveProperty('seriesYear');
+		expect(detectedText).toHaveProperty('treasurer');
+		expect(detectedText).toHaveProperty('secretary');
 	});
 });
 
@@ -237,7 +234,7 @@ describe('ExtendedDetectedText', () => {
 	 * @test {ExtendedDetectedText}#federalReserveLocation
 	 */
 	it('should extend DetectedText and MappedData interfaces', () => {
-		const extendedDetectedText: ExtendedDetectedText = {
+		expect({
 			validDenomination: '20',
 			frontPlateId: 'frontPlateId',
 			SerialPatternMatch: 'SerialPatternMatch',
@@ -248,17 +245,115 @@ describe('ExtendedDetectedText', () => {
 			treasurer: 'treasurer',
 			secretary: 'secretary',
 			federalReserveLocation: 'federalReserveLocation',
-		};
-		expect(extendedDetectedText).toHaveProperty('validDenomination');
-		expect(extendedDetectedText).toHaveProperty('frontPlateId');
-		expect(extendedDetectedText).toHaveProperty('SerialPatternMatch');
-		expect(extendedDetectedText).toHaveProperty('serialNumber');
-		expect(extendedDetectedText).toHaveProperty('federalReserveId');
-		expect(extendedDetectedText).toHaveProperty('notePositionId');
-		expect(extendedDetectedText).toHaveProperty('seriesYear');
-		expect(extendedDetectedText).toHaveProperty('treasurer');
-		expect(extendedDetectedText).toHaveProperty('secretary');
-		expect(extendedDetectedText).toHaveProperty('federalReserveLocation');
+		}).toHaveProperty('validDenomination');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('frontPlateId');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('SerialPatternMatch');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('serialNumber');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('federalReserveId');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('notePositionId');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('seriesYear');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('treasurer');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('secretary');
+		expect({
+			validDenomination: '20',
+			frontPlateId: 'frontPlateId',
+			SerialPatternMatch: 'SerialPatternMatch',
+			serialNumber: 'serialNumber',
+			federalReserveId: 'federalReserveId',
+			notePositionId: 'notePositionId',
+			seriesYear: 'year',
+			treasurer: 'treasurer',
+			secretary: 'secretary',
+			federalReserveLocation: 'federalReserveLocation',
+		}).toHaveProperty('federalReserveLocation');
 	});
 });
 
@@ -281,9 +376,9 @@ describe('UploadData', () => {
 	 */
 	it('should have specific properties', () => {
 		const uploadData: UploadData = {
-			validDenomination: '20',
+			validdenomination: '20',
 			frontPlateId: 'frontPlateId',
-			SerialPatternMatch: 'SerialPatternMatch',
+			serialPatternMatch: 'SerialPatternMatch',
 			serialNumber: 'serialNumber',
 			federalReserveId: 'federalReserveId',
 			notePositionId: 'notePositionId',

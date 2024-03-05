@@ -12,27 +12,40 @@ const pool = new Pool({
 	port: Number(process.env.DB_PORT),
 });
 
-async function insertNoteDetail(noteDetail: NoteDetail): Promise<QueryResult<any>> {
+async function insertNoteDetail(noteDetail: NoteDetail): Promise<QueryResult> {
+	const {
+		serialNumber,
+		validdenomination,
+		federalReserveId,
+		federalReserveLocation,
+		frontPlateId,
+		notePositionId,
+		serialPatternMatch,
+		seriesYear,
+		treasurer,
+		secretary,
+		s3url,
+	} = noteDetail;
+
 	const query = `
         INSERT INTO note_details
             (serialnumber, validdenomination, federalreserveid, federalreservelocation, frontplateid, notepositionid, serialpatternmatch,
             seriesyear, treasurer, secretary, s3url)  
         VALUES
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-    `;
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`;
 	try {
 		return await pool.query(query, [
-			noteDetail.serialNumber,
-			noteDetail.validdenomination,
-			noteDetail.federalReserveId,
-			noteDetail.federalReserveLocation,
-			noteDetail.frontPlateId,
-			noteDetail.notePositionId,
-			noteDetail.serialPatternMatch,
-			noteDetail.seriesYear,
-			noteDetail.treasurer,
-			noteDetail.secretary,
-			noteDetail.s3url,
+			serialNumber,
+			validdenomination,
+			federalReserveId,
+			federalReserveLocation,
+			frontPlateId,
+			notePositionId,
+			serialPatternMatch,
+			seriesYear,
+			treasurer,
+			secretary,
+			s3url,
 		]);
 	} catch (error) {
 		handleDatabaseError(error);
@@ -40,4 +53,4 @@ async function insertNoteDetail(noteDetail: NoteDetail): Promise<QueryResult<any
 	}
 }
 
-export { pool, insertNoteDetail };
+export { insertNoteDetail };

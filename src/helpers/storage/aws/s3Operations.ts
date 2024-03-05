@@ -20,7 +20,7 @@ async function saveToS3(filePath: string, Key: string): Promise<string> {
 	};
 
 	const response = await s3.upload(params).promise();
-	console.log('S3 Response:', response);
+	// console.log('S3 Response:', response);
 	return response.Location; // Return the S3 object URL
 }
 

@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response, Request } from 'express';
 import { RouteError } from '../classes/errorClasses';
 
 /**
@@ -8,7 +8,7 @@ import { RouteError } from '../classes/errorClasses';
  * @param {Response} res - The Express response object.
  * @param {NextFunction} next - The Express next function.
  */
-function handleRouteError(error: Error, req: Request, res: Response, next: NextFunction) {
+function handleRouteError(error: Error, req: Request, res: Response) {
 	if (error instanceof RouteError) {
 		res.status(error.status).json({ message: error.message });
 	} else {

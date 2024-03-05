@@ -33,7 +33,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
 		}
 
 		const responseData = await response.json();
-		console.log(responseData);
+		// console.log(responseData);
 
 		window.location.href = '/success';
 	} catch (error) {

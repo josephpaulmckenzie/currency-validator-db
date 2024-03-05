@@ -17,3 +17,8 @@ build/*
 
 #Enviromental varaiables
 .env
+
+#Test Coverage Files
+
+/coverage
+.nyc_output/*

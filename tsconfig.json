@@ -2,12 +2,10 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@root/*": ["./*"],
-      "@src/*": ["./src/*"],
-      "@uploads/*": ["./src/uploads/*"],
-      "@interfaces/*": ["./src/interfaces/*"],
-      "@classes/*": ["./src/classes/*"],
-      "@tests/*": ["src/__tests__/*"]
+      "@src/*": ["src/*"],
+      "@helpers/*": ["src/helpers/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@tests/*": ["__tests__/*"]
     },
     "module": "commonjs",
     "target": "ES6",
@@ -19,7 +17,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/__tests__/**/*.ts"
+    "__tests__/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -22,7 +22,7 @@ async function getTextDetections(imageData: string | Buffer): Promise<UploadData
 		});
 
 		const response = await new RekognitionClient({ region: 'us-east-1' }).send(command);
-		console.log('response', response);
+		// console.log('response', response);
 		if (!response.TextDetections || response.TextDetections.length === 0) {
 			throw new Error('No text detections found in the response.');
 		}
@@ -130,7 +130,7 @@ async function checkRegexPatterns(textDetections: TextDetection[]) {
 		);
 
 		const details: UploadData = {
-			validDenomination: {
+			validdenomination: {
 				text: wordDetails.validDenomination?.text ?? '',
 				boundingBox: wordDetails.validDenomination?.boundingBox ?? {},
 			},
@@ -138,7 +138,7 @@ async function checkRegexPatterns(textDetections: TextDetection[]) {
 				text: wordDetails.frontPlateId?.text ?? '',
 				boundingBox: wordDetails.frontPlateId?.boundingBox ?? {},
 			},
-			SerialPatternMatch: {
+			serialPatternMatch: {
 				text: wordDetails.SerialPatternMatch?.text ?? 'Regular',
 				boundingBox: wordDetails.SerialPatternMatch?.boundingBox ?? {},
 			},
@@ -172,8 +172,8 @@ async function checkRegexPatterns(textDetections: TextDetection[]) {
 			details.federalReserveLocation = federalReserveMapping[matchedWordsHash.federalReserveId];
 		}
 
-		console.log('wordDetails', wordDetails);
-		console.log('details', details);
+		// console.log('wordDetails', wordDetails);
+		// console.log('details', details);
 		return details;
 	} catch (error) {
 		throw new Error(`Error in checkRegexPatterns ${JSON.stringify(error)}`);

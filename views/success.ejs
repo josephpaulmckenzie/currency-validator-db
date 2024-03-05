@@ -148,42 +148,42 @@
 				<!-- Form fields for editing response data -->
 				<div>
 					<label for="validDenomination">Valid Denomination:</label>
-					<input type="text" id="validDenomination" name="validDenomination" value="<%= detectedText.validDenomination.text %>" />
+					<input type="text" id="validDenomination" name="validDenomination" value="<%= noteDetails.validDenomination.text %>" />
 				</div>
 				<label for="frontPlateId" id="frontPlateLabel">Front Plate ID:<span class="tooltip" id="frontPlateTooltip"></span></label>
-				<input type="text" id="frontPlateId" name="frontPlateId" value="<%= detectedText.frontPlateId.text %>" />
+				<input type="text" id="frontPlateId" name="frontPlateId" value="<%= noteDetails.frontPlateId.text %>" />
 
 				<div>
 					<label for="SerialPatternMatch">Serial Pattern Match:</label>
-					<input type="text" id="SerialPatternMatch" name="SerialPatternMatch" value="<%= detectedText.SerialPatternMatch.text %>" />
+					<input type="text" id="SerialPatternMatch" name="SerialPatternMatch" value="<%= noteDetails.SerialPatternMatch.text %>" />
 				</div>
 				<div>
 					<label for="serialNumber">Serial Number:</label>
-					<input type="text" id="serialNumber" name="serialNumber" value="<%= detectedText.serialNumber.text %>" />
+					<input type="text" id="serialNumber" name="serialNumber" value="<%= noteDetails.serialNumber.text %>" />
 				</div>
 				<div>
 					<label for="federalReserveId">Federal Reserve ID:</label>
-					<input type="text" id="federalReserveId" name="federalReserveId" value="<%= detectedText.federalReserveId.text %>" />
+					<input type="text" id="federalReserveId" name="federalReserveId" value="<%= noteDetails.federalReserveId.text %>" />
 				</div>
 				<div>
 					<label for="federalReserveLocation">Federal Reserve Location:</label>
-					<input type="text" id="federalReserveLocation" name="federalReserveLocation" value="<%= detectedText.federalReserveLocation %>" />
+					<input type="text" id="federalReserveLocation" name="federalReserveLocation" value="<%= noteDetails.federalReserveLocation %>" />
 				</div>
 				<div>
 					<label for="notePositionId">Note Position Id:</label>
-					<input type="text" id="notePositionId" name="notePositionId" value="<%= detectedText.notePositionId.text %>" />
+					<input type="text" id="notePositionId" name="notePositionId" value="<%= noteDetails.notePositionId.text %>" />
 				</div>
 				<div>
 					<label for="seriesYear">Series Year:</label>
-					<input type="text" id="seriesYear" name="seriesYear" value="<%= detectedText.seriesYear %>" />
+					<input type="text" id="seriesYear" name="seriesYear" value="<%= noteDetails.seriesYear %>" />
 				</div>
 				<div>
 					<label for="treasurer">Treasurer:</label>
-					<input type="text" id="treasurer" name="treasurer" value="<%= detectedText.treasurer.text %>" />
+					<input type="text" id="treasurer" name="treasurer" value="<%= noteDetails.treasurer.text %>" />
 				</div>
 				<div>
 					<label for="secretary">Secretary:</label>
-					<input type="text" id="secretary" name="secretary" value="<%= detectedText.secretary.text %>" />
+					<input type="text" id="secretary" name="secretary" value="<%= noteDetails.secretary.text %>" />
 				</div>
 
 				<!-- Submit button to save changes -->
@@ -237,9 +237,9 @@
 			// Function to get bounding box coordinates based on form field id
 			function getBoundingBox(fieldId) {
 				// Accessing dynamically based on fieldId
-				const detectedTextStr = '<%- JSON.stringify(detectedText) %>';
-				const detectedText = JSON.parse(detectedTextStr);
-				const boundingBoxDetails = detectedText[fieldId].boundingBox;
+				const noteDetailsStr = '<%- JSON.stringify(noteDetails) %>';
+				const noteDetails = JSON.parse(noteDetailsStr);
+				const boundingBoxDetails = noteDetails[fieldId].boundingBox;
 				// console.log('BBDetails', boundingBoxDetails);
 
 				// Calculate bounding box coordinates relative to the preview image dimensions
