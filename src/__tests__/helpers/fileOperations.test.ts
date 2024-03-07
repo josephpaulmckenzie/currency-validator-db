@@ -5,9 +5,13 @@ import { existsSync, readFileSync } from 'fs';
 jest.mock('fs');
 
 describe('fileOperations', () => {
+	beforeEach(() => {
+		jest.resetAllMocks(); // Reset all mocks before each test
+	});
+
 	describe('checkFileExists', () => {
 		it('should return true if the file exists', () => {
-			const filePath = '/Users/josephmckenzie/Documents/Code/currency-validator-db/directory_structure.txt';
+			const filePath = 'mockedpathlocation/directory_structure.txt';
 			(existsSync as jest.Mock).mockReturnValue(true); // Mock existsSync to return true
 			const fileExists = fileOperations.checkFileExists(filePath);
 			expect(fileExists).toBe(true);
@@ -22,7 +26,7 @@ describe('fileOperations', () => {
 
 	describe('readFile', () => {
 		it('should read the contents of the file', () => {
-			const filePath = '/Users/josephmckenzie/Documents/Code/currency-validator-db/directory_structure.txt';
+			const filePath = 'mockedpathlocation/directory_structure.txt';
 			const fileContents = 'This is the file content.';
 			(existsSync as jest.Mock).mockReturnValue(true); // Mock existsSync to return true
 			(readFileSync as jest.Mock).mockReturnValue(fileContents); // Mock readFileSync to return file contents
@@ -37,7 +41,7 @@ describe('fileOperations', () => {
 		});
 
 		it('should throw an error if there are issues reading the file', () => {
-			const filePath = '/Users/josephmckenzie/Documents/Code/currency-validator-db/directory_structure.txt';
+			const filePath = 'mockedpathlocation/directory_structure.txt';
 			const errorMessage = 'Error reading file.';
 			(existsSync as jest.Mock).mockReturnValue(true); // Mock existsSync to return true
 			(readFileSync as jest.Mock).mockImplementation(() => {

@@ -45,7 +45,7 @@ function getAdditionalDetails(denomination: DenominationDetail[], serialNumber: 
 		}
 
 		const matchedDetail = denomination.find((detail) => {
-			const regex = typeof detail.pattern === 'string' ? new RegExp(detail.pattern) : detail.pattern;
+			const regex = typeof detail.serialNumberPrefix === 'string' ? new RegExp(detail.serialNumberPrefix) : detail.serialNumberPrefix;
 			return regex.test(serialNumber.charAt(0));
 		});
 
@@ -125,7 +125,7 @@ async function checkRegexPatterns(textDetections: TextDetection[]) {
 		const denomination = matchedWordsHash.validDenomination;
 		const serialNumber = matchedWordsHash.validSerialNumberPattern;
 		const additionalDetails = getAdditionalDetails(
-			createSerialNumberMappings('./src/mappings/additionalMappingDetails.txt')[`$${denomination}`],
+			createSerialNumberMappings('./src/mappings/additionalMappingDetails.csv')[`$${denomination}`],
 			serialNumber
 		);
 

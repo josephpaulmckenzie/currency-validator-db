@@ -1,7 +1,8 @@
+import { CustomError, FileNotFoundError, InvalidFormatError } from '../classes/errorClasses';
 import { fileOperations } from '../helpers/storage/localSystem/fileOperations';
 import { SerialNumberMappings, FederalReserveMapping } from '../interfaces/interfaces';
 
-const federalReserveMapping: FederalReserveMapping = {
+export const federalReserveMapping: FederalReserveMapping = {
 	A1: 'Boston, MA',
 	B2: 'New York City, NY',
 	C3: 'Philadelphia, PA',
@@ -16,41 +17,59 @@ const federalReserveMapping: FederalReserveMapping = {
 	L12: 'San Francisco, CAs',
 };
 
-function createSerialNumberMappings(filePath: string): SerialNumberMappings {
+export function createSerialNumberMappings(filePath: string): SerialNumberMappings {
 	try {
-		const lines = fileOperations.readFile(filePath).split('\n');
 		const serialNumberMappings: SerialNumberMappings = {};
 
-		lines.forEach((line) => {
-			if (line.trim() !== '') {
-				const [denomination, secretary, treasurer, seriesYear, serialNumberPrefix] = line.trim().split(/\s+/);
+		const fileContent = fileOperations.readFile(filePath);
+		const lines = fileContent.split('\n');
 
-				if (denomination && serialNumberPrefix) {
-					if (!serialNumberMappings[denomination]) {
-						serialNumberMappings[denomination] = [];
-					}
+		if (lines.length <= 1) {
+			throw new InvalidFormatError('Mapping File is empty or contains only headers', 400);
+		}
 
-					const escapedPrefix = serialNumberPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		lines.slice().map((line, lineNumber) => {
+			if ((lines[0].startsWith('DENOMINATION') && lineNumber === 0) || line.trim() === '') return;
 
-					serialNumberMappings[denomination].push({
-						pattern: new RegExp(`^${escapedPrefix}`),
-						denomination,
-						seriesYear,
-						treasurer,
-						secretary,
-					});
-				}
+			// Split the line into fields using comma as delimiter
+			const lineData = line.split(',');
+			// Remove leading/trailing whitespace from each field
+			const trimmedLineData = lineData.map((field) => field.trim());
+
+			// Validate the format of the line
+			if (trimmedLineData.length !== 5 || !trimmedLineData.every(Boolean)) {
+				throw new InvalidFormatError('Invalid format of line: Missing required value', 400);
 			}
+
+			// Extract data from the line
+			const [denomination, secretary, treasurer, seriesYear, serialNumberPrefix] = trimmedLineData;
+
+			// Initialize denomination mappings if it doesn't exist
+			if (!serialNumberMappings[denomination]) {
+				serialNumberMappings[denomination] = [];
+			}
+
+			// Construct the mapping entry
+			const mappingEntry = {
+				serialNumberPrefix,
+				denomination,
+				seriesYear,
+				treasurer,
+				secretary,
+			};
+
+			// Add the mapping entry to the denomination mappings
+			serialNumberMappings[denomination].push(mappingEntry);
 		});
+
 		return serialNumberMappings;
 	} catch (error) {
-		throw {
-			status: 400,
-			error: `Error creating Serial Number Mappings ${error} `,
-			inputDetails: {},
-			validator: 'createSerialNumberMappings',
-		};
+		if (error instanceof FileNotFoundError) {
+			throw new Error('The specified file was not found.');
+		} else if (error instanceof InvalidFormatError) {
+			throw error; // Rethrow the InvalidFormatError
+		} else {
+			throw error; // Rethrow other errors as is
+		}
 	}
 }
-
-export { federalReserveMapping, createSerialNumberMappings };

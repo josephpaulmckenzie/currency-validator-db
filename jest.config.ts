@@ -1,6 +1,7 @@
-import path from 'path';
+const path = require('path');
 
-export default {
+module.exports = {
+	moduleDirectories: ['node_modules', 'src'],
 	roots: [path.resolve(__dirname, 'src')],
 	testMatch: [path.resolve(__dirname, 'src', '**', '*.test.ts')],
 	collectCoverage: true,

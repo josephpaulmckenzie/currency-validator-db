@@ -1,16 +1,61 @@
+import { equal } from 'assert';
+
 /**
  * Custom error class for file not found errors.
  * Extends the built-in Error class.
  */
 export class FileNotFoundError extends Error {
+	statusCode: number | undefined;
 	/**
 	 * Creates a new instance of FileNotFoundError.
 	 * @param {string} message - The error message.
 	 */
-	constructor(message: string) {
+	constructor(message: string, statusCode?: number) {
 		super(message);
 		this.name = 'FileNotFoundError';
+		this.statusCode = statusCode;
 		Object.setPrototypeOf(this, FileNotFoundError.prototype);
+	}
+}
+
+/**
+ * Custom error class for errors.
+ * Extends the built-in Error class.
+ */
+export class CustomError extends Error {
+	statusCode: number;
+
+	/**
+	 * Creates a new instance of InvalidFormatError.
+	 * @param {string} message - The error message.
+	 */
+	constructor(message: string, statusCode: number) {
+		super(message);
+
+		this.name = 'CustomError';
+		this.statusCode = statusCode;
+
+		Object.setPrototypeOf(this, CustomError.prototype);
+	}
+}
+/**
+ * Custom error class for invalid formatting errors.
+ * Extends the built-in Error class.
+ */
+export class InvalidFormatError extends Error {
+	statusCode: number;
+
+	/**
+	 * Creates a new instance of InvalidFormatError.
+	 * @param {string} message - The error message.
+	 */
+	constructor(message: string, statusCode: number) {
+		super(message);
+
+		this.name = 'InvalidFormatError';
+		this.statusCode = statusCode;
+
+		Object.setPrototypeOf(this, InvalidFormatError.prototype);
 	}
 }
 

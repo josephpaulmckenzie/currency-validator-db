@@ -25,17 +25,20 @@ const fileOperations: FileOperations = {
 	 * Reads the contents of a file.
 	 * @param {string} filePath - The path of the file to read.
 	 * @returns {string} The content of the file as a string.
+	 * @throws {FileNotFoundError} Throws an error if the file does not exist.
 	 * @throws {Error} Throws an error if there are any issues reading the file.
 	 */
 	readFile(filePath: string): string {
 		try {
-			this.checkFileExists(filePath);
+			this.checkFileExists(filePath); // Check if file exists
 			return readFileSync(filePath, 'utf8');
 		} catch (error) {
 			if (error instanceof FileNotFoundError) {
+				// Check if FileNotFoundError
 				throw error;
+			} else {
+				throw new Error(`Error whilst trying to read file: ${error}`);
 			}
-			throw error;
 		}
 	},
 };

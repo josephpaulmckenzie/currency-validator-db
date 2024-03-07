@@ -1,4 +1,5 @@
 import { Result, ValidationError } from 'express-validator';
+import { Options, StorageEngine } from 'multer';
 
 /**
  * Interface representing regular expression validators.
@@ -12,7 +13,7 @@ interface RegExValidators {
  */
 interface SerialNumberMappings {
 	[key: string]: {
-		pattern: RegExp;
+		serialNumberPrefix: string;
 		denomination: string;
 		seriesYear: string;
 		treasurer: string;
@@ -56,7 +57,7 @@ interface MatchedDetail {
  * Interface representing details of a banknote denomination.
  */
 interface DenominationDetail {
-	pattern: RegExp | string;
+	serialNumberPrefix: string;
 	seriesYear: string;
 	treasurer: string;
 	secretary: string;
@@ -263,6 +264,16 @@ interface DatabaseError {
 }
 type ValidationResult = Result<ValidationError>;
 
+// Define custom multer options
+interface CustomMulterOptions extends Options {
+	storage: StorageEngine;
+}
+
+interface CustomError {
+	error: string;
+	statusCode: number;
+}
+
 export {
 	RegExValidators,
 	SerialNumberMappings,
@@ -288,4 +299,6 @@ export {
 	NoteDetailsItem,
 	DatabaseError,
 	ValidationResult,
+	CustomMulterOptions,
+	CustomError,
 };

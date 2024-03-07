@@ -32,19 +32,22 @@ describe('SerialNumberMappings', () => {
 	 */
 	it('should have string keys and an array of objects with specific properties', () => {
 		const serialNumberMappings: SerialNumberMappings = {
-			key1: [{ pattern: /pattern1/, denomination: 'denom1', seriesYear: 'year1', treasurer: 'treasurer1', secretary: 'secretary1' }],
-			key2: [{ pattern: /pattern2/, denomination: 'denom2', seriesYear: 'year2', treasurer: 'treasurer2', secretary: 'secretary2' }],
+			key1: [
+				{ serialNumberPrefix: 'serialNumberPrefix', denomination: 'denom1', seriesYear: 'year1', treasurer: 'treasurer1', secretary: 'secretary1' },
+			],
+			key2: [
+				{ serialNumberPrefix: 'serialNumberPrefix', denomination: 'denom2', seriesYear: 'year2', treasurer: 'treasurer2', secretary: 'secretary2' },
+			],
 		};
 		expect(serialNumberMappings).toHaveProperty('key1');
 		expect(serialNumberMappings).toHaveProperty('key2');
 		expect(serialNumberMappings.key1).toBeInstanceOf(Array);
 		expect(serialNumberMappings.key2).toBeInstanceOf(Array);
-		expect(serialNumberMappings.key1[0]).toHaveProperty('pattern');
+		expect(serialNumberMappings.key1[0]).toHaveProperty('serialNumberPrefix');
 		expect(serialNumberMappings.key1[0]).toHaveProperty('denomination');
 		expect(serialNumberMappings.key1[0]).toHaveProperty('seriesYear');
 		expect(serialNumberMappings.key1[0]).toHaveProperty('treasurer');
 		expect(serialNumberMappings.key1[0]).toHaveProperty('secretary');
-		expect(serialNumberMappings.key1[0].pattern).toBeInstanceOf(RegExp);
 	});
 });
 
@@ -166,16 +169,16 @@ describe('DenominationDetail', () => {
 			seriesYear: 'year',
 			treasurer: 'treasurer',
 			secretary: 'secretary',
-			pattern: /regexPattern/,
+			serialNumberPrefix: 'serialNumberPrefix',
 		};
 		expect(denominationDetail).toHaveProperty('seriesYear');
 		expect(denominationDetail).toHaveProperty('treasurer');
 		expect(denominationDetail).toHaveProperty('secretary');
-		expect(denominationDetail).toHaveProperty('pattern');
+		expect(denominationDetail).toHaveProperty('serialNumberPrefix');
 		expect(typeof denominationDetail.seriesYear).toBe('string');
 		expect(typeof denominationDetail.treasurer).toBe('string');
 		expect(typeof denominationDetail.secretary).toBe('string');
-		expect(denominationDetail.pattern).toBeInstanceOf(RegExp);
+		expect(typeof denominationDetail.serialNumberPrefix).toBe('string');
 	});
 });
 
