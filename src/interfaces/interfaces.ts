@@ -158,7 +158,7 @@ interface FileOperations {
 	 * @returns {boolean} True if the file exists, false otherwise.
 	 * @throws {FileNotFoundError} Throws an error if the file does not exist.
 	 */
-	checkFileExists(filePath: string): boolean;
+	fileExists(filePath: string): boolean;
 
 	/**
 	 * Reads the contents of a file.

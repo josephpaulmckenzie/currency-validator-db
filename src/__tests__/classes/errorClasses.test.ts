@@ -3,15 +3,8 @@
  * @module ErrorClassTests
  */
 
-import {
-	DatabaseError,
-	DynamoDBInsertionError,
-	FileNotFoundError,
-	RouteError,
-	S3UploadError,
-	StorageError,
-	TextDetectionsError,
-} from '../../classes/errorClasses';
+import { ENOENT } from 'constants';
+import { DatabaseError, FileNotFoundError, MappingError, RouteError, S3UploadError, TextDetectionsError } from '../../classes/errorClasses';
 
 /**
  * Test suite for FileNotFoundError class.
@@ -23,7 +16,7 @@ describe('FileNotFoundError', () => {
 	 */
 	it('should create a new instance with the provided message', () => {
 		const errorMessage = 'File not found';
-		const error = new FileNotFoundError(errorMessage);
+		const error = new FileNotFoundError(errorMessage, ENOENT);
 		expect(error.message).toBe(errorMessage);
 		expect(error.name).toBe('FileNotFoundError');
 	});
@@ -45,21 +38,6 @@ describe('S3UploadError', () => {
 });
 
 /**
- * Test suite for DynamoDBInsertionError class.
- */
-describe('DynamoDBInsertionError', () => {
-	/**
-	 * Test case: should create a new instance with the provided message.
-	 */
-	it('should create a new instance with the provided message', () => {
-		const errorMessage = 'DynamoDB insertion error';
-		const error = new DynamoDBInsertionError(errorMessage);
-		expect(error.message).toBe(errorMessage);
-		expect(error.name).toBe('DynamoDBInsertionError');
-	});
-});
-
-/**
  * Test suite for RouteError class.
  */
 describe('RouteError', () => {
@@ -67,7 +45,7 @@ describe('RouteError', () => {
 	 * Test case: should create a new instance with the provided status and message.
 	 */
 	it('should create a new instance with the provided status and message', () => {
-		const status = 404;
+		const status = ENOENT;
 		const errorMessage = 'Route error';
 		const error = new RouteError(status, errorMessage);
 		expect(error.message).toBe(errorMessage);
@@ -108,16 +86,21 @@ describe('DatabaseError', () => {
 	});
 });
 
-describe('StorageError', () => {
-	it('should create a StorageError instance with the provided message and code', () => {
-		const errorMessage = 'An error occurred while accessing storage';
-		const errorCode = 'STORAGE_ACCESS_ERROR';
+describe('MappingError', () => {
+	it('should have the correct properties', () => {
+		const errorMessage = 'Mapping error';
+		const statusCode = 500;
 
-		const storageError = new StorageError(errorMessage, errorCode);
+		const mappingError = new MappingError(errorMessage, statusCode);
 
-		expect(storageError instanceof StorageError).toBe(true);
-		expect(storageError.message).toBe(errorMessage);
-		expect(storageError.code).toBe(errorCode);
-		expect(storageError.name).toBe('StorageError');
+		expect(mappingError.message).toBe(errorMessage);
+		expect(mappingError.statusCode).toBe(statusCode);
+		expect(mappingError.name).toBe('MappingError');
+	});
+
+	it('should inherit from Error', () => {
+		const mappingError = new MappingError('Mapping error', 500);
+
+		expect(mappingError instanceof Error).toBe(true);
 	});
 });

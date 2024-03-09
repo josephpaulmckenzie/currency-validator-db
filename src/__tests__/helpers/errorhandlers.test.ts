@@ -1,54 +1,54 @@
-import { DatabaseError } from '../../classes/errorClasses';
-import { handleDatabaseError } from '../../helpers/errorHandlers';
+import { InvalidFormatError, TextDetectionsError, ValidationError } from '../../classes/errorClasses';
+import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
+import { createSerialNumberMappings } from '../../mappings/additional_mapping';
+jest.mock('../../helpers/storage/localSystem/fileOperations');
 
-describe('handleDatabaseError function', () => {
-	let consoleErrorSpy: jest.SpyInstance;
+afterEach(() => {
+	jest.clearAllMocks();
+});
 
-	beforeEach(() => {
-		consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+describe('TextDetectionsError', () => {
+	it('should create an instance of TextDetectionsError with the correct message', () => {
+		const errorMessage = 'Error during text detections';
+		const error = new TextDetectionsError(errorMessage);
+
+		expect(error).toBeInstanceOf(TextDetectionsError);
+		expect(error.message).toEqual(errorMessage);
 	});
 
-	afterEach(() => {
-		consoleErrorSpy.mockRestore();
+	it('should have the name property set to "TextDetectionsError"', () => {
+		const error = new TextDetectionsError('Some error message');
+		expect(error.name).toEqual('TextDetectionsError');
+	});
+});
+
+describe('ValidationError', () => {
+	it('should create an instance of ValidationError', () => {
+		const errorMessage = 'Error during Validation';
+		const error = new ValidationError(errorMessage);
+
+		expect(error).toBeInstanceOf(ValidationError);
+		expect(error.message).toEqual(errorMessage);
 	});
 
-	it('should handle duplicate key violation error', () => {
-		const error = new DatabaseError('Duplicate key violation', '23505', 'constraint');
-		const result = handleDatabaseError(error);
-
-		expect(result).toBe(true);
-		expect(consoleErrorSpy).toHaveBeenCalledWith('Duplicate key violation:', 'constraint');
+	it('should have the name property set to "ValidationError"', () => {
+		const error = new ValidationError('Some error message');
+		expect(error.name).toEqual('ValidationError');
 	});
+});
 
-	it('should handle table not found error', () => {
-		const error = new DatabaseError('Table not found', '42P01', undefined, 'table_name');
-		const result = handleDatabaseError(error);
+it('should throw InvalidFormatError for an empty file', () => {
+	(fileOperations.fileExists as jest.Mock).mockReturnValue(true);
+	(fileOperations.readFile as jest.Mock).mockReturnValue('');
 
-		expect(result).toBe(true);
-		expect(consoleErrorSpy).toHaveBeenCalledWith('Table not found:', 'table_name');
-	});
+	const filePath = 'path/to/empty/file.txt';
+	expect(() => createSerialNumberMappings(filePath)).toThrow(InvalidFormatError);
+});
 
-	it('should handle unknown database error', () => {
-		const error = new DatabaseError('Unknown database error', 'XYZ');
-		const result = handleDatabaseError(error);
+it('should throw InvalidFormatError for a file with only headers', () => {
+	(fileOperations.fileExists as jest.Mock).mockReturnValue(true);
+	(fileOperations.readFile as jest.Mock).mockReturnValue('DENOMINATION, SECRETARY, TREASURER, SERIES_YEAR, SERIAL_NUMBER_PREFIX');
 
-		expect(result).toBe(true);
-		expect(consoleErrorSpy).toHaveBeenCalledWith('Unknown database error:', error);
-	});
-
-	it('should handle other unknown errors', () => {
-		const error = new Error('Some other error');
-		const result = handleDatabaseError(error);
-
-		expect(result).toBe(false);
-		expect(consoleErrorSpy).toHaveBeenCalledWith('Unknown error:', error);
-	});
-
-	it('should handle error not being an instance of DatabaseError', () => {
-		const error = new Error('Some other error');
-		const result = handleDatabaseError(error);
-
-		expect(result).toBe(false);
-		expect(consoleErrorSpy).toHaveBeenCalledWith('Unknown error:', error);
-	});
+	const filePath = 'path/to/file/with/only/headers.txt';
+	expect(() => createSerialNumberMappings(filePath)).toThrow(InvalidFormatError);
 });

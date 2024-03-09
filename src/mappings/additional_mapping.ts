@@ -1,4 +1,4 @@
-import { CustomError, FileNotFoundError, InvalidFormatError } from '../classes/errorClasses';
+import { FileNotFoundError, InvalidFormatError, MappingError } from '../classes/errorClasses';
 import { fileOperations } from '../helpers/storage/localSystem/fileOperations';
 import { SerialNumberMappings, FederalReserveMapping } from '../interfaces/interfaces';
 
@@ -18,23 +18,25 @@ export const federalReserveMapping: FederalReserveMapping = {
 };
 
 export function createSerialNumberMappings(filePath: string): SerialNumberMappings {
-	try {
-		const serialNumberMappings: SerialNumberMappings = {};
+	const serialNumberMappings: SerialNumberMappings = {};
+	const fileContent = fileOperations.readFile(filePath);
 
-		const fileContent = fileOperations.readFile(filePath);
+	try {
+		if (!filePath) throw new FileNotFoundError('Mapping File not found', 404);
+
 		const lines = fileContent.split('\n');
 
 		if (lines.length <= 1) {
 			throw new InvalidFormatError('Mapping File is empty or contains only headers', 400);
 		}
 
-		lines.slice().map((line, lineNumber) => {
+		lines.slice().map((line: string, lineNumber: number) => {
 			if ((lines[0].startsWith('DENOMINATION') && lineNumber === 0) || line.trim() === '') return;
 
 			// Split the line into fields using comma as delimiter
 			const lineData = line.split(',');
 			// Remove leading/trailing whitespace from each field
-			const trimmedLineData = lineData.map((field) => field.trim());
+			const trimmedLineData = lineData.map((field: string) => field.trim());
 
 			// Validate the format of the line
 			if (trimmedLineData.length !== 5 || !trimmedLineData.every(Boolean)) {
@@ -58,18 +60,21 @@ export function createSerialNumberMappings(filePath: string): SerialNumberMappin
 				secretary,
 			};
 
+			// Check if all required keys have non-null values
+			if (Object.values(mappingEntry).length === 0) {
+				throw new MappingError('Error creating mapping entry: Missing required keys or values', 500);
+			}
+
 			// Add the mapping entry to the denomination mappings
 			serialNumberMappings[denomination].push(mappingEntry);
 		});
 
 		return serialNumberMappings;
 	} catch (error) {
-		if (error instanceof FileNotFoundError) {
-			throw new Error('The specified file was not found.');
-		} else if (error instanceof InvalidFormatError) {
-			throw error; // Rethrow the InvalidFormatError
+		if (error instanceof FileNotFoundError || error instanceof InvalidFormatError) {
+			throw error;
 		} else {
-			throw error; // Rethrow other errors as is
+			throw new Error('Error creating serial number mappings');
 		}
 	}
 }

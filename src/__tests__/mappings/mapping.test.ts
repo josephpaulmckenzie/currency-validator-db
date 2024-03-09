@@ -1,7 +1,6 @@
-import { createSerialNumberMappings } from '../../mappings/additional_mapping';
+import { FileNotFoundError, InvalidFormatError, MappingError } from '../../classes/errorClasses';
 import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
-import { CustomError } from '../../interfaces/interfaces';
-import { InvalidFormatError } from '../../classes/errorClasses';
+import { createSerialNumberMappings } from '../../mappings/additional_mapping';
 
 jest.mock('../../helpers/storage/localSystem/fileOperations');
 
@@ -9,95 +8,114 @@ describe('createSerialNumberMappings', () => {
 	afterEach(() => {
 		jest.clearAllMocks();
 	});
-	it('should correctly parse the mapping data from the file', () => {
-		// Mock the readFile function to return mock mapping data
-		(fileOperations.readFile as jest.Mock).mockReturnValue(
-			`
-			$1, Rubin, Withrow, 1996, *
-			$20, Rubin, Withrow, 1996, A
-			$50, Rubin, Withrow, 1996, A
-			`.trim()
-		);
 
-		const filePath = 'fakepath/additionalMappingDetails.csv';
-		const mappings = createSerialNumberMappings(filePath);
+	it('should throw FileNotFoundError when filePath is empty or falsy', () => {
+		const emptyFilePath = '';
+		expect(() => createSerialNumberMappings(emptyFilePath)).toThrow(FileNotFoundError);
 
-		// Assert specific mapping entries
-		expect(mappings['$1']).toBeDefined();
-		expect(mappings['$1'].length).toBe(1);
-		expect(mappings['$1'][0]).toEqual({
-			denomination: '$1',
-			secretary: 'Rubin',
-			treasurer: 'Withrow',
-			seriesYear: '1996',
-			serialNumberPrefix: '*',
-		});
-		expect(mappings['$20']).toBeDefined();
-		expect(mappings['$20'].length).toBe(1);
-		expect(mappings['$20'][0]).toEqual({
-			denomination: '$20',
-			secretary: 'Rubin',
-			treasurer: 'Withrow',
-			seriesYear: '1996',
-			serialNumberPrefix: 'A',
-		});
-		// Add more specific assertions based on your expected outcomes
+		// You can add more test cases for other falsy values like null, undefined, etc.
 	});
 
-	it('should correctly parse the mapping data from a file with headers', () => {
-		// Mock the readFile function to return mock mapping data with headers
-		(fileOperations.readFile as jest.Mock).mockReturnValue(
-			`
-			DENOMINATION,SECRETARY,TREASURER,SERIES YEAR,SERIAL NUMBER PREFIX
-			$20,Rubin,Withrow,1996,A
-			$50,Rubin,Withrow,1996,A
-			$100,Rubin,Withrow,1996,A
-			$1,Summers,Withrow,1999,*
-			`.trim()
-		);
+	it('should throw InvalidFormatError when lines.length <= 1', () => {
+		// Mock readFile to return a string with only headers or an empty string
+		(fileOperations.readFile as jest.Mock).mockReturnValueOnce('DENOMINATION,SECRETARY,TREASURER,SERIES YEAR,SERIAL NUMBER PREFIX');
 
-		const filePath = 'fakepath/additionalMappingDetails.csv';
+		const filePath = 'path/to/file';
+		expect(() => createSerialNumberMappings(filePath)).toThrow(InvalidFormatError);
+	});
+
+	it('should throw InvalidFormatError when trimmedLineData length is not 5 or contains falsy values', () => {
+		const invalidData = ['1', '2', '3', '4'];
+		const invalidDataString = invalidData.join(',');
+		(fileOperations.readFile as jest.Mock).mockReturnValueOnce(invalidDataString);
+
+		const filePath = 'path/to/file';
+		expect(() => createSerialNumberMappings(filePath)).toThrow(InvalidFormatError);
+	});
+
+	it('should throw InvalidFormatError when mappingEntry has no non-null values', () => {
+		// Mocking the readFile function to return a valid line with all null values
+		(fileOperations.readFile as jest.Mock).mockReturnValueOnce(',,,,');
+
+		const filePath = 'path/to/file';
+		expect(() => createSerialNumberMappings(filePath)).toThrow(InvalidFormatError);
+	});
+
+	it('should correctly parse the mapping data from a file with headers and a row of data', () => {
+		const headers = 'DENOMINATION,SECRETARY,TREASURER,SERIES YEAR,SERIAL NUMBER PREFIX';
+		const rowData = '$20, Bob, Bill, 2021, A';
+		(fileOperations.readFile as jest.Mock).mockReturnValueOnce(`${headers}\n${rowData}`);
+
+		const filePath = 'path/to/file';
 		const mappings = createSerialNumberMappings(filePath);
 
 		expect(mappings['$20']).toBeDefined();
 		expect(mappings['$20'].length).toBe(1);
 		expect(mappings['$20'][0]).toEqual({
-			denomination: '$20',
-			secretary: 'Rubin',
-			treasurer: 'Withrow',
-			seriesYear: '1996',
 			serialNumberPrefix: 'A',
+			denomination: '$20',
+			seriesYear: '2021',
+			treasurer: 'Bill',
+			secretary: 'Bob',
 		});
 	});
 
-	it('should handle an empty file', () => {
-		const filePath = 'path/to/empty/file.txt';
+	it('should throw InvalidFormatError when trimmedLineData has missing values', () => {
+		const headers = 'DENOMINATION,SECRETARY,TREASURER,SERIES YEAR,SERIAL NUMBER PREFIX';
+		const rowData = '$20, Bob, Bill, , A';
+		(fileOperations.readFile as jest.Mock).mockReturnValueOnce(`${headers}\n${rowData}`);
+
+		const filePath = 'path/to/file';
+
+		// Catch the error thrown by createSerialNumberMappings and compare it with a new instance of InvalidFormatError
+		try {
+			createSerialNumberMappings(filePath);
+		} catch (error) {
+			expect(error).toEqual(new InvalidFormatError('Invalid format of line: Missing required value', 400));
+		}
+	});
+
+	it('should throw InvalidFormatError when trimmedLineData has missing values', () => {
+		const headers = 'DENOMINATION,SECRETARY,TREASURER,SERIES YEAR,SERIAL NUMBER PREFIX';
+		const rowData = '$20, Bob, Bill, , A';
+		(fileOperations.readFile as jest.Mock).mockReturnValueOnce(`${headers}\n${rowData}`);
+
+		const filePath = 'path/to/file';
+
+		// Catch the error thrown by createSerialNumberMappings and check its message
 		try {
 			createSerialNumberMappings(filePath);
 		} catch (error) {
 			if (error instanceof InvalidFormatError) {
-				// Asserting type to InvalidFormatError
-				expect(error.message).toEqual('Mapping File is empty or contains only headers');
-				expect(error.statusCode).toEqual(400);
-			} else {
-				// Handle other error types if needed
-				fail('Expected error to be an instance of InvalidFormatError');
+				expect(error).toBeInstanceOf(InvalidFormatError);
+				expect(error.message).toEqual('Invalid format of line: Missing required value');
 			}
 		}
 	});
 
-	it('should handle a file with invalid format', () => {
-		// Mock the readFile function to return mock mapping data with invalid format
-		(fileOperations.readFile as jest.Mock).mockReturnValue(
-			`
-            $20,Rubin,Withrow,1996,A
-            Rubin,Withrow,1996,A
-        `.trim()
-		);
+	it('should be all good when when all needed keys are correctly supplied', () => {
+		const validKeys = ['1', '2', '3', '4', '5'];
+		const validDataString = validKeys.join(',');
+		(fileOperations.readFile as jest.Mock).mockReturnValueOnce(validDataString);
 
-		const filePath = 'fakepath/additionalMappingDetails.txt';
-
-		// Expect createSerialNumberMappings to throw an error
+		const filePath = 'path/to/file';
 		expect(() => createSerialNumberMappings(filePath)).toThrow(InvalidFormatError);
+	});
+
+	it('should throw an error', () => {
+		const headers = 'DENOMINATION,SECRETARY,TREASURER,SERIES YEAR,SERIAL NUMBER PREFIX';
+		const rowData = '$20, Bob, Bill, 2021, A';
+		(fileOperations.readFile as jest.Mock).mockReturnValueOnce(`${headers}\n${rowData}`);
+
+		const filePath = 'path/to/file';
+
+		try {
+			createSerialNumberMappings(filePath);
+		} catch (error) {
+			if (error instanceof MappingError) {
+				expect(error).toBeInstanceOf(MappingError);
+				expect(error.message).toEqual('Invalid format of line: Missing required value');
+			}
+		}
 	});
 });

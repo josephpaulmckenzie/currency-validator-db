@@ -1,7 +1,7 @@
 import { Pool, QueryResult } from 'pg';
-import { handleDatabaseError } from './errorHandlers';
 import { NoteDetail } from '../interfaces/interfaces';
 import { config } from 'dotenv';
+import { DatabaseError } from '../classes/errorClasses';
 config();
 
 const pool = new Pool({
@@ -48,8 +48,11 @@ async function insertNoteDetail(noteDetail: NoteDetail): Promise<QueryResult> {
 			s3url,
 		]);
 	} catch (error) {
-		handleDatabaseError(error);
-		throw error;
+		if (error instanceof DatabaseError) {
+			throw new DatabaseError(error.message, '500');
+		} else {
+			throw error;
+		}
 	}
 }
 

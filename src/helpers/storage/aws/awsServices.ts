@@ -1,7 +1,8 @@
 import { saveToS3 } from './s3Operations';
-import { DynamoDBInsertionError, S3UploadError } from '../../../classes/errorClasses';
+import { S3UploadError } from '../../../classes/errorClasses';
 import { insertNoteDetail } from '../../insertRecord';
 import { NoteDetail, UploadData } from '@src/interfaces/interfaces';
+import { DatabaseError } from 'pg';
 
 const AwsService = {
 	async uploadToAws(details: NoteDetail | UploadData, s3Key: string): Promise<{ success: boolean; message?: string }> {
@@ -26,7 +27,7 @@ const AwsService = {
 			console.log('Upload and save completed successfully.');
 			return { success: true };
 		} catch (error) {
-			if (error instanceof DynamoDBInsertionError) {
+			if (error instanceof DatabaseError) {
 				return { success: false, message: error.message };
 			} else {
 				console.error(error);

@@ -13,25 +13,10 @@ import { DatabaseError } from '../classes/errorClasses';
  */
 function handleDatabaseError(error: unknown): boolean {
 	if (error instanceof DatabaseError) {
-		if (error instanceof DatabaseError) {
-			if (error.code === '23505') {
-				console.error('Duplicate key violation:', error.constraint);
-				// Handle duplicate key violation error
-			} else if (error.code === '42P01') {
-				console.error('Table not found:', error.table);
-				// Handle table not found error
-			} else {
-				console.error('Unknown database error:', error);
-			}
-			return true; // Error handled successfully
-		} else {
-			console.error('Unknown error:', error);
-			// Handle other unknown errors
-			return false; // Error not handled
-		}
+		throw new DatabaseError(error.message, '500');
 	} else {
 		console.error('Unknown error:', error);
-		return false; // Error not handled
+		throw new DatabaseError('An unknown error occurred.', '500');
 	}
 }
 
