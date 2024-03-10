@@ -48,13 +48,14 @@ export class S3UploadError extends Error {
 }
 
 export class DatabaseError extends Error {
-	code: string;
+	statusCode: string;
 	constraint?: string;
 	table?: string;
 
-	constructor(message: string, code: string, constraint?: string, table?: string) {
+	constructor(message: string, statusCode: string, constraint?: string, table?: string) {
 		super(message);
-		this.code = code;
+		this.name = 'DatabaseError';
+		this.statusCode = statusCode;
 		this.constraint = constraint;
 		this.table = table;
 	}

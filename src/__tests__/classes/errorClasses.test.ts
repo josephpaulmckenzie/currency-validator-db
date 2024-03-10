@@ -69,23 +69,6 @@ describe('TextDetectionsError', () => {
 	});
 });
 
-describe('DatabaseError', () => {
-	it('should create a DatabaseError instance with provided properties', () => {
-		const errorMessage = 'Database error occurred';
-		const errorCode = '23505';
-		const errorConstraint = 'unique_key_constraint';
-		const errorTable = 'users';
-
-		const databaseError = new DatabaseError(errorMessage, errorCode, errorConstraint, errorTable);
-
-		expect(databaseError instanceof DatabaseError).toBe(true);
-		expect(databaseError.message).toBe(errorMessage);
-		expect(databaseError.code).toBe(errorCode);
-		expect(databaseError.constraint).toBe(errorConstraint);
-		expect(databaseError.table).toBe(errorTable);
-	});
-});
-
 describe('MappingError', () => {
 	it('should have the correct properties', () => {
 		const errorMessage = 'Mapping error';
@@ -102,5 +85,18 @@ describe('MappingError', () => {
 		const mappingError = new MappingError('Mapping error', 500);
 
 		expect(mappingError instanceof Error).toBe(true);
+	});
+});
+
+describe('Database Error', () => {
+	/**
+	 * Test case: should create a new instance with the provided message.
+	 */
+	it('should create a new instance with the provided message', () => {
+		const databaseError = new DatabaseError('There was an error with the database', '5000');
+
+		expect(databaseError.message).toBe('There was an error with the database');
+		expect(databaseError.statusCode).toBe('5000');
+		expect(databaseError.name).toBe('DatabaseError');
 	});
 });

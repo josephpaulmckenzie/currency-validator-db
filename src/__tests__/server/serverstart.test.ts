@@ -1,8 +1,8 @@
-import { startServer, stopServer } from '../startServer'; // Importing server start and stop functions
+import { startServer, stopServer } from '../../startServer';
 
 // Test suite for the server functionality
 describe('Server', () => {
-	let consoleLogSpy: jest.SpyInstance<void, Parameters<typeof console.log>>; // Spy to mock console.log
+	let consoleLogSpy: jest.SpyInstance<void, Parameters<typeof console.log>>;
 
 	// Before each test, mock console.log and reset the spy
 	beforeEach(async () => {
