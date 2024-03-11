@@ -26,7 +26,7 @@ const serialNumberPatterns: any = {
 	// Examples: '01100110, 02200220, 98899889'
 
 	// Super Radar - In a super radar, the interior digits are all the same.
-	isSuperRadarSerialPattern: /^[A-Q]?[A-L]\s?(\d)(?!\1{8})\d{6}\1[A-Q]$/,
+	isSuperRadarSerialPattern: /^[A-Q]?[A-L]\s?(\d)(\d)(\2{5})\1[A-Q]$/,
 
 	// Examples: '71111117, 98888889, 21111112'
 
@@ -47,8 +47,8 @@ const serialNumberPatterns: any = {
 	// Example: '11111110'
 
 	// Binary - In a binary serial number, only two numbers appear.
-	isBinarySerialPattern: /^[A-Q]?[A-L]\s?(\d)(?!\1+$)\d*[0-9]\d*[A-Q]$/,
-	// Examples: '10101010, 12122112, 34343434'
+	isBinarySerialPattern: /^[A-Q]?[A-L]\s?(\d)(?!\1)(\d)(?:\1|\2){3}(?:\2|\1){3}\s?[A-Q]$/,
+	// Examples: 12122112, 34343434'
 
 	// True Binary - In a true binary serial number, those two numbers are zero and one.
 	isTrueBinarySerialPattern: /^[A-Q]?[A-L]\s?(01|10)+[A-Q]$/,

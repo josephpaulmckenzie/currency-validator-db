@@ -111,10 +111,10 @@
 		</form>
 
 		<!-- Success message will be displayed here -->
-
 		<script>
 			document.getElementById('uploadForm').addEventListener('submit', async function (event) {
 				event.preventDefault();
+				console.log('Form submitted'); // Add this line to check if the form submission event is triggered
 
 				const fileInput = document.getElementById('fileInput');
 				const file = fileInput.files[0];
@@ -136,10 +136,9 @@
 					const response = await fetch('/upload', {
 						method: 'POST',
 						body: formData,
-						// Enable upload progress tracking
-						onUploadProgress: function (event) {
-							const progressPercentage = Math.round((event.loaded / event.total) * 100);
-							progress.style.width = progressPercentage + '%';
+						// Add headers to specify form data
+						headers: {
+							Accept: 'application/json',
 						},
 					});
 
@@ -147,13 +146,31 @@
 						throw new Error('Failed to upload image');
 					}
 
-					const responseData = await response.json();
-					// console.log(responseData);
+					const totalBytes = response.headers.get('Content-Length'); // Total size of the uploaded image
+					const reader = response.body.getReader(); // Get a reader for reading the response body
 
+					let receivedBytes = 0; // Variable to track received bytes
+
+					reader.read().then(function processResult(result) {
+						if (result.done) {
+							// Upload completed
+							console.log('Upload completed');
+						} else {
+							// Calculate progress and update UI
+							receivedBytes += result.value.length;
+							const progress = (receivedBytes / totalBytes) * 100;
+							console.log(`Upload progress: ${progress.toFixed(2)}%`);
+
+							// Read the next chunk
+							return reader.read().then(processResult);
+						}
+					});
+
+					// If everything is successful, redirect to the success page
 					window.location.href = '/success';
 				} catch (error) {
-					console.error('Error:', error);
-					alert('Failed to upload image. Please try again.');
+					console.error('Error submitting form:', error); // Add error handling for form submission
+					alert('Failed to submit form. Please try again.');
 				} finally {
 					// Hide loader after upload completes or fails
 					loaderContainer.style.display = 'none';
@@ -165,7 +182,6 @@
 				const success = urlParams.get('success');
 
 				if (success === 'true') {
-					// Display success message
 					document.getElementById('successMessage').style.display = 'block';
 				}
 			});

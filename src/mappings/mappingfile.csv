@@ -1,61 +1,61 @@
 DENOMINATION,SECRETARY,TREASURER,SERIES YEAR,SERIAL NUMBER PREFIX
-$20.00,        Rubin,    Withrow,1996,    A
-$50.00,        Rubin,    Withrow,1996,    A
-$100.00,    Rubin,    Withrow,1996,    A
-$1.00,        Summers,    Withrow,1999,    *
-$5.00,        Summers,    Withrow,1996,    B
-$10.00,        Summer,    Withrow,1996,    B
-$20.00,        Summers,    Withrow,1996,    B
-$100.00,    Summers,    Withrow,1996,    B
-$1.00,        O'Neil,    Marin,2001,    *
-$5.00,        O'Neil,    Marin,2001,    C
-$10.00,        O'Neil,    Marin,2001,    C
-$20.00,        O'Neil,    Marin,2001,    C
-$50.00,        O'Neil,    Marin,2001,    C
-$100.00,    O'Neil,    Marin,2001,    C
-$1.00,        Snow,    Marin,2003,    *
-$2.00,        Snow,    Marin,2003,    *
-$10.00,        Snow,    Marin,2003,    D
-$100.00,    Snow,    Marin,2003,    D
-$1.00,        Snow,    Cabral,2003A,    *
-$2.00,        Snow,    Cabral,2003A,    *
-$5.00,        Snow,    Cabral,2003A,    F
-$100.00,    Snow,    Cabral,2003A,    F
-$20.00,        Snow,    Marin,2004,    E
-$50.00,        Snow,    Marin,2004,    E
-$10.00,        Snow,    Cabral,2004A,    G
-$20.00,        Snow,    Cabral,2004A,    G
-$50.00,        Snow,    Cabral,2004A,    G
-$5.00,        Paulson,    Cabral,2006,    H
-$100.00,    Paulson,    Cabral,2006,    H
-$100.00,    Paulson,    Cabral,2006A,    K
-$20.00,        Paulson,    Cabral,2006,    I
-$1.00,        Paulson,    Cabral,2006,    *
-$5.00,        Paulson,    Cabral,2006,    I
-$10.00,        Paulson,    Cabral,2006,    I
-$50.00,        Paulson,    Cabral,2006,    I
-$1.00,        Geithner,Rios,2009,    *
-$2.00,        Geithner,Rios,2009,    *
-$10.00,        Geithner,Rios,2009,    J
-$20.00,        Geithner,Rios,2009,    J
-$50.00,        Geithner,Rios,2009,    J
-$100.00,    Geithner,Rios,2009,    J
-$100.00,    Geithner,Rios,2009A,    L
-$1.00,        Lew,        Rios,2013,    *
-$5.00,        Lew,        Rios,2013,    M
-$10.00,        Lew,        Rios,2013,    M
-$20.00,        Lew,        Rios,2013,    M
-$50.00,        Lew,        Rios,2013,    M
-$100.00,    Lew,        Rios,2013,    M
-$1.00,        Mnuchin,    Carranza,2017,    *
-$10.00,        Mnuchin,    Carranza,2017,    N
-$20.00,        Mnuchin,    Carranza,2017,    N
-$1.00,        Mnuchin,    Carranza,2017A,    *
-$2.00,        Mnuchin,    Carranza,2017A,    *
-$5.00,        Mnuchin,    Carranza,2017A,    P
-$10.00,        Mnuchin,    Carranza,2017A,    P
-$20.00,        Mnuchin,    Carranza,2017A,    P
-$50.00,        Mnuchin,    Carranza,2017A,    P
-$100.00,    Mnuchin,    Carranza,2017A,    P
-$1.00,        Yellen,    Malerba,2021,    Q
-$5.00,        Yellen,    Malerba,2021,    Q
+$20,Rubin,Withrow,1996,A
+$50,Rubin,Withrow,1996,A
+$100,Rubin,Withrow,1996,A
+$1,Summers,Withrow,1999,*
+$5,Summers,Withrow,1996,B
+$10,Summer,Withrow,1996,B
+$20,Summers,Withrow,1996,B
+$100,Summers,Withrow,1996,B
+$1,O'Neil,Marin,2001,*
+$5,O'Neil,Marin,2001,C
+$10,O'Neil,Marin,2001,C
+$20,O'Neil,Marin,2001,C
+$50,O'Neil,Marin,2001,C
+$100,O'Neil,Marin,2001,C
+$1,Snow,Marin,2003,*
+$2,Snow,Marin,2003,*
+$10,Snow,Marin,2003,D
+$100,Snow,Marin,2003,D
+$1,Snow,Cabral,2003A,*
+$2,Snow,Cabral,2003A,*
+$5,Snow,Cabral,2003A,F
+$100,Snow,Cabral,2003A,F
+$20,Snow,Marin,2004,E
+$50,Snow,Marin,2004,E
+$10,Snow,Cabral,2004A,G
+$20,Snow,Cabral,2004A,G
+$50,Snow,Cabral,2004A,G
+$5,Paulson,Cabral,2006,H
+$100,Paulson,Cabral,2006,H
+$100,Paulson,Cabral,2006A,K
+$20,Paulson,Cabral,2006,I
+$1,Paulson,Cabral,2006,*
+$5,Paulson,Cabral,2006,I
+$10,Paulson,Cabral,2006,I
+$50,Paulson,Cabral,2006,I
+$1,Geithner,Rios,2009,*
+$2,Geithner,Rios,2009,*
+$10,Geithner,Rios,2009,J
+$20,Geithner,Rios,2009,J
+$50,Geithner,Rios,2009,J
+$100,Geithner,Rios,2009,J
+$100,Geithner,Rios,2009A,L
+$1,Lew,Rios,2013,*
+$5,Lew,Rios,2013,M
+$10,Lew,Rios,2013,M
+$20,Lew,Rios,2013,M
+$50,Lew,Rios,2013,M
+$100,Lew,Rios,2013,M
+$1,Mnuchin,Carranza,2017,*
+$10,Mnuchin,Carranza,2017,N
+$20,Mnuchin,Carranza,2017,N
+$1,Mnuchin,Carranza,2017A,*
+$2,Mnuchin,Carranza,2017A,*
+$5,Mnuchin,Carranza,2017A,P
+$10,Mnuchin,Carranza,2017A,P
+$20,Mnuchin,Carranza,2017A,P
+$50,Mnuchin,Carranza,2017A,P
+$100,Mnuchin,Carranza,2017A,P
+$1,Yellen,Malerba,2021,Q
+$5,Yellen,Malerba,2021,Q

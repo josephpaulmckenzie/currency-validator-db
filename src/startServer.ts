@@ -2,7 +2,7 @@
 
 import { app } from './server/server';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3089;
 
 let server: any; // Define the server variable outside the conditional block
 

@@ -1,8 +1,8 @@
-import { FileNotFoundError, InvalidFormatError, MappingError } from '../classes/errorClasses';
+import { constants } from 'buffer';
 import { fileOperations } from '../helpers/storage/localSystem/fileOperations';
 import { SerialNumberMappings, FederalReserveMapping } from '../interfaces/interfaces';
 
-export const federalReserveMapping: FederalReserveMapping = {
+const federalReserveMapping: FederalReserveMapping = {
 	A1: 'Boston, MA',
 	B2: 'New York City, NY',
 	C3: 'Philadelphia, PA',
@@ -17,64 +17,48 @@ export const federalReserveMapping: FederalReserveMapping = {
 	L12: 'San Francisco, CAs',
 };
 
-export function createSerialNumberMappings(filePath: string): SerialNumberMappings {
-	const serialNumberMappings: SerialNumberMappings = {};
-	const fileContent = fileOperations.readFile(filePath);
-
+function createSerialNumberMappings(filePath: string) {
+	// console.log('in create mappinsgs (file path)', filePath);
 	try {
-		if (!filePath) throw new FileNotFoundError('Mapping File not found', 404);
+		const lines = fileOperations.readFile(filePath).split('\n');
+		const serialNumberMappings: SerialNumberMappings = {};
+		// console.log('lines', lines);
+		lines.forEach((line) => {
+			// console.log('line', line);
+			if (line.trim() !== '') {
+				const [denomination, secretary, treasurer, seriesYear, serialNumberPrefix] = line.trim().split(',');
+				// console.log('denomination', denomination);
+				// console.log('secretary', secretary);
+				// console.log('treasurer', treasurer);
+				// console.log('seriesYear', seriesYear);
+				// console.log('serialNumberPrefix', serialNumberPrefix);
+				if (denomination && serialNumberPrefix) {
+					if (!serialNumberMappings[denomination]) {
+						serialNumberMappings[denomination] = [];
+					}
 
-		const lines = fileContent.split('\n');
+					// const escapedPrefix = serialNumberPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-		if (lines.length <= 1) {
-			throw new InvalidFormatError('Mapping File is empty or contains only headers', 400);
-		}
-
-		lines.slice().map((line: string, lineNumber: number) => {
-			if ((lines[0].startsWith('DENOMINATION') && lineNumber === 0) || line.trim() === '') return;
-
-			// Split the line into fields using comma as delimiter
-			const lineData = line.split(',');
-			// Remove leading/trailing whitespace from each field
-			const trimmedLineData = lineData.map((field: string) => field.trim());
-
-			// Validate the format of the line
-			if (trimmedLineData.length !== 5 || !trimmedLineData.every(Boolean)) {
-				throw new InvalidFormatError('Invalid format of line: Missing required value', 400);
+					serialNumberMappings[denomination].push({
+						serialNumberPrefix,
+						denomination,
+						seriesYear,
+						treasurer,
+						secretary,
+					});
+				}
 			}
-
-			// Extract data from the line
-			const [denomination, secretary, treasurer, seriesYear, serialNumberPrefix] = trimmedLineData;
-
-			// Initialize denomination mappings if it doesn't exist
-			if (!serialNumberMappings[denomination]) {
-				serialNumberMappings[denomination] = [];
-			}
-
-			// Construct the mapping entry
-			const mappingEntry = {
-				serialNumberPrefix,
-				denomination,
-				seriesYear,
-				treasurer,
-				secretary,
-			};
-
-			// Check if all required keys have non-null values
-			if (Object.values(mappingEntry).length === 0) {
-				throw new MappingError('Error creating mapping entry: Missing required keys or values', 500);
-			}
-
-			// Add the mapping entry to the denomination mappings
-			serialNumberMappings[denomination].push(mappingEntry);
 		});
-
+		// consosle.log('serialNumberMappings', serialNumberMappings);
 		return serialNumberMappings;
 	} catch (error) {
-		if (error instanceof FileNotFoundError || error instanceof InvalidFormatError) {
-			throw error;
-		} else {
-			throw new Error('Error creating serial number mappings');
-		}
+		throw {
+			status: 400,
+			error: `Error creating Serial Number Mappings ${error} `,
+			inputDetails: {},
+			validator: 'createSerialNumberMappings',
+		};
 	}
 }
+
+export { federalReserveMapping, createSerialNumberMappings };

@@ -48,21 +48,29 @@ interface NoteDetails {
  * Interface representing matched details of a banknote.
  */
 interface MatchedDetail {
-	seriesYear: string;
-	treasurer: string;
-	secretary: string;
+	seriesYear: string | undefined;
+	treasurer: string | undefined;
+	secretary: string | undefined;
 }
 
 /**
  * Interface representing details of a banknote denomination.
  */
+// interface DenominationDetail {
+// 	pattern: any;
+// 	serialNumberPrefix: string;
+// 	seriesYear: string;
+// 	treasurer: string;
+// 	secretary: string;
+// }
+
 interface DenominationDetail {
 	serialNumberPrefix: string;
-	seriesYear: string;
-	treasurer: string;
-	secretary: string;
+	pattern?: RegExp | string;
+	seriesYear?: string;
+	treasurer?: string;
+	secretary?: string;
 }
-
 interface BoundingBox {
 	Width: number;
 	Height: number;

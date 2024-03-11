@@ -1,87 +1,86 @@
 import express, { NextFunction, Request, Response } from 'express';
-import fs from 'fs';
 import multer, { StorageEngine } from 'multer';
 import path from 'path';
 import { AwsService } from '../helpers/storage/aws/awsServices';
-import { CustomMulterOptions } from '@src/interfaces/interfaces';
+import { readFileSync } from 'fs';
+import { getTextDetections } from '../helpers';
+import { UploadData } from '../interfaces/interfaces';
 
-/**
- * Initialize Express app.
- */
 const app: express.Application = express();
 app.set('view engine', 'ejs');
 
-// Initialize multer with the storage engine
+// Logging middleware to log incoming requests
+app.use((req, res, next) => {
+	console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+	next();
+});
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+	console.error('An error occurred:', err);
+	res.status(500).json({ error: 'Internal Server Error' });
+});
+
 const storage: StorageEngine = multer.diskStorage({
-	destination: 'public/uploads/',
-	filename: (_req, file) => {
-		return file.originalname;
+	destination: (req, file, cb) => {
+		// Set the destination folder for uploads
+		cb(null, 'public/uploads/');
+	},
+	filename: (req, file, cb) => {
+		// Set the filename to be the original filename
+		cb(null, file.originalname);
 	},
 });
 
-// Create upload middleware with multer
-const uploadOptions: CustomMulterOptions = {
-	storage: storage,
-};
-
-const upload = multer(uploadOptions);
-
-/**
- * Middleware to parse urlencoded bodies and serve static files.
- */
+// Set up multer with the configured storage engine
+const upload = multer({ storage: storage });
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-/**
- * Route for serving the index page.
- */
+let imageDataUrl = '';
+let buffer: string | Buffer;
+let detectedText: any;
+let fileName: string;
+let noteDetails;
 app.get('/', async (_req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
+		console.log('Rendering index.ejs');
+
 		return res.render('index');
 	} catch (error) {
 		next(error);
 	}
 });
 
-/**
- * Route for handling file upload.
- */
 app.post('/upload', upload.single('image'), async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
-	console.log('Received file upload request'); // Add debug logging
+	console.log('Received file upload request');
 	if (!request.file) {
-		console.log('No file uploaded'); // Add debug logging
+		console.log('No file uploaded');
 		return response.status(400).json({ message: 'No file uploaded' });
 	}
 
 	try {
-		console.log('File uploaded successfully'); // Add debug logging
+		console.log('File uploaded successfully');
 		const destinationDir = 'public/uploads/';
-		console.log('Destination directory:', destinationDir); // Add debug logging
-		const buffer = fs.readFileSync(request.file.path);
-		const imageDataUrl = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+		console.log('Destination directory:', destinationDir);
+		buffer = readFileSync(request.file.path);
+		imageDataUrl = `data:image/jpeg;base64,${buffer.toString('base64')}`;
 		return response.json({ success: true, dataURL: imageDataUrl });
 	} catch (error) {
-		console.error('Error handling file upload:', error); // Add debug logging
+		console.error('Error handling file upload:', error);
 		next(error);
 	}
 });
 
-/**
- * Route for displaying success page.
- */
 app.get('/success', async (_req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
-		const noteDetails = {};
-		const dataURL: string = '';
-		return res.render('success', { noteDetails, dataURL });
+		noteDetails = await getTextDetections(buffer);
+		console.log('noteDetails', noteDetails);
+		return res.render('success', { noteDetails, dataURL: imageDataUrl });
 	} catch (error) {
 		next(error);
 	}
 });
 
-/**
- * Route for saving data to AWS and responding with the results.
- */
 app.post('/save', async (req: Request, res: Response): Promise<Response | void> => {
 	try {
 		const noteDetails = req.body.noteDetails;
@@ -96,14 +95,6 @@ app.post('/save', async (req: Request, res: Response): Promise<Response | void> 
 		console.error('Error uploading to AWS:', error);
 		return res.status(500).json({ error: 'An error occurred while uploading to AWS' });
 	}
-});
-
-/**
- * Export the Express app instance.
- */
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
 });
 
 export { app };
