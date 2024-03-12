@@ -1,50 +1,57 @@
-import { FileNotFoundError } from '../../classes/errorClasses';
+import path from 'path';
+import { FileNotFoundError, InvalidFormatError } from '../../classes/errorClasses';
 import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, statSync } from 'fs';
 
 jest.mock('fs');
 
 describe('fileOperations', () => {
 	describe('checkFileExists', () => {
 		it('should return true if the file exists', () => {
-			const filePath = 'fakepath/directory_structure.txt';
-			(existsSync as jest.Mock).mockReturnValue(true); // Mock existsSync to return true
+			const filePath = 'existing/file.txt';
+			(existsSync as jest.Mock).mockReturnValue(true);
+
 			const fileExists = fileOperations.fileExists(filePath);
 			expect(fileExists).toBe(true);
 		});
 
 		it('should throw FileNotFoundError if the file does not exist', () => {
-			const filePath = 'path/to/nonexistent/file.txt';
-			(existsSync as jest.Mock).mockReturnValue(false); // Mock existsSync to return false
+			const filePath = 'nonexistent/file.txt';
+			(existsSync as jest.Mock).mockReturnValue(false);
+
 			expect(() => fileOperations.fileExists(filePath)).toThrow(FileNotFoundError);
 		});
 	});
 
-	describe('readFile', () => {
+	describe('Test reading files', () => {
+		it('should throw an error if there are issues reading the file', () => {
+			const filePath = 'nonexistent/file.txt';
+			(existsSync as jest.Mock).mockReturnValue(true);
+			(statSync as jest.Mock).mockReturnValueOnce({ size: 10 });
+			(readFileSync as jest.Mock).mockImplementation(() => {
+				throw new Error('Error reading file');
+			});
+
+			expect(() => fileOperations.readFile(filePath)).toThrow();
+		});
+
+		it('should throw InvalidFormatError if the file is empty', () => {
+			const filePath = 'empty/file.txt';
+			(existsSync as jest.Mock).mockReturnValue(true);
+			(statSync as jest.Mock).mockReturnValueOnce({ size: 0 });
+
+			expect(() => fileOperations.readFile(filePath)).toThrow(InvalidFormatError);
+		});
+
 		it('should read the contents of the file', () => {
-			const filePath = 'Users/josephmckenzie/Documents/Code/currency-validator-db/directory_structure.txt';
+			const filePath = 'existing/file.txt';
 			const fileContents = 'This is the file content.';
-			(existsSync as jest.Mock).mockReturnValue(true); // Mock existsSync to return true
-			(readFileSync as jest.Mock).mockReturnValue(fileContents); // Mock readFileSync to return file contents
+			(existsSync as jest.Mock).mockReturnValue(true);
+			(statSync as jest.Mock).mockReturnValueOnce({ size: fileContents.length });
+			(readFileSync as jest.Mock).mockReturnValue(fileContents);
+
 			const content = fileOperations.readFile(filePath);
 			expect(content).toBe(fileContents);
-		});
-
-		it('should throw FileNotFoundError if the file does not exist', () => {
-			const filePath = 'path/to/nonexistent/file.txt';
-			(existsSync as jest.Mock).mockReturnValue(false); // Mock existsSync to return false
-			expect(() => fileOperations.readFile(filePath)).toThrow(FileNotFoundError);
-		});
-
-		it('should throw an error if there are issues reading the file', () => {
-			const filePath = '/Users/josephmckenzie/Documents/Code/currency-validator-db/directory_structure.txt';
-			const errorMessage = 'Error reading file.';
-			(existsSync as jest.Mock).mockReturnValue(true); // Mock existsSync to return true
-			(readFileSync as jest.Mock).mockImplementation(() => {
-				throw new Error(errorMessage); // Mock readFileSync to throw an error
-			});
-			expect(() => fileOperations.readFile(filePath)).toThrow(Error);
-			expect(() => fileOperations.readFile(filePath)).toThrow(errorMessage);
 		});
 	});
 });

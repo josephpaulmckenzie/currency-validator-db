@@ -1,19 +1,22 @@
-import multer from 'multer';
+// middleware.test.js
+
+import { multer } from 'multer';
+import { initializeMulter } from '../../server/multerInitializer';
 
 describe('Multer Initialization', () => {
 	it('should initialize multer with the correct storage engine', () => {
-		// Mock the diskStorage function
 		const mockDiskStorage = jest.fn();
-		// Mock the diskStorage function to return the expected configuration
 		jest.spyOn(multer, 'diskStorage').mockImplementation(mockDiskStorage);
 
-		// Initialize multer with the storage engine
-		require('../../server/server');
+		// Initialize multer using your initializer
+		initializeMulter();
 
 		// Verify that diskStorage was called with the correct configuration
-		expect(mockDiskStorage).toHaveBeenCalledWith({
-			destination: 'public/uploads/',
-			filename: expect.any(Function), // The filename should be a function
-		});
+		expect(mockDiskStorage).toHaveBeenCalledWith(
+			expect.objectContaining({
+				destination: expect.any(Function),
+				filename: expect.any(Function),
+			})
+		);
 	});
 });

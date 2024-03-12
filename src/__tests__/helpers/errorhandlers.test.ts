@@ -1,7 +1,9 @@
+import { statSync } from 'fs';
 import { InvalidFormatError, TextDetectionsError, ValidationError } from '../../classes/errorClasses';
 import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
 import { createSerialNumberMappings } from '../../mappings/additional_mapping';
 jest.mock('../../helpers/storage/localSystem/fileOperations');
+jest.mock('fs');
 
 afterEach(() => {
 	jest.clearAllMocks();
@@ -40,6 +42,7 @@ describe('ValidationError', () => {
 it('should throw InvalidFormatError for an empty file', () => {
 	(fileOperations.fileExists as jest.Mock).mockReturnValue(true);
 	(fileOperations.readFile as jest.Mock).mockReturnValue('');
+	(statSync as jest.Mock).mockReturnValueOnce({ size: 0 });
 
 	const filePath = 'path/to/empty/file.txt';
 	expect(() => createSerialNumberMappings(filePath)).toThrow(InvalidFormatError);

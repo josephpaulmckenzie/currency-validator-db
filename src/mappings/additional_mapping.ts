@@ -1,6 +1,8 @@
 import { constants } from 'buffer';
 import { fileOperations } from '../helpers/storage/localSystem/fileOperations';
 import { SerialNumberMappings, FederalReserveMapping } from '../interfaces/interfaces';
+import { statSync } from 'fs';
+import { FileNotFoundError, InvalidFormatError } from '../classes/errorClasses';
 
 const federalReserveMapping: FederalReserveMapping = {
 	A1: 'Boston, MA',
@@ -18,26 +20,37 @@ const federalReserveMapping: FederalReserveMapping = {
 };
 
 function createSerialNumberMappings(filePath: string) {
-	// console.log('in create mappinsgs (file path)', filePath);
 	try {
+		if (!filePath) {
+			console.log('File Path is required');
+			throw new FileNotFoundError('File Path is required', 500);
+		}
+
+		if (!fileOperations.fileExists(filePath)) {
+			// console.log('File does not exist');
+			throw new FileNotFoundError('File does not exist', 500);
+		}
+
+		try {
+			const fileStats = statSync(filePath);
+			if (fileStats.size === 0) {
+				// console.log('File is empty');
+				throw new InvalidFormatError('File is empty', 500);
+			}
+		} catch (error) {
+			// console.error('Error checking file size:', error);
+			throw new InvalidFormatError('Error checking file size', 500);
+		}
+
 		const lines = fileOperations.readFile(filePath).split('\n');
 		const serialNumberMappings: SerialNumberMappings = {};
-		// console.log('lines', lines);
 		lines.forEach((line) => {
-			// console.log('line', line);
 			if (line.trim() !== '') {
 				const [denomination, secretary, treasurer, seriesYear, serialNumberPrefix] = line.trim().split(',');
-				// console.log('denomination', denomination);
-				// console.log('secretary', secretary);
-				// console.log('treasurer', treasurer);
-				// console.log('seriesYear', seriesYear);
-				// console.log('serialNumberPrefix', serialNumberPrefix);
 				if (denomination && serialNumberPrefix) {
 					if (!serialNumberMappings[denomination]) {
 						serialNumberMappings[denomination] = [];
 					}
-
-					// const escapedPrefix = serialNumberPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 					serialNumberMappings[denomination].push({
 						serialNumberPrefix,
@@ -49,15 +62,16 @@ function createSerialNumberMappings(filePath: string) {
 				}
 			}
 		});
-		// consosle.log('serialNumberMappings', serialNumberMappings);
+		console.log('serialNumberMappings', serialNumberMappings);
 		return serialNumberMappings;
 	} catch (error) {
-		throw {
-			status: 400,
-			error: `Error creating Serial Number Mappings ${error} `,
-			inputDetails: {},
-			validator: 'createSerialNumberMappings',
-		};
+		// Re-throw specific errors
+		if (error instanceof FileNotFoundError || error instanceof InvalidFormatError) {
+			throw error;
+		} else {
+			// If it's an unexpected error, re-throw it
+			throw error;
+		}
 	}
 }
 

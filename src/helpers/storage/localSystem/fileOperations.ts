@@ -1,5 +1,5 @@
-import { existsSync, readFileSync } from 'fs';
-import { FileNotFoundError } from '../../../classes/errorClasses';
+import { existsSync, readFileSync, statSync } from 'fs';
+import { FileNotFoundError, InvalidFormatError } from '../../../classes/errorClasses';
 import { FileOperations } from '../../../interfaces/interfaces';
 
 /**
@@ -29,7 +29,18 @@ const fileOperations: FileOperations = {
 	 */
 	readFile(filePath: string): string {
 		try {
-			this.fileExists(filePath);
+			if (!existsSync(filePath)) {
+				throw new FileNotFoundError('File does not exist', 500);
+			}
+			if (existsSync(filePath)) {
+				const stats = statSync(filePath);
+
+				if (stats.size === 0) {
+					// console.log('File is empty');
+					throw new InvalidFormatError('File is empty', 500);
+				}
+			}
+
 			return readFileSync(filePath, 'utf8');
 		} catch (error) {
 			if (error instanceof FileNotFoundError) {
