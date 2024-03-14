@@ -1,4 +1,3 @@
-import path from 'path';
 import { FileNotFoundError, InvalidFormatError } from '../../classes/errorClasses';
 import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
 import { existsSync, readFileSync, statSync } from 'fs';

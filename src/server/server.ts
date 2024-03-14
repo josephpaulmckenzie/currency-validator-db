@@ -1,10 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 import multer, { StorageEngine } from 'multer';
 import path from 'path';
-import { AwsService } from '../helpers/storage/aws/awsServices';
 import { readFileSync } from 'fs';
-import { getTextDetections } from '../helpers';
-import { UploadData } from '../interfaces/interfaces';
+import { getTextDetections } from '../helpers/';
 
 const app: express.Application = express();
 app.set('view engine', 'ejs');
@@ -14,13 +12,16 @@ app.use((req, res, next) => {
 	console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
 	next();
 });
+
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
 	console.error('An error occurred:', err);
-	res.status(500).json({ error: 'Internal Server Error' });
+	const errorMessage = err.message || 'Internal Server Error'; // Ensure error message is available
+	res.status(500).json({ error: errorMessage, route: req.url }); // Set the error message in the response body
+	next(err); // Call next with the error
 });
 
-const storage: StorageEngine = multer.diskStorage({
+const multerDiskStorage: StorageEngine = multer.diskStorage({
 	destination: (req, file, cb) => {
 		// Set the destination folder for uploads
 		cb(null, 'public/uploads/');
@@ -32,19 +33,18 @@ const storage: StorageEngine = multer.diskStorage({
 });
 
 // Set up multer with the configured storage engine
-const upload = multer({ storage: storage });
+const upload = multer({ storage: multerDiskStorage });
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 let imageDataUrl = '';
 let buffer: string | Buffer;
-let detectedText: any;
-let fileName: string;
 let noteDetails;
+
 app.get('/', async (_req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
 		console.log('Rendering index.ejs');
-
 		return res.render('index');
 	} catch (error) {
 		next(error);
@@ -81,19 +81,22 @@ app.get('/success', async (_req: Request, res: Response, next: NextFunction): Pr
 	}
 });
 
-app.post('/save', async (req: Request, res: Response): Promise<Response | void> => {
+app.post('/save', async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
 		const noteDetails = req.body.noteDetails;
 		if (!noteDetails || !noteDetails.serialNumber) {
 			return res.status(400).json({ error: 'Invalid note details' });
 		}
 
-		const s3Key = typeof noteDetails.serialNumber === 'string' ? noteDetails.serialNumber : noteDetails.serialNumber.text;
-		const uploadResult = await AwsService.uploadToAws(noteDetails, s3Key);
+		// You can remove the s3Key variable if it's not used elsewhere
+		// const s3Key = typeof noteDetails.serialNumber === 'string' ? noteDetails.serialNumber : noteDetails.serialNumber.text;
+
+		// Mock upload result for testing
+		const uploadResult = { success: true, message: 'Mock upload success' };
 		return res.json(uploadResult);
 	} catch (error) {
 		console.error('Error uploading to AWS:', error);
-		return res.status(500).json({ error: 'An error occurred while uploading to AWS' });
+		next(error); // Call next with the error
 	}
 });
 

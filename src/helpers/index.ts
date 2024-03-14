@@ -1,5 +1,5 @@
 import { RekognitionClient, DetectTextCommand, TextDetection } from '@aws-sdk/client-rekognition';
-import { DenominationDetail, MatchedDetail, UploadData } from '../interfaces/interfaces';
+import { DenominationDetail, MatchedDetail } from '../interfaces/interfaces';
 import { createSerialNumberMappings, federalReserveMapping } from '../mappings/additional_mapping';
 import { serialNumberPatterns, noteValidators } from '../services/serialPatterns';
 
@@ -57,42 +57,6 @@ async function getTextDetections(imageData: string | Buffer) {
  * @returns {Interfaces.MatchedDetail} The matched detail.
  * @throws {Error} If there is an error obtaining additional details.
  */
-// function getAdditionalDetails(denomination: any[], serialNumber: string) {
-// 	// console.log('!!!!!!!!!!!!!!', denomination);
-// 	try {
-// 		// Check if the denomination is empty
-// 		if (!denomination) {
-// 			throw new Error('Denomination of the note was not detected or provided.');
-// 		}
-// 		// Find the matched detail based on the serial number  and denomination
-// 		const matchedDetail = denomination.find((detail) => {
-// 			// Check if the serial number prefix and denomination match
-// 			if (detail.serialNumberPrefix === serialNumber.charAt(0)) {
-// 				return true;
-// 			}
-// 		});
-
-// 		// If no matched detail is found, throw an error
-// 		if (!matchedDetail) {
-// 			throw new Error('No matching detail found');
-// 		}
-
-// 		// Return the matched detail
-// 		return {
-// 			seriesYear: matchedDetail.seriesYear,
-// 			treasurer: matchedDetail.treasurer,
-// 			secretary: matchedDetail.secretary,
-// 		};
-// 	} catch (error) {
-// 		// If there is an error, throw with additional error details
-// 		throw {
-// 			status: 400,
-// 			error: `Error obtaining additionalDetails: ${error}`,
-// 			inputDetails: {},
-// 			validator: 'additionalDetails',
-// 		};
-// 	}
-// }
 
 function getAdditionalDetails(denomination: DenominationDetail[], serialNumber: string): MatchedDetail {
 	try {

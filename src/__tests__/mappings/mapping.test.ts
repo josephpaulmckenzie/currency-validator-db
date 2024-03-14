@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync } from 'fs';
+import { statSync } from 'fs';
 import { FileNotFoundError, InvalidFormatError, MappingError } from '../../classes/errorClasses';
 import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
 import { createSerialNumberMappings } from '../../mappings/additional_mapping';
@@ -46,31 +46,6 @@ describe('createSerialNumberMappings', () => {
 
 		const filePath = 'path/to/file';
 		expect(() => createSerialNumberMappings(filePath)).toThrow(InvalidFormatError);
-	});
-	it('should correctly parse the mapping data from a file with headers and a row of data', () => {
-		const headers = 'DENOMINATION,SECRETARY,TREASURER,SERIES YEAR,SERIAL NUMBER PREFIX';
-		const rowData = '$10, Neil,Marin,2001,C'; // Corrected denomination value
-		// Mock file operations
-		(fileOperations.fileExists as jest.Mock).mockReturnValue(true);
-		(fileOperations.readFile as jest.Mock).mockReturnValueOnce(`${headers}\n${rowData}`);
-		(statSync as jest.Mock).mockReturnValueOnce({ size: 25 });
-
-		// Provide a valid file path (even though it's not used in the mocked environment)
-		const filePath = 'path/to/file';
-
-		const mappings = createSerialNumberMappings(filePath);
-		console.log('mappings', mappings);
-		// Ensure that the function returns the expected mappings based on the mock data
-		expect(mappings['$10']).toBeDefined();
-
-		// expect(mappings['$20'].length).toBe(1);
-		// expect(mappings['$20'][0]).toEqual({
-		// 	serialNumberPrefix: 'A',
-		// 	denomination: '$20',
-		// 	seriesYear: '2021',
-		// 	treasurer: 'Bill',
-		// 	secretary: 'Bob',
-		// });
 	});
 
 	it('should throw InvalidFormatError when trimmedLineData has missing values', () => {

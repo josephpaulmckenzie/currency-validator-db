@@ -1,17 +1,20 @@
-// startServer.ts
-
 import { app } from './server/server';
 
-const port = process.env.PORT || 3089;
+const startServer = () => {
+	const port = process.env.PORT || 3089;
 
-let server: any; // Define the server variable outside the conditional block
+	const server = app.listen(port, () => {
+		console.log(`Server is running on port ${port}`);
+	});
 
-// Check if the environment is test, if so, don't actually start listening
-// if (process.env.NODE_ENV !== 'test') {
-server = app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
-});
-// }
+	// Return the server instance for testing or other purposes
+	return server;
+};
 
-// Export the server variable
-export { server };
+// Start the server if the environment is not 'test'
+if (process.env.NODE_ENV !== 'test') {
+	startServer();
+}
+
+// Export the startServer function in case you need to manually start the server elsewhere
+export { startServer };

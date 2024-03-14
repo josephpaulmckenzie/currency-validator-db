@@ -1,6 +1,6 @@
-import type * as Interfaces from '../interfaces/interfaces';
+import { RegExValidators } from '../interfaces/interfaces';
 
-const serialNumberPatterns: any = {
+const serialNumberPatterns: RegExValidators = {
 	// Checks to see if a serial number matches a low serial number pattern
 	isLowSerialNumberPattern: /^[A-Q]?[A-L]\s?0{4}\d{4}\s?[A-Q]$/,
 	// Examples: 'AB00000011C, BL00001234D, DA00000001L'
@@ -57,7 +57,7 @@ const serialNumberPatterns: any = {
 	// Example: Check if a serial number contains the number 420
 	fourTwentySerialPattern: /^[A-Q]?[A-L]\s?(\d*420\d*)[A-Q]$/,
 };
-const noteValidators: Interfaces.RegExValidators = {
+const noteValidators: RegExValidators = {
 	// Valid Serial Number Pattern - Check if a serial number matches the serial number pattern(s)
 	validSerialNumberPattern: /^[A-Q]?[A-L]\s?\d{8}\s?[A-K]$/,
 	// Examples: 'AB12345678C, AB 12345678 C, PA42003287 D, LD 56709823E'

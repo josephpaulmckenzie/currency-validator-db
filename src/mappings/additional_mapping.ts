@@ -1,4 +1,3 @@
-import { constants } from 'buffer';
 import { fileOperations } from '../helpers/storage/localSystem/fileOperations';
 import { SerialNumberMappings, FederalReserveMapping } from '../interfaces/interfaces';
 import { statSync } from 'fs';
@@ -22,7 +21,7 @@ const federalReserveMapping: FederalReserveMapping = {
 function createSerialNumberMappings(filePath: string) {
 	try {
 		if (!filePath) {
-			console.log('File Path is required');
+			// console.log('File Path is required');
 			throw new FileNotFoundError('File Path is required', 500);
 		}
 
@@ -62,7 +61,7 @@ function createSerialNumberMappings(filePath: string) {
 				}
 			}
 		});
-		console.log('serialNumberMappings', serialNumberMappings);
+		// console.log('serialNumberMappings', serialNumberMappings);
 		return serialNumberMappings;
 	} catch (error) {
 		// Re-throw specific errors
