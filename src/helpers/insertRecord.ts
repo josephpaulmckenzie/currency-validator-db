@@ -24,7 +24,7 @@ async function insertNoteDetail(noteDetail: NoteDetail): Promise<QueryResult> {
 		seriesYear,
 		treasurer,
 		secretary,
-		s3url,
+		s3Url,
 	} = noteDetail;
 
 	const query = `
@@ -45,7 +45,7 @@ async function insertNoteDetail(noteDetail: NoteDetail): Promise<QueryResult> {
 			seriesYear,
 			treasurer,
 			secretary,
-			s3url,
+			s3Url,
 		]);
 	} catch (error) {
 		if (error instanceof DatabaseError) {

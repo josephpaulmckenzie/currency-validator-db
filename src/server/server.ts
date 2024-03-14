@@ -12,13 +12,12 @@ app.use((req, res, next) => {
 	console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
 	next();
 });
-
-// Error handling middleware
 app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
-	console.error('An error occurred:', err);
-	const errorMessage = err.message || 'Internal Server Error'; // Ensure error message is available
-	res.status(500).json({ error: errorMessage, route: req.url }); // Set the error message in the response body
-	next(err); // Call next with the error
+	console.error('An error occurred:', err.message);
+	console.error('Route:', req.url);
+	console.error('Stack:', err.stack);
+	res.status(500).json({ error: err.message || 'Internal Server Error' }); // Ensure error message is set in the response body
+	next(err); // Pass the error to the next middleware or error handler
 });
 
 const multerDiskStorage: StorageEngine = multer.diskStorage({
@@ -35,13 +34,17 @@ const multerDiskStorage: StorageEngine = multer.diskStorage({
 // Set up multer with the configured storage engine
 const upload = multer({ storage: multerDiskStorage });
 
+// Middleware to parse URL-encoded bodies
 app.use(express.urlencoded({ extended: false }));
+
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 let imageDataUrl = '';
 let buffer: string | Buffer;
 let noteDetails;
 
+// Route handler for rendering the index page
 app.get('/', async (_req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
 		console.log('Rendering index.ejs');
@@ -51,6 +54,7 @@ app.get('/', async (_req: Request, res: Response, next: NextFunction): Promise<R
 	}
 });
 
+// Route handler for handling file uploads
 app.post('/upload', upload.single('image'), async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
 	console.log('Received file upload request');
 	if (!request.file) {
@@ -71,6 +75,7 @@ app.post('/upload', upload.single('image'), async (request: Request, response: R
 	}
 });
 
+// Route handler for rendering the success page
 app.get('/success', async (_req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
 		noteDetails = await getTextDetections(buffer);
@@ -81,15 +86,13 @@ app.get('/success', async (_req: Request, res: Response, next: NextFunction): Pr
 	}
 });
 
+// Route handler for processing form submissions
 app.post('/save', async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 	try {
 		const noteDetails = req.body.noteDetails;
 		if (!noteDetails || !noteDetails.serialNumber) {
 			return res.status(400).json({ error: 'Invalid note details' });
 		}
-
-		// You can remove the s3Key variable if it's not used elsewhere
-		// const s3Key = typeof noteDetails.serialNumber === 'string' ? noteDetails.serialNumber : noteDetails.serialNumber.text;
 
 		// Mock upload result for testing
 		const uploadResult = { success: true, message: 'Mock upload success' };

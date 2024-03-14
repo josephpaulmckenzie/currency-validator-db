@@ -262,7 +262,6 @@ interface NoteDetail {
 	treasurer: TextWithBoundingBox | string;
 	secretary: TextWithBoundingBox | string;
 	federalReserveLocation: string;
-	s3url?: string; // Optional property
 }
 
 interface DatabaseError {
