@@ -1,9 +1,9 @@
 // errorHandler.ts
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { RouteNotFound } from '../../classes/routeClasses';
 import { log } from '../logging/logger';
 
-export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+export function errorHandler(err: Error, req: Request, res: Response) {
 	let statusCode: number;
 	let errorMessage: string;
 
