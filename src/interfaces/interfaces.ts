@@ -48,9 +48,10 @@ interface NoteDetails {
  * Interface representing matched details of a banknote.
  */
 interface MatchedDetail {
-	seriesYear: string | undefined;
-	treasurer: string | undefined;
-	secretary: string | undefined;
+	federalReserveLocation?: string;
+	seriesYear?: string;
+	treasurer?: string;
+	secretary?: string;
 }
 
 /**
@@ -147,11 +148,6 @@ interface FileReader {
 	readFile(filePath: string): string;
 }
 
-interface AWSService {
-	insertIntoDynamo: (item: UploadData) => Promise<AWS.DynamoDB.DocumentClient.PutItemOutput>;
-	saveToS3: (filePath: string, Key: string) => Promise<string>;
-}
-
 interface RouteErrors extends Error {
 	status: number; // HTTP status code
 }
@@ -229,13 +225,12 @@ interface UploadData {
 	serialPatternMatch: TextWithBoundingBox | string;
 	serialNumber: TextWithBoundingBox | string;
 	federalReserveId: TextWithBoundingBox | string;
-	federalReserveLocation: string;
+	federalReserveLocation?: string;
 	notePositionId: TextWithBoundingBox | string;
-	seriesYear: string;
-	treasurer: TextWithBoundingBox | string;
-	secretary: TextWithBoundingBox | string;
-	s3Url: string;
-	validSerialNumberPattern: TextWithBoundingBox | string;
+	seriesYear?: TextWithBoundingBox | string;
+	treasurer?: TextWithBoundingBox | string;
+	secretary?: TextWithBoundingBox | string;
+	s3Url?: string;
 }
 
 interface NoteDetailsItem {
@@ -250,18 +245,11 @@ interface NoteDetailsItem {
 
 type DatabaseErrorType = '23505' | '42P01';
 
-interface NoteDetail {
-	s3Url: string;
-	validdenomination: TextWithBoundingBox | string;
-	frontPlateId: TextWithBoundingBox | string;
-	serialPatternMatch: TextWithBoundingBox | string;
-	serialNumber: TextWithBoundingBox | string;
-	federalReserveId: TextWithBoundingBox | string;
-	notePositionId: TextWithBoundingBox | string;
-	seriesYear: string;
+interface NoteDetail extends UploadData {
+	seriesYear: TextWithBoundingBox | string;
 	treasurer: TextWithBoundingBox | string;
 	secretary: TextWithBoundingBox | string;
-	federalReserveLocation: string;
+	federalReserveLocation?: string;
 }
 
 interface DatabaseError {
@@ -292,7 +280,6 @@ export {
 	FederalReserveMapping,
 	FileChecker,
 	FileReader,
-	AWSService,
 	RouteErrors,
 	MockedDynamoDbResponse,
 	DynamoDbResponse,
@@ -308,4 +295,5 @@ export {
 	ValidationResult,
 	CustomMulterOptions,
 	CustomError,
+	TextWithBoundingBox,
 };
