@@ -115,7 +115,6 @@ app.post('/save', async (req: Request, res: Response, next: NextFunction): Promi
 
 		// await uploadToDatabase(noteDetails);
 
-		// Exclude serialNumber from the response since it's already included in noteDetails
 		const uploadResult = { success: true, s3Results: s3uploaded, noteDetails };
 		console.log('uploadResult', uploadResult);
 		return res.json(uploadResult);

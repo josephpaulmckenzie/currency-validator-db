@@ -6,6 +6,7 @@ export class FileNotFoundError extends Error {
 		this.name = 'FileNotFoundError';
 		this.statusCode = statusCode;
 		Object.setPrototypeOf(this, FileNotFoundError.prototype);
+		// Error.captureStackTrace(this, this.constructor);
 	}
 }
 
@@ -17,6 +18,7 @@ export class InvalidFormatError extends Error {
 		this.name = 'InvalidFormatError';
 		this.statusCode = statusCode;
 		Object.setPrototypeOf(this, InvalidFormatError.prototype);
+		// Error.captureStackTrace(this, this.constructor);
 	}
 }
 
@@ -28,6 +30,7 @@ export class MappingError extends Error {
 		this.name = 'MappingError';
 		this.statusCode = statusCode;
 		Object.setPrototypeOf(this, MappingError.prototype);
+		// Error.captureStackTrace(this, this.constructor);
 	}
 }
 
@@ -36,6 +39,7 @@ export class TextDetectionsError extends Error {
 		super(message);
 		this.name = 'TextDetectionsError';
 		Object.setPrototypeOf(this, TextDetectionsError.prototype);
+		// Error.captureStackTrace(this, this.constructor);
 	}
 }
 
@@ -44,6 +48,7 @@ export class S3UploadError extends Error {
 		super(message);
 		this.name = 'S3UploadError';
 		Object.setPrototypeOf(this, S3UploadError.prototype);
+		// Error.captureStackTrace(this, this.constructor);
 	}
 }
 
@@ -58,6 +63,8 @@ export class DatabaseError extends Error {
 		this.statusCode = statusCode;
 		this.constraint = constraint;
 		this.table = table;
+		Object.setPrototypeOf(this, DatabaseError.prototype);
+		// Error.captureStackTrace(this, this.constructor);
 	}
 }
 
@@ -66,8 +73,10 @@ export class ValidationError extends Error {
 		super(message);
 		this.name = 'ValidationError';
 		Object.setPrototypeOf(this, ValidationError.prototype);
+		// Error.captureStackTrace(this, this.constructor);
 	}
 }
+
 export class RouteError extends Error {
 	status: number;
 
@@ -75,5 +84,20 @@ export class RouteError extends Error {
 		super(message);
 		this.name = 'RouteError';
 		this.status = status;
+		Object.setPrototypeOf(this, RouteError.prototype);
+		// Error.captureStackTrace(this, this.constructor);
+	}
+}
+
+export class RouteNotFound extends Error {
+	status: number;
+	message: string;
+	constructor(message: string, status: number) {
+		super(message);
+		this.name = 'RouteNotFound';
+		this.status = status;
+		this.message = message;
+		Object.setPrototypeOf(this, RouteNotFound.prototype);
+		// Error.captureStackTrace(this, this.constructor);
 	}
 }
