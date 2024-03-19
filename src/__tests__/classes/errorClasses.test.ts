@@ -9,56 +9,58 @@ import {
 	TextDetectionsError,
 	ValidationError,
 } from '../../classes/errorClasses';
-import { RouteNotFound } from '../../classes/routeClasses';
 
 describe('TextDetectionsError', () => {
-	// Test case: TextDetectionsError should create a new instance with the provided message
 	it('should create a new instance with the provided message', () => {
 		const errorMessage = 'Text Detections error';
 		const error = new TextDetectionsError(errorMessage);
+
+		expect(error).toBeInstanceOf(TextDetectionsError);
 		expect(error.message).toBe(errorMessage);
 		expect(error.name).toBe('TextDetectionsError');
 	});
 });
 
 describe('FileNotFoundError', () => {
-	// Test case: FileNotFoundError should create a new instance with the provided message
 	it('should create a new instance with the provided message', () => {
 		const errorMessage = 'File not found';
 		const error = new FileNotFoundError(errorMessage, ENOENT);
+
 		expect(error.message).toBe(errorMessage);
 		expect(error.name).toBe('FileNotFoundError');
 	});
 });
 
 describe('S3UploadError', () => {
-	// Test case: S3UploadError should create a new instance with the provided message
 	it('should create a new instance with the provided message', () => {
 		const errorMessage = 'S3 upload error';
 		const error = new S3UploadError(errorMessage);
-		expect(error.message).toBe(errorMessage);
+
+		expect(error).toBeInstanceOf(S3UploadError);
 		expect(error.name).toBe('S3UploadError');
+		expect(error.message).toBe(errorMessage);
 	});
 });
 
 describe('ValidationError', () => {
-	// Test case: S3UploadError should create a new instance with the provided message
 	it('should create a new instance with the provided message', () => {
-		const errorMessage = ' Validation error';
+		const errorMessage = ' Error Uploading To S3';
 		const error = new ValidationError(errorMessage);
+		expect(error).toBeInstanceOf(ValidationError);
 		expect(error.message).toBe(errorMessage);
 		expect(error.name).toBe('ValidationError');
 	});
 });
 
 describe('RouteError', () => {
-	// Test case: RouteError should create a new instance with the provided status and message
 	it('should create a new instance with the provided status and message', () => {
 		const status = ENOENT;
 		const errorMessage = 'Route error';
-		const error = new RouteError(status, errorMessage);
-		expect(error.message).toBe(errorMessage);
+		const error = new RouteError(errorMessage, status); // Corrected the order of parameters
+
+		expect(error).toBeInstanceOf(RouteError);
 		expect(error.name).toBe('RouteError');
+		expect(error.message).toBe(errorMessage);
 		expect(error.status).toBe(status);
 	});
 });
@@ -67,48 +69,32 @@ describe('RouteNotFound error', () => {
 	it('should create an instance with the provided message and status', () => {
 		const errorMessage = 'Route not found';
 		const status = 404;
-		const error = new RouteNotFound(errorMessage, status);
+		const error = new RouteError(errorMessage, status);
 
-		expect(error).toBeInstanceOf(RouteNotFound);
+		expect(error).toBeInstanceOf(RouteError);
 		expect(error.message).toBe(errorMessage);
 		expect(error.status).toBe(status);
 	});
 
 	it('should have the correct name property', () => {
-		const error = new RouteNotFound('Route not found', 404);
-		expect(error.name).toBe('RouteNotFound');
-	});
-
-	it('should capture the stack trace', () => {
-		// Mock Error.captureStackTrace to verify it's called
-		const originalCaptureStackTrace = Error.captureStackTrace;
-		Error.captureStackTrace = jest.fn();
-
-		// Create a RouteNotFound instance
-		const error = new RouteNotFound('Route not found', 404);
-
-		// Verify that Error.captureStackTrace was called with the error instance
-		expect(Error.captureStackTrace).toHaveBeenCalledWith(error, error.constructor);
-
-		// Restore the original Error.captureStackTrace implementation
-		Error.captureStackTrace = originalCaptureStackTrace;
+		const error = new RouteError('Route not found', 404);
+		expect(error.name).toBe('RouteError');
 	});
 });
 
 describe('MappingError', () => {
-	// Test case 1: MappingError should have the correct properties
 	it('should have the correct properties', () => {
-		const errorMessage = 'Mapping error';
+		const errorMessage = 'There was a problem when trying to map out note details';
 		const statusCode = 500;
+		const name = 'MappingError';
 
 		const mappingError = new MappingError(errorMessage, statusCode);
 
 		expect(mappingError.message).toBe(errorMessage);
 		expect(mappingError.statusCode).toBe(statusCode);
-		expect(mappingError.name).toBe('MappingError');
+		expect(mappingError.name).toBe(name);
 	});
 
-	// Test case 2: MappingError should inherit from Error
 	it('should inherit from Error', () => {
 		const mappingError = new MappingError('Mapping error', 500);
 
@@ -117,12 +103,24 @@ describe('MappingError', () => {
 });
 
 describe('Database Error', () => {
-	// Test case: DatabaseError should create a new instance with the provided message
 	it('should create a new instance with the provided message', () => {
 		const databaseError = new DatabaseError('There was an error with the database', '5000');
 
 		expect(databaseError.message).toBe('There was an error with the database');
 		expect(databaseError.statusCode).toBe('5000');
 		expect(databaseError.name).toBe('DatabaseError');
+	});
+
+	it('should throw an error in the else block', async () => {
+		try {
+			throw new Error('Expected error message');
+		} catch (error) {
+			if (error instanceof DatabaseError) {
+				expect(error).toBeInstanceOf(DatabaseError);
+				expect(error.message).toEqual('Expected error message');
+			} else {
+				expect(error).toBeInstanceOf(Error);
+			}
+		}
 	});
 });

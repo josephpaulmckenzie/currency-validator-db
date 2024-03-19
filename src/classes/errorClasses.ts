@@ -69,35 +69,26 @@ export class DatabaseError extends Error {
 }
 
 export class ValidationError extends Error {
+	message: string;
 	constructor(message: string) {
 		super(message);
 		this.name = 'ValidationError';
+		this.message = message;
 		Object.setPrototypeOf(this, ValidationError.prototype);
 		// Error.captureStackTrace(this, this.constructor);
 	}
 }
 
 export class RouteError extends Error {
+	message: string;
 	status: number;
 
-	constructor(status: number, message: string) {
+	constructor(message: string, status: number) {
 		super(message);
 		this.name = 'RouteError';
 		this.status = status;
-		Object.setPrototypeOf(this, RouteError.prototype);
-		// Error.captureStackTrace(this, this.constructor);
-	}
-}
-
-export class RouteNotFound extends Error {
-	status: number;
-	message: string;
-	constructor(message: string, status: number) {
-		super(message);
-		this.name = 'RouteNotFound';
-		this.status = status;
 		this.message = message;
-		Object.setPrototypeOf(this, RouteNotFound.prototype);
+		Object.setPrototypeOf(this, RouteError.prototype);
 		// Error.captureStackTrace(this, this.constructor);
 	}
 }

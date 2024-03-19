@@ -7,13 +7,6 @@ jest.mock('../../helpers/storage/localSystem/fileOperations', () => ({
 	readFile: jest.fn(),
 }));
 
-// No need to import the real fileOperations module here
-// Importing required interfaces and classes
-// import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
-
-// Importing required interfaces and classes
-// import { fileOperations } from '../../helpers/storage/localSystem/fileOperations';
-
 // Mock the AWS SDK for testing purposes
 jest.mock('aws-sdk', () => ({
 	S3: jest.fn().mockImplementation(() => ({
@@ -71,10 +64,8 @@ describe('FederalReserveMapping', () => {
 	});
 });
 
-// Tests for NoteDetails interface
 describe('NoteDetails', () => {
 	it('should have specific properties', () => {
-		// Test case for the structure of the NoteDetails object
 		const noteDetails: NoteDetails = {
 			validDenomination: 'denom',
 			frontPlateId: 'frontId',
@@ -86,18 +77,12 @@ describe('NoteDetails', () => {
 			treasurer: '',
 			secretary: '',
 		};
-		// Assertions for the structure
 		expect(noteDetails).toHaveProperty('validDenomination');
 		expect(noteDetails).toHaveProperty('frontPlateId');
-		// Add more assertions based on your expected outcomes
 	});
 });
 
-// Add more test descriptions and cases for other interfaces similarly
-
-/**
- * @test {FileOperations}
- */ describe('FileOperations', () => {
+describe('FileOperations', () => {
 	it('should return true if the file exists', () => {
 		// Mock fileExists to return true
 		const mockFileExists = jest.fn().mockReturnValue(true);

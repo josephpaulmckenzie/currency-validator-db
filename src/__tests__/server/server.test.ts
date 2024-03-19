@@ -1,19 +1,9 @@
 import request from 'supertest';
-import { app } from '../../server/server'; // Import the Express application to be tested
-
-// Import Express types
+import { app } from '../../server/server';
 import { NextFunction, Request, Response } from 'express';
-
-// Import the helper function to be mocked
 import { getTextDetections } from '../../helpers/index';
-
-// Import file system functions for temporary file creation
 import { mkdtempSync, rmSync, writeFileSync } from 'fs';
-
-// Import path module for file paths
 import path from 'path';
-
-// Import os module for temporary directory creation
 import { tmpdir } from 'os';
 import { Server } from 'http';
 
@@ -28,7 +18,7 @@ const mockMulterMiddleware = () => (req: Request, _res: Response, next: NextFunc
 };
 
 // Error handling middleware
-app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 	console.error('An error occurred:', err.message);
 	console.error('Route:', req.url);
 	console.error('Stack:', err.stack);

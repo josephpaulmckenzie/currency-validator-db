@@ -5,12 +5,6 @@ import { createSerialNumberMappings } from '../../mappings/additional_mapping';
 
 jest.mock('../../helpers/storage/localSystem/fileOperations');
 jest.mock('fs');
-// jest.mock('../../helpers/storage/localSystem/fileOperations', () => ({
-// 	...jest.requireActual('../../helpers/storage/localSystem/fileOperations'), // Import the real module to keep unmocked methods
-// 	createSerialNumberMappings: jest.fn(() => ({
-// 		// Provide a mock implementation if needed
-// 	})),
-// }));
 
 describe('createSerialNumberMappings', () => {
 	afterEach(() => {

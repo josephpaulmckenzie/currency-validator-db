@@ -13,7 +13,7 @@
 		"server": "npx ts-node src/startServer.ts",
 		"clean": "rm -rf build",
 		"compile": "tsc",
-		"lint": "npm eslint . --ext .ts",
+		"lint": "eslint . --ext .ts",
 		"test": "jest",
 		"coverage": "npx nyc jest",
 		"prepare": "npm run clean && npm run compile && npm run lint && npm run test && npm run coverage",

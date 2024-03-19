@@ -1,9 +1,9 @@
 // errorHandler.ts
 
 import { Request, Response, NextFunction } from 'express';
-import { RouteNotFound } from '../../classes/routeClasses';
 import { log } from '../logging/logger';
-import { formatErrorResponse } from './errorResponse'; // Import the formatErrorResponse function
+import { formatErrorResponse } from './errorFormatting';
+import { RouteError } from '../../classes/errorClasses';
 
 // Error logging middleware
 export function logErrors(err: Error, req: Request, res: Response, next: NextFunction) {
@@ -16,7 +16,7 @@ export function errorHandler(err: Error, req: Request, res: Response, next: Next
 	let statusCode: number;
 	let errorMessage: string;
 
-	if (err instanceof RouteNotFound) {
+	if (err instanceof RouteError) {
 		statusCode = 404;
 		errorMessage = 'Resource Not Found';
 	} else {
@@ -24,6 +24,6 @@ export function errorHandler(err: Error, req: Request, res: Response, next: Next
 		errorMessage = 'Internal Server Error';
 	}
 
-	const errorResponse = formatErrorResponse(statusCode, errorMessage); // Format the error response
-	res.status(statusCode).json(errorResponse); // Send the formatted error response
+	const errorResponse = formatErrorResponse(errorMessage, statusCode);
+	res.status(statusCode).json(errorResponse);
 }

@@ -5,24 +5,13 @@ import path from 'path';
 import { getTextDetections } from '../helpers/';
 import { saveToS3 } from '../helpers/storage/aws/s3Operations';
 import { NoteDetail, TextWithBoundingBox, UploadData } from '../interfaces/interfaces';
+import { errorHandler, logErrors } from '../helpers/errorHandling/errorHandler';
 
 const app: express.Application = express();
 app.set('view engine', 'ejs');
 
 // Logging middleware to log incoming requests
-app.use((req, res, next) => {
-	console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-	next();
-});
-
-// Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction): any => {
-	console.error('An error occurred:', err.message);
-	console.error('Route:', req.url);
-	console.error('Stack:', err.stack);
-	res.status(500).json({ error: err.message || 'Internal Server Error' });
-	next(err); // Pass the error to the next middleware or error handler
-});
+app.use(logErrors);
 
 const multerDiskStorage: StorageEngine = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -44,6 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(errorHandler);
 let imageDataUrl: string = '';
 let buffer: Buffer;
 let noteDetails: UploadData;

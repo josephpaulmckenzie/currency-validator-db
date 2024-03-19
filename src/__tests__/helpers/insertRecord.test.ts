@@ -2,7 +2,6 @@ import { Pool, QueryResult } from 'pg';
 import { insertNoteDetail } from '../../helpers/insertRecord'; // Update with your file path
 import { DatabaseError } from '../../classes/errorClasses';
 
-// Mocking environment variables
 jest.mock('dotenv', () => ({
 	config: jest.fn(),
 }));
@@ -19,7 +18,7 @@ describe('insertNoteDetail', () => {
 		seriesYear: '2022',
 		treasurer: 'John Doe',
 		secretary: 'Jane Doe',
-		s3Url: 'https://example.com/image.jpg', // Corrected property name to match SQL query
+		s3Url: 'https://example.com/image.jpg',
 	};
 
 	afterEach(() => {
@@ -35,13 +34,11 @@ describe('insertNoteDetail', () => {
 			oid: 0,
 		};
 
-		// Mocking Pool class and its methods
 		const mockPoolQuery = jest.fn().mockResolvedValueOnce(mockQueryResult);
 		jest.spyOn(Pool.prototype, 'query').mockImplementation(mockPoolQuery);
 
 		await expect(insertNoteDetail(mockNoteDetail)).resolves.toEqual(mockQueryResult);
 
-		// Asserting that the query was called with the correct arguments
 		expect(mockPoolQuery).toHaveBeenCalledWith(expect.any(String), [
 			mockNoteDetail.serialNumber,
 			mockNoteDetail.validdenomination,
@@ -53,20 +50,27 @@ describe('insertNoteDetail', () => {
 			mockNoteDetail.seriesYear,
 			mockNoteDetail.treasurer,
 			mockNoteDetail.secretary,
-			mockNoteDetail.s3Url, // Ensure the property name matches SQL query
+			mockNoteDetail.s3Url,
 		]);
 	});
 
 	it('should throw DatabaseError when database query fails', async () => {
 		const mockDatabaseError = new DatabaseError('Database connection failed', '500');
 
-		// Mocking Pool class and its methods
 		const mockPoolQuery = jest.fn().mockRejectedValueOnce(mockDatabaseError);
 		jest.spyOn(Pool.prototype, 'query').mockImplementation(mockPoolQuery);
 
 		await expect(insertNoteDetail(mockNoteDetail)).rejects.toThrow(DatabaseError);
 
-		// Asserting that the error was thrown
+		expect(mockPoolQuery).toHaveBeenCalledWith(expect.any(String), expect.any(Array));
+	});
+
+	it('should throw the original error if it is not an instance of DatabaseError', async () => {
+		const mockError = new Error('Some error');
+		const mockPoolQuery = jest.fn().mockRejectedValueOnce(mockError);
+
+		jest.spyOn(Pool.prototype, 'query').mockImplementation(mockPoolQuery);
+		await expect(insertNoteDetail(mockNoteDetail)).rejects.toThrow(mockError);
 		expect(mockPoolQuery).toHaveBeenCalledWith(expect.any(String), expect.any(Array));
 	});
 });
